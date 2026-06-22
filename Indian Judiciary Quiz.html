@@ -1,0 +1,353 @@
+<!DOCTYPE html>
+<html>
+<head>
+      <!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-KN4DRRWZ17"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-KN4DRRWZ17');
+</script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title> Indian Judiciary Quiz</title>
+
+<style>
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: Arial;
+}
+
+body {
+  background: #f5f5f5;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+}
+
+/* Container */
+.app {
+  width: 95%;
+  max-width: 500px;
+  background: white;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+}
+
+/* Header */
+header {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 20px;
+}
+
+.timer {
+  background: #2196F3;
+  color: white;
+  padding: 5px 10px;
+  border-radius: 5px;
+}
+
+/* Question */
+.question {
+  font-size: 20px;
+  margin-bottom: 15px;
+}
+
+/* Options */
+.option {
+  background: #eee;
+  padding: 10px;
+  margin: 8px 0;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.option:hover {
+  background: #ddd;
+}
+
+.correct {
+  background: #4CAF50 !important;
+  color: white;
+}
+
+.wrong {
+  background: #f44336 !important;
+  color: white;
+}
+
+/* Button */
+button {
+  margin-top: 15px;
+  padding: 10px;
+  width: 100%;
+  border: none;
+ background:linear-gradient(135deg,#0a2dbcf3,#779af583);
+  color: white;
+  font-size: 16px;
+  cursor: pointer;
+  border-radius: 5px;
+}
+
+/* Hidden */
+.hide {
+  display: none;
+}
+
+/* Result */
+.result {
+  text-align: center;
+}
+
+/* Responsive */
+@media (max-width: 600px) {
+  .question {
+    font-size: 18px;
+  }
+}
+</style>
+
+</head>
+<body>
+
+<div class="app">
+
+  <!-- Start Screen -->
+  <div id="startScreen">
+    <h2>Quiz App</h2>
+    <button onclick="startQuiz()">Start Quiz</button>
+  </div>
+
+  <!-- Quiz Screen -->
+  <div id="quizScreen" class="hide">
+    <header>
+      <div>Question <span id="qNo">1</span>/100</div>
+      <div class="timer" id="timer">10</div>
+    </header>
+
+    <div class="question" id="question"></div>
+    <div id="options"></div>
+
+    <button onclick="nextQuestion()">Next</button>
+  </div>
+
+  <!-- Result Screen -->
+  <div id="resultScreen" class="hide result">
+    <h2>Your Score</h2>
+    <h1 id="score"></h1>
+    <button onclick="location.reload()">Play Again</button>
+  </div>
+
+</div>
+
+<script>
+const quizData = [
+{
+question:"भारत का राष्ट्रीय पशु कौन है?",
+options:["शेर","बाघ","हाथी","गैंडा"],
+answer:1
+},
+{
+question:"भारतीय संविधान का निर्माता किसे कहा जाता है?",
+options:["महात्मा गांधी","डॉ. बी.आर. अंबेडकर","नेहरू","पटेल"],
+answer:1
+},
+{
+question:"भारत का राष्ट्रीय पक्षी कौन है?",
+options:["मोर","तोता","कबूतर","हंस"],
+answer:0
+},
+
+{ question:"भारत के सर्वोच्च न्यायालय की स्थापना कब हुई थी?", options:["1950","1952","1947","1960"], answer:0 },
+{ question:"भारत के सर्वोच्च न्यायालय का मुख्यालय कहाँ है?", options:["मुंबई","नई दिल्ली","कोलकाता","चेन्नई"], answer:1 },
+{ question:"भारतीय संविधान का संरक्षक कौन होता है?", options:["संसद","राष्ट्रपति","सुप्रीम कोर्ट","प्रधानमंत्री"], answer:2 },
+{ question:"भारत में कुल कितने उच्च न्यायालय हैं (2026 तक)?", options:["18","21","25","28"], answer:2 },
+{ question:"भारत का प्रथम मुख्य न्यायाधीश कौन थे?", options:["एच. जे. कानिया","वाई. वी. चंद्रचूड़","एम. हिदायतुल्ला","पी. एन. भगवती"], answer:0 },
+{ question:"जनहित याचिका (PIL) किस देश से प्रेरित है?", options:["अमेरिका","ब्रिटेन","कनाडा","फ्रांस"], answer:0 },
+{ question:"PIL का पूर्ण रूप क्या है?", options:["Public Interest Litigation","Private Interest Law","Public Internal Law","People Interest Law"], answer:0 },
+{ question:"भारतीय संविधान का अनुच्छेद 32 किससे संबंधित है?", options:["मौलिक अधिकार","राज्य नीति","आपातकाल","राष्ट्रपति"], answer:0 },
+{ question:"अनुच्छेद 226 किससे संबंधित है?", options:["उच्च न्यायालय की रिट शक्ति","संसद","प्रधानमंत्री","चुनाव आयोग"], answer:0 },
+{ question:"सुप्रीम कोर्ट के न्यायाधीशों की नियुक्ति कौन करता है?", options:["प्रधानमंत्री","राष्ट्रपति","मुख्य न्यायाधीश","संसद"], answer:1 },
+
+{ question:"भारत के मुख्य न्यायाधीश का कार्यकाल सामान्यतः कितना होता है?", options:["62 वर्ष","65 वर्ष","60 वर्ष","58 वर्ष"], answer:1 },
+{ question:"भारत में न्यायिक समीक्षा (Judicial Review) का आधार क्या है?", options:["संविधान","संसद","राष्ट्रपति आदेश","प्रधानमंत्री निर्णय"], answer:0 },
+{ question:"भारत का सर्वोच्च न्यायालय किस सिद्धांत पर आधारित है?", options:["एकीकृत न्यायपालिका","दोहरी न्यायपालिका","त्रिस्तरीय न्यायपालिका","स्थानीय न्यायपालिका"], answer:0 },
+{ question:"भारत में न्यायपालिका का अंतिम अपीलीय न्यायालय कौन है?", options:["उच्च न्यायालय","जिला न्यायालय","सुप्रीम कोर्ट","लोक अदालत"], answer:2 },
+{ question:"भारतीय संविधान में कितने भाग (Parts) हैं?", options:["20","22","24","25"], answer:1 },
+{ question:"भारतीय संविधान में कुल कितने अनुच्छेद हैं (मूल रूप से)?", options:["395","400","448","500"], answer:0 },
+{ question:"संविधान का कौन सा भाग मौलिक अधिकारों से संबंधित है?", options:["भाग II","भाग III","भाग IV","भाग V"], answer:1 },
+{ question:"मौलिक अधिकारों को कौन निलंबित कर सकता है?", options:["संसद","राष्ट्रपति","सुप्रीम कोर्ट","प्रधानमंत्री"], answer:1 },
+{ question:"आपातकाल की घोषणा कौन करता है?", options:["प्रधानमंत्री","राष्ट्रपति","सुप्रीम कोर्ट","राज्यपाल"], answer:1 },
+{ question:"भारत में रिट कितने प्रकार की होती हैं?", options:["3","4","5","6"], answer:2 },
+
+{ question:"Habeas Corpus का अर्थ क्या है?", options:["कैदी को प्रस्तुत करना","संपत्ति अधिकार","चुनाव","कर व्यवस्था"], answer:0 },
+{ question:"Mandamus रिट किसके खिलाफ जारी होती है?", options:["निजी व्यक्ति","सरकारी अधिकारी","विदेशी सरकार","न्यायालय"], answer:1 },
+{ question:"भारत में न्यायपालिका किस प्रकार की है?", options:["स्वतंत्र","निर्भर","सैन्य","धार्मिक"], answer:0 },
+{ question:"उच्च न्यायालयों की स्थापना किस अनुच्छेद में है?", options:["अनुच्छेद 214","अनुच्छेद 124","अनुच्छेद 312","अनुच्छेद 300"], answer:0 },
+{ question:"जिला न्यायालय किसके अधीन होते हैं?", options:["सुप्रीम कोर्ट","उच्च न्यायालय","राष्ट्रपति","राज्यपाल"], answer:1 },
+{ question:"भारत में लोक अदालत की स्थापना किस कानून के तहत हुई?", options:["Legal Services Authorities Act","IPC","CPC","CrPC"], answer:0 },
+{ question:"भारतीय दंड संहिता (IPC) कब लागू हुई?", options:["1860","1857","1947","1950"], answer:0 },
+{ question:"CrPC का पूर्ण रूप क्या है?", options:["Criminal Procedure Code","Civil Procedure Code","Court Procedure Code","Crime Protection Code"], answer:0 },
+{ question:"CPC का संबंध किससे है?", options:["आपराधिक कानून","नागरिक प्रक्रिया","संविधान","चुनाव"], answer:1 },
+{ question:"भारत का संविधान कब लागू हुआ?", options:["15 अगस्त 1947","26 जनवरी 1950","26 नवंबर 1949","2 अक्टूबर 1947"], answer:1 },
+
+{ question:"संविधान सभा के अध्यक्ष कौन थे?", options:["डॉ. राजेंद्र प्रसाद","जवाहरलाल नेहरू","सरदार पटेल","बी. आर. अंबेडकर"], answer:0 },
+{ question:"संविधान निर्माण समिति के अध्यक्ष कौन थे?", options:["नेहरू","अंबेडकर","पटेल","राजेंद्र प्रसाद"], answer:1 },
+{ question:"भारत में न्यायपालिका की स्वतंत्रता किससे सुनिश्चित होती है?", options:["संविधान","संसद","राज्य","सेना"], answer:0 },
+{ question:"भारत में सर्वोच्च न्यायालय के न्यायाधीशों की संख्या कौन तय करता है?", options:["संसद","राष्ट्रपति","प्रधानमंत्री","मुख्य न्यायाधीश"], answer:0 },
+{ question:"मूल अधिकारों की रक्षा कौन करता है?", options:["सुप्रीम कोर्ट","प्रधानमंत्री","संसद","राज्यपाल"], answer:0 },
+{ question:"अनुच्छेद 21 किससे संबंधित है?", options:["जीवन और व्यक्तिगत स्वतंत्रता","धर्म","शिक्षा","संपत्ति"], answer:0 },
+{ question:"भारत में प्रथम महिला मुख्य न्यायाधीश बनने की संभावना किस राज्य में हुई थी (सामान्य GK)?", options:["भारत में अब तक नहीं","केरल","दिल्ली","महाराष्ट्र"], answer:0 },
+{ question:"लोकसभा में कुल कितने सदस्य होते हैं (लगभग)?", options:["543","545","550","552"], answer:0 },
+{ question:"राज्यसभा को कौन भंग नहीं कर सकता?", options:["राष्ट्रपति","प्रधानमंत्री","सुप्रीम कोर्ट","लोकसभा"], answer:0 },
+{ question:"न्यायिक सक्रियता (Judicial Activism) का अर्थ क्या है?", options:["सक्रिय न्यायालय निर्णय","न्यायालय की निष्क्रियता","संसद का नियंत्रण","चुनाव प्रक्रिया"], answer:0 },
+
+{ question:"भारत का सर्वोच्च कानून क्या है?", options:["संविधान","संसद","राष्ट्रपति आदेश","सुप्रीम कोर्ट"], answer:0 },
+{ question:"उच्च न्यायालय के न्यायाधीशों की नियुक्ति कौन करता है?", options:["राष्ट्रपति","प्रधानमंत्री","राज्यपाल","मुख्य मंत्री"], answer:0 },
+{ question:"भारत में कितने मौलिक कर्तव्य हैं?", options:["10","11","12","9"], answer:1 },
+{ question:"मौलिक कर्तव्य किस अनुच्छेद में हैं?", options:["अनुच्छेद 51A","अनुच्छेद 32","अनुच्छेद 14","अनुच्छेद 21"], answer:0 },
+{ question:"कानून का शासन (Rule of Law) किस देश से लिया गया है?", options:["ब्रिटेन","अमेरिका","फ्रांस","जर्मनी"], answer:0 },
+{ question:"भारत में अपील का अंतिम अधिकार किसके पास है?", options:["सुप्रीम कोर्ट","उच्च न्यायालय","जिला न्यायालय","राष्ट्रपति"], answer:0 },
+{ question:"संविधान का कौन सा भाग राज्य नीति के निदेशक तत्वों से संबंधित है?", options:["भाग IV","भाग III","भाग II","भाग V"], answer:0 },
+{ question:"Directive Principles का उद्देश्य क्या है?", options:["सामाजिक-आर्थिक न्याय","राजनीतिक चुनाव","सैन्य शक्ति","न्यायिक दंड"], answer:0 },
+{ question:"भारत में न्यायपालिका किसके अधीन नहीं होती?", options:["कार्यपालिका","संविधान","संसद","जनता"], answer:0 },
+{ question:"सुप्रीम कोर्ट के न्यायाधीशों को शपथ कौन दिलाता है?", options:["राष्ट्रपति","प्रधानमंत्री","मुख्य न्यायाधीश","लोकसभा अध्यक्ष"], answer:0 },
+
+{ question:"भारत में कितने प्रकार की न्यायालय प्रणाली है?", options:["एक","दो","तीन","चार"], answer:2 },
+{ question:"भारत में जिला न्यायालय का प्रमुख कौन होता है?", options:["जिला न्यायाधीश","मुख्य न्यायाधीश","राज्यपाल","मंत्री"], answer:0 },
+{ question:"संविधान संशोधन की प्रक्रिया किस अनुच्छेद में है?", options:["अनुच्छेद 368","अनुच्छेद 356","अनुच्छेद 32","अनुच्छेद 14"], answer:0 },
+{ question:"भारत में राष्ट्रपति पर महाभियोग कौन लगा सकता है?", options:["संसद","सुप्रीम कोर्ट","प्रधानमंत्री","राज्यपाल"], answer:0 },
+{ question:"न्यायपालिका का मुख्य कार्य क्या है?", options:["न्याय देना","कानून बनाना","कर वसूलना","योजना बनाना"], answer:0 },
+{ question:"भारत में कानून बनाने वाली संस्था कौन है?", options:["संसद","सुप्रीम कोर्ट","राष्ट्रपति","न्यायालय"], answer:0 },
+{ question:"संसद के कितने सदन हैं?", options:["1","2","3","4"], answer:1 },
+{ question:"राज्यसभा को स्थायी सदन क्यों कहा जाता है?", options:["यह भंग नहीं होती","यह चुनाव नहीं होता","यह कम शक्ति वाला है","यह नियुक्त होता है"], answer:0 },
+{ question:"लोकसभा का कार्यकाल कितना होता है?", options:["4 वर्ष","5 वर्ष","6 वर्ष","7 वर्ष"], answer:1 },
+{ question:"भारत का सर्वोच्च न्यायिक अधिकारी कौन होता है?", options:["मुख्य न्यायाधीश","राष्ट्रपति","प्रधानमंत्री","राज्यपाल"], answer:0 },
+
+{ question:"भारत में संविधान की व्याख्या कौन करता है?", options:["सुप्रीम कोर्ट","संसद","प्रधानमंत्री","राज्यपाल"], answer:0 },
+{ question:"न्यायपालिका की स्वतंत्रता का क्या अर्थ है?", options:["सरकार से स्वतंत्र निर्णय","सरकार के अधीन निर्णय","संसद का नियंत्रण","सेना का नियंत्रण"], answer:0 },
+{ question:"भारत में कुल कितने मौलिक अधिकार हैं?", options:["5","6","7","8"], answer:1 },
+{ question:"Right to Constitutional Remedies किस अनुच्छेद में है?", options:["अनुच्छेद 32","अनुच्छेद 19","अनुच्छेद 21","अनुच्छेद 14"], answer:0 },
+{ question:"भारत में न्यायपालिका किस प्रकार की व्यवस्था है?", options:["एकीकृत","अलग-अलग","सैन्य","धार्मिक"], answer:0 },
+{ question:"भारत में प्रथम महिला न्यायाधीश कौन थीं (सुप्रीम कोर्ट)?", options:["फातिमा बीवी","इंदिरा गांधी","सरोजिनी नायडू","मीरा कुमार"], answer:0 },
+{ question:"भारत में न्यायालय की सर्वोच्च शक्ति किसके पास है?", options:["सुप्रीम कोर्ट","संसद","राष्ट्रपति","राज्य"], answer:0 },
+{ question:"संविधान सभा ने संविधान कब अपनाया?", options:["26 नवंबर 1949","26 जनवरी 1950","15 अगस्त 1947","2 अक्टूबर 1948"], answer:0 },
+{ question:"भारत में न्यायालयों का पदानुक्रम क्या है?", options:["सुप्रीम कोर्ट > HC > District Court","HC > SC > District Court","District > SC > HC","SC > District > HC"], answer:0 },
+{ question:"भारत में कानून का अंतिम व्याख्याकार कौन है?", options:["सुप्रीम कोर्ट","संसद","प्रधानमंत्री","राज्यपाल"], answer:0 },
+
+{ question:"भारत में संविधान की प्रस्तावना क्या है?", options:["उद्देश्यों का विवरण","कानून सूची","न्यायालय आदेश","चुनाव नियम"], answer:0 },
+{ question:"भारत में राष्ट्रपति का चुनाव कौन करता है?", options:["निर्वाचक मंडल","जनता","संसद","सुप्रीम कोर्ट"], answer:0 },
+{ question:"उच्च न्यायालय का अपीलीय क्षेत्र कौन सा है?", options:["राज्य स्तर","राष्ट्रीय स्तर","जिला स्तर","ग्राम स्तर"], answer:0 },
+{ question:"भारत में न्यायिक प्रणाली किस प्रकार की है?", options:["एकीकृत और स्वतंत्र","सैन्य","धार्मिक","राजनीतिक"], answer:0 },
+{ question:"भारत में संविधान का सबसे शक्तिशाली भाग कौन सा है?", options:["मौलिक अधिकार","अनुसूचियां","प्रस्तावना","भाग I"], answer:0 },
+{ question:"अनुच्छेद 14 किससे संबंधित है?", options:["समानता का अधिकार","धर्म","शिक्षा","संपत्ति"], answer:0 },
+{ question:"अनुच्छेद 19 किससे संबंधित है?", options:["स्वतंत्रता का अधिकार","धर्म","जीवन","शिक्षा"], answer:0 },
+{ question:"अनुच्छेद 25 किससे संबंधित है?", options:["धार्मिक स्वतंत्रता","समानता","जीवन","शिक्षा"], answer:0 },
+{ question:"भारत में न्यायपालिका का उद्देश्य क्या है?", options:["न्याय प्रदान करना","कर वसूलना","कानून बनाना","नीति बनाना"], answer:0 },
+{ question:"भारत में सर्वोच्च न्यायालय के न्यायाधीशों की सेवानिवृत्ति आयु कितनी है?", options:["65 वर्ष","62 वर्ष","60 वर्ष","70 वर्ष"], answer:0 },
+
+{ question:"भारत में अधिवक्ता (Advocate) का पंजीकरण कौन करता है?", options:["बार काउंसिल ऑफ इंडिया","सुप्रीम कोर्ट","राष्ट्रपति","संसद"], answer:0 },
+{ question:"बार काउंसिल ऑफ इंडिया की स्थापना कब हुई?", options:["1961","1950","1947","1975"], answer:0 },
+{ question:"भारत में कानून का स्रोत क्या है?", options:["संविधान","राष्ट्रपति","प्रधानमंत्री","राज्यपाल"], answer:0 },
+{ question:"भारत में न्यायालयों का नियंत्रण किसके पास होता है?", options:["सुप्रीम कोर्ट","संसद","राष्ट्रपति","प्रधानमंत्री"], answer:0 },
+{ question:"सिविल मामलों की सुनवाई किस कानून के तहत होती है?", options:["CPC","IPC","CrPC","Evidence Act"], answer:0 },
+
+{ question:"आपराधिक मामलों की सुनवाई किस कानून के तहत होती है?", options:["CrPC","CPC","IPC","Contract Act"], answer:0 },
+{ question:"भारतीय साक्ष्य अधिनियम (Evidence Act) कब लागू हुआ?", options:["1872","1860","1950","1947"], answer:0 },
+{ question:"भारत में फास्ट ट्रैक कोर्ट का उद्देश्य क्या है?", options:["तेजी से न्याय देना","कर वसूलना","कानून बनाना","चुनाव कराना"], answer:0 },
+{ question:"न्यायिक पुनरावलोकन (Judicial Review) का मुख्य उद्देश्य क्या है?", options:["कानून की संवैधानिकता जांचना","कर लगाना","नीति बनाना","चुनाव कराना"], answer:0 },
+{ question:"भारत में पहला लोक अदालत कब आयोजित हुआ था?", options:["1982","1950","1947","2000"], answer:0 },
+
+{ question:"राष्ट्रीय न्यायिक अकादमी कहाँ स्थित है?", options:["भोपाल","दिल्ली","मुंबई","चेन्नई"], answer:0 },
+{ question:"भारत में न्यायपालिका किस सूची में आती है?", options:["संविधान की सूची","राज्य सूची","संघ सूची","समवर्ती सूची"], answer:0 },
+{ question:"भारत में कितने प्रकार के न्यायालय होते हैं?", options:["3","2","4","5"], answer:0 },
+{ question:"न्यायिक प्रणाली का मुख्य उद्देश्य क्या है?", options:["न्याय प्रदान करना","कर लगाना","नीति बनाना","सैन्य नियंत्रण"], answer:0 },
+{ question:"भारत में सर्वोच्च न्यायालय के निर्णय किस पर लागू होते हैं?", options:["सभी न्यायालयों पर","केवल उच्च न्यायालय","केवल जिला न्यायालय","किसी पर नहीं"], answer:0 },
+
+{ question:"संविधान का कौन सा अंग न्यायपालिका से संबंधित है?", options:["भाग V","भाग III","भाग I","भाग II"], answer:0 },
+{ question:"भारत में न्यायपालिका को किस प्रकार की शक्ति प्राप्त है?", options:["न्यायिक शक्ति","कार्यपालिका शक्ति","विधायी शक्ति","सैन्य शक्ति"], answer:0 }
+
+];
+
+
+let index = 0;
+let score = 0;
+let timer;
+let timeLeft = 10;
+
+function startQuiz() {
+  document.getElementById("startScreen").classList.add("hide");
+  document.getElementById("quizScreen").classList.remove("hide");
+  loadQuestion();
+}
+
+function loadQuestion() {
+  resetTimer();
+  let q = quizData[index];
+  document.getElementById("question").innerText = q.question;
+  document.getElementById("qNo").innerText = index + 1;
+
+  let optionsHTML = "";
+  q.options.forEach((opt, i) => {
+    optionsHTML += `<div class="option" onclick="selectOption(${i})">${opt}</div>`;
+  });
+
+  document.getElementById("options").innerHTML = optionsHTML;
+}
+
+function selectOption(selected) {
+  let correct = quizData[index].answer;
+  let options = document.querySelectorAll(".option");
+
+  options.forEach((opt, i) => {
+    if (i === correct) opt.classList.add("correct");
+    else if (i === selected) opt.classList.add("wrong");
+
+    opt.style.pointerEvents = "none";
+  });
+
+  if (selected === correct) score++;
+}
+
+function nextQuestion() {
+  index++;
+  if (index < quizData.length) {
+    loadQuestion();
+  } else {
+    showResult();
+  }
+}
+
+  function showResult() {
+  document.getElementById("quizScreen").classList.add("hide");
+  document.getElementById("resultScreen").classList.remove("hide");
+  document.getElementById("score").innerText = score + " / " + quizData.length;
+}
+
+function resetTimer() {
+  clearInterval(timer);
+  timeLeft = 10;
+  document.getElementById("timer").innerText = timeLeft;
+
+  timer = setInterval(() => {
+    timeLeft--;
+    document.getElementById("timer").innerText = timeLeft;
+
+    if (timeLeft === 0) {
+      nextQuestion();
+    }
+  }, 1000);
+}
+
+</script>
+
+</body>
+</html>

@@ -1,0 +1,478 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-KN4DRRWZ17"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-KN4DRRWZ17');
+</script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Quiz App</title>
+
+<style>
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: Arial;
+}
+
+body {
+  background: #f5f5f5;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+}
+
+/* Container */
+.app {
+  width: 95%;
+  max-width: 500px;
+  background: white;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+}
+
+/* Header */
+header {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 20px;
+}
+
+.timer {
+  background: #2196F3;
+  color: white;
+  padding: 5px 10px;
+  border-radius: 5px;
+}
+
+/* Question */
+.question {
+  font-size: 20px;
+  margin-bottom: 15px;
+}
+
+/* Options */
+.option {
+  background: #eee;
+  padding: 10px;
+  margin: 8px 0;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.option:hover {
+  background: #ddd;
+}
+
+.correct {
+  background: #4CAF50 !important;
+  color: white;
+}
+
+.wrong {
+  background: #f44336 !important;
+  color: white;
+}
+
+/* Button */
+button {
+  margin-top: 15px;
+  padding: 10px;
+  width: 100%;
+  border: none;
+  background:linear-gradient(135deg,#0a2dbcf3,#779af583);
+  color: white;
+  font-size: 16px;
+  cursor: pointer;
+  border-radius: 5px;
+}
+
+/* Hidden */
+.hide {
+  display: none;
+}
+
+/* Result */
+.result {
+  text-align: center;
+}
+
+/* Responsive */
+@media (max-width: 600px) {
+  .question {
+    font-size: 18px;
+  }
+}
+</style>
+
+</head>
+<body>
+
+<div class="app">
+
+  <!-- Start Screen -->
+  <div id="startScreen">
+    <h2>Quiz App</h2>
+    <button onclick="startQuiz()">Start Quiz</button>
+  </div>
+
+  <!-- Quiz Screen -->
+  <div id="quizScreen" class="hide">
+    <header>
+      <div>Question <span id="qNo">1</span>/50</div>
+      <div class="timer" id="timer">10</div>
+    </header>
+
+    <div class="question" id="question"></div>
+    <div id="options"></div>
+
+    <button onclick="nextQuestion()">Next</button>
+  </div>
+
+  <!-- Result Screen -->
+  <div id="resultScreen" class="hide result">
+    <h2>Your Score</h2>
+    <h1 id="score"></h1>
+    <button onclick="location.reload()">Play Again</button>
+  </div>
+
+</div>
+
+<script>
+
+const quizData = [
+{
+question:"भारत की मुद्रा क्या है?",
+options:["डॉलर","रुपया","येन","पाउंड"],
+answer:1
+},
+{
+question:"RBI का पूरा नाम क्या है?",
+options:["Reserve Bank of India","Royal Bank of India","Rural Bank of India","None"],
+answer:0
+},
+{
+question:"भारत का केंद्रीय बैंक कौन सा है?",
+options:["SBI","PNB","RBI","BOB"],
+answer:2
+},
+{
+question:"GST का पूरा नाम क्या है?",
+options:["Goods and Services Tax","General Sales Tax","Global Service Tax","None"],
+answer:0
+},
+{
+question:"भारत में नोट जारी करने का अधिकार किसके पास है?",
+options:["RBI","संसद","राष्ट्रपति","प्रधानमंत्री"],
+answer:0
+},
+{
+question:"भारत की सबसे बड़ी बैंक कौन सी है?",
+options:["PNB","SBI","BOB","Canara Bank"],
+answer:1
+},
+{
+question:"बैंक में जमा धन पर मिलने वाली राशि क्या कहलाती है?",
+options:["कर","ब्याज","लाभ","छूट"],
+answer:1
+},
+{
+question:"मुद्रास्फीति का अर्थ क्या है?",
+options:["कीमतों में वृद्धि","कीमतों में कमी","बेरोजगारी","उत्पादन"],
+answer:0
+},
+{
+question:"भारत की आर्थिक राजधानी कौन सी है?",
+options:["दिल्ली","मुंबई","कोलकाता","चेन्नई"],
+answer:1
+},
+{
+question:"SEBI का पूरा नाम क्या है?",
+options:["Securities and Exchange Board of India","State Exchange Bank of India","Stock Exchange Board India","None"],
+answer:0
+},
+{
+question:"भारत में शेयर बाजार का नियामक कौन है?",
+options:["RBI","SEBI","NITI Aayog","SBI"],
+answer:1
+},
+{
+question:"BSE कहाँ स्थित है?",
+options:["दिल्ली","मुंबई","कोलकाता","चेन्नई"],
+answer:1
+},
+{
+question:"NSE का पूरा नाम क्या है?",
+options:["National Stock Exchange","New Stock Exchange","National Security Exchange","None"],
+answer:0
+},
+{
+question:"भारत का पहला बैंक कौन सा था?",
+options:["बैंक ऑफ हिंदुस्तान","SBI","PNB","RBI"],
+answer:0
+},
+{
+question:"RBI की स्थापना कब हुई?",
+options:["1935","1947","1950","1969"],
+answer:0
+},
+{
+question:"बजट कौन प्रस्तुत करता है?",
+options:["प्रधानमंत्री","वित्त मंत्री","राष्ट्रपति","RBI गवर्नर"],
+answer:1
+},
+{
+question:"भारत में बजट कब प्रस्तुत किया जाता है?",
+options:["1 जनवरी","1 फरवरी","15 अगस्त","26 जनवरी"],
+answer:1
+},
+{
+question:"UPI का पूरा नाम क्या है?",
+options:["Unified Payments Interface","Universal Payment Interface","United Payment Interface","None"],
+answer:0
+},
+{
+question:"डिजिटल भुगतान प्रणाली का उदाहरण कौन सा है?",
+options:["UPI","Cheque","Draft","Cash"],
+answer:0
+},
+{
+question:"जन धन योजना किससे संबंधित है?",
+options:["बैंक खाते","खेती","शिक्षा","स्वास्थ्य"],
+answer:0
+},
+{
+question:"बचत खाते पर कौन देता है?",
+options:["ब्याज","कर","लाभांश","वेतन"],
+answer:0
+},
+{
+question:"FD का पूरा नाम क्या है?",
+options:["Fixed Deposit","Final Deposit","Fast Deposit","Full Deposit"],
+answer:0
+},
+{
+question:"भारत की सबसे बड़ी बीमा कंपनी कौन सी है?",
+options:["LIC","HDFC Life","ICICI Prudential","SBI Life"],
+answer:0
+},
+{
+question:"LIC का पूरा नाम क्या है?",
+options:["Life Insurance Corporation","Life India Corporation","Limited Insurance Company","None"],
+answer:0
+},
+{
+question:"GDP का पूरा नाम क्या है?",
+options:["Gross Domestic Product","General Domestic Product","Gross Development Product","None"],
+answer:0
+},
+{
+question:"GDP किसका माप है?",
+options:["देश की अर्थव्यवस्था","जनसंख्या","शिक्षा","स्वास्थ्य"],
+answer:0
+},
+{
+question:"भारत की योजना आयोग की जगह किस संस्था ने ली?",
+options:["RBI","NITI Aayog","SEBI","LIC"],
+answer:1
+},
+{
+question:"NITI Aayog की स्थापना कब हुई?",
+options:["2015","2014","2016","2010"],
+answer:0
+},
+{
+question:"आयकर किस प्रकार का कर है?",
+options:["प्रत्यक्ष कर","अप्रत्यक्ष कर","सेवा कर","GST"],
+answer:0
+},
+{
+question:"GST किस प्रकार का कर है?",
+options:["प्रत्यक्ष कर","अप्रत्यक्ष कर","आयकर","संपत्ति कर"],
+answer:1
+},
+{
+question:"भारत में GST कब लागू हुआ?",
+options:["2017","2015","2014","2020"],
+answer:0
+},
+{
+question:"रुपये का प्रतीक चिन्ह किसने डिजाइन किया?",
+options:["डी. उदय कुमार","अब्दुल कलाम","रतन टाटा","नंदन नीलेकणी"],
+answer:0
+},
+{
+question:"बेरोजगारी किससे संबंधित है?",
+options:["रोजगार की कमी","उत्पादन","निर्यात","आयात"],
+answer:0
+},
+{
+question:"निर्यात का अर्थ क्या है?",
+options:["विदेश में सामान बेचना","विदेश से सामान खरीदना","कर देना","बचत करना"],
+answer:0
+},
+{
+question:"आयात का अर्थ क्या है?",
+options:["विदेश से सामान खरीदना","विदेश में बेचना","बचत करना","निवेश करना"],
+answer:0
+},
+{
+question:"भारत का सबसे बड़ा निर्यात क्षेत्र कौन सा है?",
+options:["आईटी सेवाएँ","खेती","खनन","पर्यटन"],
+answer:0
+},
+{
+question:"काला धन किसे कहते हैं?",
+options:["अघोषित आय","बैंक जमा","सरकारी धन","निवेश"],
+answer:0
+},
+{
+question:"म्यूचुअल फंड किससे संबंधित है?",
+options:["निवेश","खेती","शिक्षा","स्वास्थ्य"],
+answer:0
+},
+{
+question:"शेयर बाजार में निवेशक क्या खरीदते हैं?",
+options:["शेयर","कर","बॉन्ड","GST"],
+answer:0
+},
+{
+question:"बॉन्ड क्या है?",
+options:["ऋण पत्र","शेयर","कर","बीमा"],
+answer:0
+},
+{
+question:"भारत की सबसे बड़ी सार्वजनिक क्षेत्र की बैंक कौन सी है?",
+options:["SBI","PNB","BOB","Union Bank"],
+answer:0
+},
+{
+question:"ATM का पूरा नाम क्या है?",
+options:["Automated Teller Machine","Automatic Transfer Machine","Auto Teller Money","None"],
+answer:0
+},
+{
+question:"क्रेडिट कार्ड से क्या किया जाता है?",
+options:["उधार भुगतान","नकद जमा","खाता बंद","बीमा"],
+answer:0
+},
+{
+question:"डेबिट कार्ड किस खाते से जुड़ा होता है?",
+options:["बैंक खाता","शेयर बाजार","बीमा","कर विभाग"],
+answer:0
+},
+{
+question:"महंगाई बढ़ने पर क्रय शक्ति पर क्या प्रभाव पड़ता है?",
+options:["घटती है","बढ़ती है","समान रहती है","दोगुनी हो जाती है"],
+answer:0
+},
+{
+question:"भारत में मुद्रा छापने का कार्य कौन करता है?",
+options:["RBI","SEBI","SBI","LIC"],
+answer:0
+},
+{
+question:"प्रधानमंत्री जन धन योजना कब शुरू हुई?",
+options:["2014","2015","2016","2017"],
+answer:0
+},
+{
+question:"डिजिटल इंडिया अभियान कब शुरू हुआ?",
+options:["2015","2014","2016","2017"],
+answer:0
+},
+{
+question:"भारत की आर्थिक वृद्धि का प्रमुख संकेतक क्या है?",
+options:["GDP","जनसंख्या","क्षेत्रफल","साक्षरता"],
+answer:0
+},
+{
+question:"बैंक का मुख्य कार्य क्या है?",
+options:["जमा लेना और ऋण देना","कानून बनाना","कर वसूलना","शिक्षा देना"],
+answer:0
+}
+];
+
+let index = 0;
+let score = 0;
+let timer;
+let timeLeft = 10;
+
+function startQuiz() {
+  document.getElementById("startScreen").classList.add("hide");
+  document.getElementById("quizScreen").classList.remove("hide");
+  loadQuestion();
+}
+
+function loadQuestion() {
+  resetTimer();
+  let q = quizData[index];
+  document.getElementById("question").innerText = q.question;
+  document.getElementById("qNo").innerText = index + 1;
+
+  let optionsHTML = "";
+  q.options.forEach((opt, i) => {
+    optionsHTML += `<div class="option" onclick="selectOption(${i})">${opt}</div>`;
+  });
+
+  document.getElementById("options").innerHTML = optionsHTML;
+}
+
+function selectOption(selected) {
+  let correct = quizData[index].answer;
+  let options = document.querySelectorAll(".option");
+
+  options.forEach((opt, i) => {
+    if (i === correct) opt.classList.add("correct");
+    else if (i === selected) opt.classList.add("wrong");
+
+    opt.style.pointerEvents = "none";
+  });
+
+  if (selected === correct) score++;
+}
+
+function nextQuestion() {
+  index++;
+  if (index < quizData.length) {
+    loadQuestion();
+  } else {
+    showResult();
+  }
+}
+
+function showResult() {
+  document.getElementById("quizScreen").classList.add("hide");
+  document.getElementById("resultScreen").classList.remove("hide");
+  document.getElementById("score").innerText = score + " / " + quizData.length;
+}
+
+function resetTimer() {
+  clearInterval(timer);
+  timeLeft = 10;
+  document.getElementById("timer").innerText = timeLeft;
+
+  timer = setInterval(() => {
+    timeLeft--;
+    document.getElementById("timer").innerText = timeLeft;
+
+    if (timeLeft === 0) {
+      nextQuestion();
+    }
+  }, 1000);
+}
+
+</script>
+
+</body>
+</html>

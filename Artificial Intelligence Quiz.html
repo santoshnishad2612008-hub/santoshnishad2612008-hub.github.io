@@ -1,0 +1,355 @@
+<!DOCTYPE html>
+<html>
+<head>
+   <!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-KN4DRRWZ17"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-KN4DRRWZ17');
+</script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Artificial Intelligence Quiz</title>
+
+<style>
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: Arial;
+}
+
+body {
+  background: #f5f5f5;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+}
+
+/* Container */
+.app {
+  width: 95%;
+  max-width: 500px;
+  background: white;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+}
+
+/* Header */
+header {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 20px;
+}
+
+.timer {
+  background: #2196F3;
+  color: white;
+  padding: 5px 10px;
+  border-radius: 5px;
+}
+
+/* Question */
+.question {
+  font-size: 20px;
+  margin-bottom: 15px;
+}
+
+/* Options */
+.option {
+  background: #eee;
+  padding: 10px;
+  margin: 8px 0;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.option:hover {
+  background: #ddd;
+}
+
+.correct {
+  background: #4CAF50 !important;
+  color: white;
+}
+
+.wrong {
+  background: #f44336 !important;
+  color: white;
+}
+
+/* Button */
+button {
+  margin-top: 15px;
+  padding: 10px;
+  width: 100%;
+  border: none;
+ background:linear-gradient(135deg,#0a2dbcf3,#779af583);
+  color: white;
+  font-size: 16px;
+  cursor: pointer;
+  border-radius: 5px;
+}
+
+/* Hidden */
+.hide {
+  display: none;
+}
+
+/* Result */
+.result {
+  text-align: center;
+}
+
+/* Responsive */
+@media (max-width: 600px) {
+  .question {
+    font-size: 18px;
+  }
+}
+</style>
+
+</head>
+<body>
+
+<div class="app">
+
+  <!-- Start Screen -->
+  <div id="startScreen">
+    <h2>Quiz App</h2>
+    <button onclick="startQuiz()">Start Quiz</button>
+  </div>
+
+  <!-- Quiz Screen -->
+  <div id="quizScreen" class="hide">
+    <header>
+      <div>Question <span id="qNo">1</span>/106</div>
+      <div class="timer" id="timer">10</div>
+    </header>
+
+    <div class="question" id="question"></div>
+    <div id="options"></div>
+
+    <button onclick="nextQuestion()">Next</button>
+  </div>
+
+  <!-- Result Screen -->
+  <div id="resultScreen" class="hide result">
+    <h2>Your Score</h2>
+    <h1 id="score"></h1>
+    <button onclick="location.reload()">Play Again</button>
+  </div>
+
+</div>
+
+<script>
+const quizData = [
+
+{ question:"Artificial Intelligence (AI) का हिंदी में अर्थ क्या है?", options:["कृत्रिम बुद्धिमत्ता","मानव बुद्धिमत्ता","यांत्रिक शक्ति","डेटा विज्ञान"], answer:0 },
+{ question:"AI का मुख्य उद्देश्य क्या है?", options:["मनुष्यों को प्रतिस्थापित करना","मशीनों को बुद्धिमान बनाना","इंटरनेट चलाना","गेम खेलना"], answer:1 },
+{ question:"AI शब्द सबसे पहले किसने दिया?", options:["Alan Turing","John McCarthy","Einstein","Newton"], answer:1 },
+{ question:"AI का उपयोग किसमें होता है?", options:["केवल गेमिंग","केवल गणित","विभिन्न क्षेत्रों में","केवल शिक्षा"], answer:2 },
+{ question:"Machine Learning क्या है?", options:["डेटा से सीखने की तकनीक","कोड लिखने की भाषा","हार्डवेयर डिवाइस","नेटवर्क सिस्टम"], answer:0 },
+{ question:"Supervised Learning में क्या होता है?", options:["बिना डेटा के सीखना","लेबल्ड डेटा से सीखना","केवल टेस्टिंग","केवल कोडिंग"], answer:1 },
+{ question:"Unsupervised Learning में क्या होता है?", options:["लेबल्ड डेटा","अनलेबल्ड डेटा","कोडिंग","हार्डवेयर"], answer:1 },
+{ question:"Deep Learning किस पर आधारित है?", options:["Neural Networks","Database","Operating System","Cloud Storage"], answer:0 },
+{ question:"Neural Network किससे प्रेरित है?", options:["Computer","Human Brain","Internet","Mobile"], answer:1 },
+{ question:"AI का सबसे प्रसिद्ध उदाहरण क्या है?", options:["Calculator","Chatbot","Fan","Switch"], answer:1 },
+
+{ question:"Robotics AI का हिस्सा है?", options:["हाँ","नहीं","कभी-कभी","पता नहीं"], answer:0 },
+{ question:"AI में डेटा का क्या महत्व है?", options:["कोई नहीं","बहुत महत्वपूर्ण","थोड़ा","केवल गेम के लिए"], answer:1 },
+{ question:"NLP का पूरा नाम क्या है?", options:["Natural Language Processing","New Language Program","Network Level Protocol","None"], answer:0 },
+{ question:"AI का उपयोग कहाँ होता है?", options:["Medical","Education","Business","सभी जगह"], answer:3 },
+{ question:"ChatGPT किसका उदाहरण है?", options:["AI Model","Car","Phone","Robot Toy"], answer:0 },
+
+{ question:"AI सिस्टम क्या कर सकता है?", options:["सोच सकता है","केवल खेल सकता है","केवल लिख सकता है","कुछ नहीं"], answer:0 },
+{ question:"Reinforcement Learning में क्या होता है?", options:["Reward और punishment","केवल डेटा","केवल code","manual typing"], answer:0 },
+{ question:"AI का लक्ष्य क्या है?", options:["Human-like intelligence","Games बनाना","Internet बंद करना","Photos बनाना"], answer:0 },
+{ question:"Computer Vision क्या करता है?", options:["Text पढ़ता है","Images समझता है","Music बजाता है","Games बनाता है"], answer:1 },
+{ question:"AI में Algorithm क्या है?", options:["नियमों का सेट","एक मशीन","डेटा","इंटरनेट"], answer:0 },
+
+{ question:"Big Data का AI में क्या उपयोग है?", options:["कोई नहीं","Analysis","Decoration","Gaming"], answer:1 },
+{ question:"AI किस पर निर्भर करता है?", options:["Data","Water","Electricity","Books"], answer:0 },
+{ question:"Smart Assistant कौन है?", options:["Alexa","Table","Chair","Fan"], answer:0 },
+{ question:"AI में Training क्या है?", options:["सीखने की प्रक्रिया","सोने की प्रक्रिया","खाने की प्रक्रिया","चलने की प्रक्रिया"], answer:0 },
+{ question:"AI का भविष्य कैसा है?", options:["खत्म हो जाएगा","बहुत उज्ज्वल","कोई नहीं जानता","स्थिर"], answer:1 },
+
+{ question:"Python AI में क्यों उपयोग होता है?", options:["Easy language","Hard language","Game language","Music language"], answer:0 },
+{ question:"AI मॉडल क्या है?", options:["Trained system","Car","Phone","Book"], answer:0 },
+{ question:"Dataset क्या है?", options:["Data का collection","Game","Software","Hardware"], answer:0 },
+{ question:"Overfitting क्या है?", options:["Too much learning from data","No learning","Hardware issue","Internet issue"], answer:0 },
+{ question:"AI का उपयोग self-driving cars में होता है?", options:["हाँ","नहीं","कभी नहीं","पता नहीं"], answer:0 },
+
+{ question:"Speech Recognition क्या करता है?", options:["Voice को text में बदलता है","Image बनाता है","Game खेलता है","Music बनाता है"], answer:0 },
+{ question:"AI में Prediction क्या है?", options:["भविष्य का अनुमान","Past data delete करना","Game खेलना","Typing"], answer:0 },
+{ question:"AI का उपयोग Security में होता है?", options:["हाँ","नहीं","कभी-कभी","केवल offline"], answer:0 },
+{ question:"Face Recognition किसमें उपयोग होता है?", options:["Security","Cooking","Driving","Painting"], answer:0 },
+{ question:"AI किस क्षेत्र में revolution ला रहा है?", options:["हर क्षेत्र में","केवल sports","केवल music","केवल farming"], answer:0 },
+
+{ question:"AI का आधार क्या है?", options:["Mathematics","Cooking","Driving","Painting"], answer:0 },
+{ question:"Machine Learning AI का हिस्सा है?", options:["हाँ","नहीं","कभी-कभी","पता नहीं"], answer:0 },
+{ question:"AI में classification क्या है?", options:["डेटा को categories में बाँटना","डेटा delete करना","Game बनाना","Typing"], answer:0 },
+{ question:"AI में regression क्या है?", options:["Numerical prediction","Image editing","Music playing","Chatting"], answer:0 },
+{ question:"AI में testing क्यों होती है?", options:["Model check करने के लिए","Game खेलने के लिए","Internet चलाने के लिए","Photos के लिए"], answer:0 },
+
+{ question:"AI का उपयोग healthcare में कैसे होता है?", options:["Diagnosis में","Cooking में","Driving में","Painting में"], answer:0 },
+{ question:"AI का सबसे बड़ा लाभ क्या है?", options:["Automation","Confusion","Delay","Loss"], answer:0 },
+{ question:"AI क्या replace कर सकता है?", options:["कुछ repetitive काम","सब कुछ","Internet","Books"], answer:0 },
+{ question:"AI में bias क्या होता है?", options:["गलत निर्णय","Speed","Hardware","Software"], answer:0 },
+{ question:"AI ethics क्या है?", options:["AI के नियम","Game rules","Music rules","Sports rules"], answer:0 },
+
+{ question:"AI में learning rate क्या होता है?", options:["सीखने की speed","Internet speed","Computer speed","Game speed"], answer:0 },
+{ question:"AI का उपयोग chatbot में क्यों होता है?", options:["User interaction","Cooking","Driving","Painting"], answer:0 },
+{ question:"AI किसे imitate करने की कोशिश करता है?", options:["Human intelligence","Machines","Books","Cars"], answer:0 },
+{ question:"AI में clustering क्या है?", options:["Similar data group करना","Delete data","Write code","Play game"], answer:0 },
+{ question:"AI में pattern recognition क्या है?", options:["Patterns पहचानना","Game खेलना","Typing","Cooking"], answer:0 },
+
+{ question:"AI का उपयोग recommendation systems में होता है?", options:["हाँ","नहीं","कभी नहीं","पता नहीं"], answer:0 },
+{ question:"Netflix recommendations किस पर आधारित हैं?", options:["AI","Manual work","Books","Cars"], answer:0 },
+{ question:"AI में GPU का उपयोग क्यों होता है?", options:["Fast computation","Slow work","Decoration","Sound"], answer:0 },
+{ question:"AI का उपयोग fraud detection में होता है?", options:["हाँ","नहीं","कभी-कभी","केवल offline"], answer:0 },
+{ question:"AI किस प्रकार की technology है?", options:["Advanced technology","Old technology","Broken tech","None"], answer:0 },
+
+{ question:"AI का मुख्य component क्या है?", options:["Data","Water","Fire","Wood"], answer:0 },
+{ question:"AI में training dataset क्या होता है?", options:["Training के लिए data","Game","Music","Image"], answer:0 },
+{ question:"AI का उपयोग agriculture में कैसे होता है?", options:["Smart farming","Cooking","Driving","Painting"], answer:0 },
+{ question:"AI में robotics क्या है?", options:["Machines with intelligence","Books","Cars","Music"], answer:0 },
+{ question:"AI का उपयोग education में कैसे होता है?", options:["Smart learning","Cooking","Driving","Painting"], answer:0 },
+
+{ question:"AI में decision making क्या है?", options:["Decision लेना","Game खेलना","Typing","Cooking"], answer:0 },
+{ question:"AI किस भाषा में ज्यादा develop होता है?", options:["Python","HTML","CSS","SQL only"], answer:0 },
+{ question:"AI में supervised learning के लिए क्या जरूरी है?", options:["Labels","Internet","Games","Music"], answer:0 },
+{ question:"AI में unsupervised learning का output क्या होता है?", options:["Clusters","Games","Songs","Videos"], answer:0 },
+{ question:"AI का उपयोग spam detection में होता है?", options:["हाँ","नहीं","कभी नहीं","पता नहीं"], answer:0 },
+
+{ question:"AI में natural language processing (NLP) का उपयोग किस लिए होता है?", options:["भाषा समझने के लिए","गेम खेलने के लिए","हार्डवेयर बनाने के लिए","नेटवर्किंग के लिए"], answer:0 },
+{ question:"AI में image recognition क्या करता है?", options:["चित्र पहचानना","संगीत बजाना","कोड लिखना","डेटा हटाना"], answer:0 },
+{ question:"AI में data preprocessing क्यों किया जाता है?", options:["डेटा को साफ और तैयार करने के लिए","डेटा delete करने के लिए","game खेलने के लिए","internet बंद करने के लिए"], answer:0 },
+{ question:"AI में feature selection क्या है?", options:["महत्वपूर्ण data चुनना","game चुनना","music चुनना","internet चुनना"], answer:0 },
+{ question:"AI में model accuracy क्या दर्शाती है?", options:["सही prediction की दर","speed","memory","size"], answer:0 },
+
+{ question:"AI में training और testing data का अनुपात सामान्यतः क्या होता है?", options:["80:20","50:50","20:80","100:0"], answer:0 },
+{ question:"AI में loss function का उपयोग क्यों होता है?", options:["Error मापने के लिए","Game बनाने के लिए","Image बनाने के लिए","Music के लिए"], answer:0 },
+{ question:"AI में optimization का उद्देश्य क्या है?", options:["Error कम करना","Game खेलना","Data हटाना","Internet चलाना"], answer:0 },
+{ question:"AI में backpropagation क्या है?", options:["Neural network training की विधि","Game technique","Hardware process","Network cable"], answer:0 },
+{ question:"AI में epochs क्या होते हैं?", options:["Training cycles","Games","Images","Videos"], answer:0 },
+
+{ question:"AI में overfitting को कैसे रोकते हैं?", options:["Regularization से","Internet से","Hardware से","Game से"], answer:0 },
+{ question:"AI में underfitting क्या होता है?", options:["Model का कम सीखना","ज्यादा सीखना","internet slow होना","data delete होना"], answer:0 },
+{ question:"AI में CNN का उपयोग कहाँ होता है?", options:["Image processing","Music","Text writing","Database"], answer:0 },
+{ question:"CNN का full form क्या है?", options:["Convolutional Neural Network","Central Node Network","Core Neural Node","None"], answer:0 },
+{ question:"RNN का उपयोग कहाँ होता है?", options:["Sequence data में","Images में","Hardware में","Games में"], answer:0 },
+
+{ question:"AI में reinforcement learning में agent क्या होता है?", options:["Decision लेने वाला system","Game","Data","Image"], answer:0 },
+{ question:"AI में environment क्या होता है?", options:["जिससे agent interact करता है","Game","Code","Memory"], answer:0 },
+{ question:"AI में reward क्या होता है?", options:["Positive feedback","Error","Data loss","Virus"], answer:0 },
+{ question:"AI में deep learning क्यों powerful है?", options:["Large data handle कर सकता है","Slow है","Limited है","Old है"], answer:0 },
+{ question:"AI में gradient descent क्या करता है?", options:["Error minimize करता है","Game बनाता है","Image बनाता है","Music चलाता है"], answer:0 },
+
+{ question:"AI का उपयोग speech assistant में क्यों होता है?", options:["Voice commands के लिए","Game के लिए","Hardware के लिए","Painting के लिए"], answer:0 },
+{ question:"AI में chatbot किस तकनीक पर आधारित होता है?", options:["NLP","GPS","HTML","USB"], answer:0 },
+{ question:"AI में knowledge representation क्या है?", options:["Information को store करना","Game बनाना","Music बनाना","Image हटाना"], answer:0 },
+{ question:"AI में inference क्या होता है?", options:["Conclusion निकालना","Data delete करना","Game खेलना","Typing"], answer:0 },
+{ question:"AI का उपयोग autonomous drones में होता है?", options:["हाँ","नहीं","कभी नहीं","पता नहीं"], answer:0 },
+
+{ question:"AI में sensors का उपयोग क्यों होता है?", options:["Data collect करने के लिए","Game के लिए","Music के लिए","Video के लिए"], answer:0 },
+{ question:"AI में IoT का क्या relation है?", options:["Smart devices connect करना","Game खेलना","Typing करना","Painting करना"], answer:0 },
+{ question:"AI में cloud computing का उपयोग क्यों होता है?", options:["Storage और processing के लिए","Game के लिए","Music के लिए","Image के लिए"], answer:0 },
+{ question:"AI में ethics का मतलब क्या है?", options:["नैतिक नियम","Game rules","Music rules","Code rules"], answer:0 },
+{ question:"AI में transparency क्यों जरूरी है?", options:["Decision समझाने के लिए","Game के लिए","Music के लिए","Image के लिए"], answer:0 },
+
+{ question:"AI में bias कैसे आता है?", options:["Biased data से","Electricity से","Internet से","Hardware से"], answer:0 },
+{ question:"AI का उपयोग banking में कहाँ होता है?", options:["Fraud detection","Music","Painting","Driving"], answer:0 },
+{ question:"AI में recommendation system किसमें उपयोग होता है?", options:["YouTube/Netflix","Car","Book","Pen"], answer:0 },
+{ question:"AI का future कैसा माना जाता है?", options:["बहुत advanced","खत्म","slow","limited"], answer:0 },
+{ question:"AI का सबसे बड़ा challenge क्या है?", options:["Data privacy","Game design","Music","Drawing"], answer:0 },
+
+{ question:"AI में real-time processing क्या है?", options:["तुरंत processing","slow processing","no processing","manual processing"], answer:0 },
+{ question:"AI में autonomous system क्या है?", options:["Self-operating system","Manual system","Broken system","Offline system"], answer:0 },
+{ question:"AI में robotics और AI का combination क्या कहलाता है?", options:["Intelligent robots","Simple machines","Manual robots","Static robots"], answer:0 },
+{ question:"AI का उपयोग smart cities में कैसे होता है?", options:["Traffic और monitoring","Cooking","Music","Painting"], answer:0 },
+{ question:"AI में data mining क्या है?", options:["Data से patterns निकालना","Game खेलना","Music बनाना","Image बनाना"], answer:0 },
+
+{ question:"AI में virtual assistant का उदाहरण क्या है?", options:["Siri","Table","Chair","Fan"], answer:0 }
+];
+
+
+let index = 0;
+let score = 0;
+let timer;
+let timeLeft = 10;
+
+function startQuiz() {
+  document.getElementById("startScreen").classList.add("hide");
+  document.getElementById("quizScreen").classList.remove("hide");
+  loadQuestion();
+}
+
+function loadQuestion() {
+  resetTimer();
+  let q = quizData[index];
+  document.getElementById("question").innerText = q.question;
+  document.getElementById("qNo").innerText = index + 1;
+
+  let optionsHTML = "";
+  q.options.forEach((opt, i) => {
+    optionsHTML += `<div class="option" onclick="selectOption(${i})">${opt}</div>`;
+  });
+
+  document.getElementById("options").innerHTML = optionsHTML;
+}
+
+function selectOption(selected) {
+  let correct = quizData[index].answer;
+  let options = document.querySelectorAll(".option");
+
+  options.forEach((opt, i) => {
+    if (i === correct) opt.classList.add("correct");
+    else if (i === selected) opt.classList.add("wrong");
+
+    opt.style.pointerEvents = "none";
+  });
+
+  if (selected === correct) score++;
+}
+
+function nextQuestion() {
+  index++;
+  if (index < quizData.length) {
+    loadQuestion();
+  } else {
+    showResult();
+  }
+}
+
+  function showResult() {
+  document.getElementById("quizScreen").classList.add("hide");
+  document.getElementById("resultScreen").classList.remove("hide");
+  document.getElementById("score").innerText = score + " / " + quizData.length;
+}
+
+function resetTimer() {
+  clearInterval(timer);
+  timeLeft = 10;
+  document.getElementById("timer").innerText = timeLeft;
+
+  timer = setInterval(() => {
+    timeLeft--;
+    document.getElementById("timer").innerText = timeLeft;
+
+    if (timeLeft === 0) {
+      nextQuestion();
+    }
+  }, 1000);
+}
+
+</script>
+
+</body>
+</html>

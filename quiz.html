@@ -1,0 +1,478 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-KN4DRRWZ17"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-KN4DRRWZ17');
+</script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Quiz App</title>
+
+<style>
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: Arial;
+}
+
+body {
+  background: #f5f5f5;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+}
+
+/* Container */
+.app {
+  width: 95%;
+  max-width: 500px;
+  background: white;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+}
+
+/* Header */
+header {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 20px;
+}
+
+.timer {
+  background: #2196F3;
+  color: white;
+  padding: 5px 10px;
+  border-radius: 5px;
+}
+
+/* Question */
+.question {
+  font-size: 20px;
+  margin-bottom: 15px;
+}
+
+/* Options */
+.option {
+  background: #eee;
+  padding: 10px;
+  margin: 8px 0;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.option:hover {
+  background: #ddd;
+}
+
+.correct {
+  background: #4CAF50 !important;
+  color: white;
+}
+
+.wrong {
+  background: #f44336 !important;
+  color: white;
+}
+
+/* Button */
+button {
+  margin-top: 15px;
+  padding: 10px;
+  width: 100%;
+  border: none;
+ background:linear-gradient(135deg,#0a2dbcf3,#779af583);
+  color: white;
+  font-size: 16px;
+  cursor: pointer;
+  border-radius: 5px;
+}
+
+/* Hidden */
+.hide {
+  display: none;
+}
+
+/* Result */
+.result {
+  text-align: center;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .question {
+    font-size: 18px;
+  }
+}
+</style>
+
+</head>
+<body>
+
+<div class="app">
+
+  <!-- Start Screen -->
+  <div id="startScreen">
+    <h2>Quiz App</h2>
+    <button onclick="startQuiz()">Start Quiz</button>
+  </div>
+
+  <!-- Quiz Screen -->
+  <div id="quizScreen" class="hide">
+    <header>
+      <div>Question <span id="qNo">1</span>/5</div>
+      <div class="timer" id="timer">10</div>
+    </header>
+
+    <div class="question" id="question"></div>
+    <div id="options"></div>
+
+    <button onclick="nextQuestion()">Next</button>
+  </div>
+
+  <!-- Result Screen -->
+  <div id="resultScreen" class="hide result">
+    <h2>Your Score</h2>
+    <h1 id="score"></h1>
+    <button onclick="location.reload()">Play Again</button>
+  </div>
+
+</div>
+
+<script>const quizData = [
+{
+question:"भारत की राजधानी क्या है?",
+options:["मुंबई","नई दिल्ली","कोलकाता","चेन्नई"],
+answer:1
+},
+{
+question:"भारत का राष्ट्रीय पशु कौन है?",
+options:["शेर","बाघ","हाथी","मोर"],
+answer:1
+},
+{
+question:"भारत का राष्ट्रीय पक्षी कौन है?",
+options:["कबूतर","तोता","मोर","हंस"],
+answer:2
+},
+{
+question:"भारत का राष्ट्रीय फूल कौन सा है?",
+options:["गुलाब","कमल","गेंदा","चमेली"],
+answer:1
+},
+{
+question:"ताजमहल कहाँ स्थित है?",
+options:["दिल्ली","आगरा","जयपुर","लखनऊ"],
+answer:1
+},
+{
+question:"भारत की सबसे लंबी नदी कौन सी है?",
+options:["गंगा","यमुना","गोदावरी","नर्मदा"],
+answer:0
+},
+{
+question:"विश्व का सबसे ऊँचा पर्वत कौन सा है?",
+options:["K2","माउंट एवरेस्ट","कंचनजंगा","अरावली"],
+answer:1
+},
+{
+question:"भारत का स्वतंत्रता दिवस कब मनाया जाता है?",
+options:["15 अगस्त","26 जनवरी","2 अक्टूबर","14 नवंबर"],
+answer:0
+},
+{
+question:"गांधी जी का जन्म कब हुआ था?",
+options:["1869","1870","1885","1890"],
+answer:0
+},
+{
+question:"भारत का संविधान कब लागू हुआ?",
+options:["1947","1950","1949","1952"],
+answer:1
+},
+{
+question:"पानी का रासायनिक सूत्र क्या है?",
+options:["CO2","H2O","O2","NaCl"],
+answer:1
+},
+{
+question:"सूर्य एक क्या है?",
+options:["ग्रह","उपग्रह","तारा","धूमकेतु"],
+answer:2
+},
+{
+question:"मानव शरीर में रक्त कौन पंप करता है?",
+options:["फेफड़ा","हृदय","मस्तिष्क","गुर्दा"],
+answer:1
+},
+{
+question:"CPU का पूरा नाम क्या है?",
+options:["Central Processing Unit","Computer Process Unit","Control Unit","None"],
+answer:0
+},
+{
+question:"HTML का उपयोग किस लिए होता है?",
+options:["वेब पेज","गेम","OS","Database"],
+answer:0
+},
+{
+question:"कंप्यूटर का जनक किसे कहा जाता है?",
+options:["चार्ल्स बैबेज","बिल गेट्स","स्टीव जॉब्स","न्यूटन"],
+answer:0
+},
+{
+question:"भारत की मुद्रा क्या है?",
+options:["डॉलर","रुपया","येन","पाउंड"],
+answer:1
+},
+{
+question:"RBI का पूरा नाम क्या है?",
+options:["Reserve Bank of India","Royal Bank India","Rural Bank India","None"],
+answer:0
+},
+{
+question:"भारत का सबसे बड़ा राज्य कौन सा है?",
+options:["उत्तर प्रदेश","राजस्थान","मध्य प्रदेश","बिहार"],
+answer:1
+},
+{
+question:"भारत का सबसे छोटा राज्य कौन सा है?",
+options:["गोवा","सिक्किम","त्रिपुरा","मणिपुर"],
+answer:0
+},
+{
+question:"भारत का राष्ट्रीय खेल क्या है?",
+options:["हॉकी","क्रिकेट","फुटबॉल","कबड्डी"],
+answer:0
+},
+{
+question:"विश्व पर्यावरण दिवस कब मनाया जाता है?",
+options:["5 जून","21 जून","15 अगस्त","2 अक्टूबर"],
+answer:0
+},
+{
+question:"विश्व का सबसे बड़ा महासागर कौन सा है?",
+options:["हिंद महासागर","प्रशांत महासागर","अटलांटिक","आर्कटिक"],
+answer:1
+},
+{
+question:"भारत में कुल कितने राज्य हैं?",
+options:["28","29","30","27"],
+answer:0
+},
+{
+question:"भारत के प्रथम राष्ट्रपति कौन थे?",
+options:["राजेंद्र प्रसाद","नेहरू","पटेल","अम्बेडकर"],
+answer:0
+},
+{
+question:"भारत के प्रथम प्रधानमंत्री कौन थे?",
+options:["गांधी","नेहरू","पटेल","राजेंद्र प्रसाद"],
+answer:1
+},
+{
+question:"चंद्रमा पर पहला व्यक्ति कौन गया था?",
+options:["नील आर्मस्ट्रांग","यूरी गागरिन","कल्पना चावला","राकेश शर्मा"],
+answer:0
+},
+{
+question:"भारत का राष्ट्रीय गान किसने लिखा?",
+options:["बंकिम चंद्र","रवीन्द्रनाथ टैगोर","प्रेमचंद","दिनकर"],
+answer:1
+},
+{
+question:"भारत का राष्ट्रीय गीत कौन सा है?",
+options:["जन गण मन","वंदे मातरम्","सारे जहाँ से अच्छा","ऐ मेरे वतन"],
+answer:1
+},
+{
+question:"भारत में कितने केंद्र शासित प्रदेश हैं?",
+options:["8","7","9","10"],
+answer:0
+},
+{
+question:"ग्रहों की संख्या कितनी है?",
+options:["7","8","9","10"],
+answer:1
+},
+{
+question:"सबसे निकटतम ग्रह कौन सा है?",
+options:["मंगल","शुक्र","बुध","बृहस्पति"],
+answer:2
+},
+{
+question:"भारत का राष्ट्रीय वृक्ष कौन सा है?",
+options:["नीम","बरगद","पीपल","आम"],
+answer:1
+},
+{
+question:"भारत का राष्ट्रीय फल कौन सा है?",
+options:["केला","सेब","आम","अमरूद"],
+answer:2
+},
+{
+question:"भारत का राष्ट्रीय जलीय जीव कौन है?",
+options:["व्हेल","डॉल्फिन","शार्क","मगरमच्छ"],
+answer:1
+},
+{
+question:"किस ग्रह को लाल ग्रह कहा जाता है?",
+options:["शुक्र","मंगल","बुध","शनि"],
+answer:1
+},
+{
+question:"किस ग्रह के छल्ले होते हैं?",
+options:["शुक्र","शनि","मंगल","बुध"],
+answer:1
+},
+{
+question:"भारत छोड़ो आंदोलन कब शुरू हुआ?",
+options:["1942","1947","1930","1920"],
+answer:0
+},
+{
+question:"दांडी यात्रा किसने की थी?",
+options:["नेहरू","गांधी","पटेल","बोस"],
+answer:1
+},
+{
+question:"भारत का सर्वोच्च न्यायालय कहाँ है?",
+options:["मुंबई","दिल्ली","कोलकाता","चेन्नई"],
+answer:1
+},
+{
+question:"लोकसभा का कार्यकाल कितना होता है?",
+options:["4 वर्ष","5 वर्ष","6 वर्ष","7 वर्ष"],
+answer:1
+},
+{
+question:"भारत में मतदान की न्यूनतम आयु क्या है?",
+options:["16","18","21","25"],
+answer:1
+},
+{
+question:"विश्व का सबसे बड़ा देश कौन सा है?",
+options:["भारत","अमेरिका","रूस","चीन"],
+answer:2
+},
+{
+question:"विश्व का सबसे अधिक जनसंख्या वाला देश कौन सा है?",
+options:["भारत","चीन","अमेरिका","रूस"],
+answer:0
+},
+{
+question:"भारत का राष्ट्रीय कैलेंडर कौन सा है?",
+options:["विक्रम संवत","शक संवत","हिजरी","ग्रेगोरियन"],
+answer:1
+},
+{
+question:"ISRO का मुख्यालय कहाँ है?",
+options:["दिल्ली","मुंबई","बेंगलुरु","चेन्नई"],
+answer:2
+},
+{
+question:"भारत का राष्ट्रीय ध्वज किसने डिजाइन किया?",
+options:["गांधी","पिंगली वेंकैया","नेहरू","पटेल"],
+answer:1
+},
+{
+question:"पहला क्रिकेट विश्व कप किस देश ने जीता?",
+options:["भारत","ऑस्ट्रेलिया","वेस्टइंडीज","इंग्लैंड"],
+answer:2
+},
+{
+question:"भारत ने पहला क्रिकेट विश्व कप कब जीता?",
+options:["1983","2011","2007","1996"],
+answer:0
+},
+{
+question:"भारत का राष्ट्रीय प्रतीक किससे लिया गया है?",
+options:["अशोक स्तंभ","ताजमहल","कुतुब मीनार","लाल किला"],
+answer:0
+}
+];
+
+
+
+let index = 0;
+let score = 0;
+let timer;
+let timeLeft = 10;
+
+function startQuiz() {
+  document.getElementById("startScreen").classList.add("hide");
+  document.getElementById("quizScreen").classList.remove("hide");
+  loadQuestion();
+}
+
+function loadQuestion() {
+  resetTimer();
+  let q = quizData[index];
+  document.getElementById("question").innerText = q.question;
+  document.getElementById("qNo").innerText = index + 1;
+
+  let optionsHTML = "";
+  q.options.forEach((opt, i) => {
+    optionsHTML += `<div class="option" onclick="selectOption(${i})">${opt}</div>`;
+  });
+
+  document.getElementById("options").innerHTML = optionsHTML;
+}
+
+function selectOption(selected) {
+  let correct = quizData[index].answer;
+  let options = document.querySelectorAll(".option");
+
+  options.forEach((opt, i) => {
+    if (i === correct) opt.classList.add("correct");
+    else if (i === selected) opt.classList.add("wrong");
+
+    opt.style.pointerEvents = "none";
+  });
+
+  if (selected === correct) score++;
+}
+
+function nextQuestion() {
+  index++;
+  if (index < quizData.length) {
+    loadQuestion();
+  } else {
+    showResult();
+  }
+}
+
+function showResult() {
+  document.getElementById("quizScreen").classList.add("hide");
+  document.getElementById("resultScreen").classList.remove("hide");
+  document.getElementById("score").innerText = score + " / " + quizData.length;
+}
+
+function resetTimer() {
+  clearInterval(timer);
+  timeLeft = 10;
+  document.getElementById("timer").innerText = timeLeft;
+
+  timer = setInterval(() => {
+    timeLeft--;
+    document.getElementById("timer").innerText = timeLeft;
+
+    if (timeLeft === 0) {
+      nextQuestion();
+    }
+  }, 1000);
+}
+
+</script>
+
+</body>
+</html>

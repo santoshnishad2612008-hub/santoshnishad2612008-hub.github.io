@@ -1,0 +1,347 @@
+<!DOCTYPE html>
+<html>
+<head>
+   <!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-KN4DRRWZ17"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-KN4DRRWZ17');
+</script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title> viseshan Quiz </title>
+
+<style>
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: Arial;
+}
+
+body {
+  background: #f5f5f5;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+}
+
+/* Container */
+.app {
+  width: 95%;
+  max-width: 500px;
+  background: white;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+}
+
+/* Header */
+header {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 20px;
+}
+
+.timer {
+  background: #2196F3;
+  color: white;
+  padding: 5px 10px;
+  border-radius: 5px;
+}
+
+/* Question */
+.question {
+  font-size: 20px;
+  margin-bottom: 15px;
+}
+
+/* Options */
+.option {
+  background: #eee;
+  padding: 10px;
+  margin: 8px 0;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.option:hover {
+  background: #ddd;
+}
+
+.correct {
+  background: #4CAF50 !important;
+  color: white;
+}
+
+.wrong {
+  background: #f44336 !important;
+  color: white;
+}
+
+/* Button */
+button {
+  margin-top: 15px;
+  padding: 10px;
+  width: 100%;
+  border: none;
+ background:linear-gradient(135deg,#0a2dbcf3,#779af583);
+  color: white;
+  font-size: 16px;
+  cursor: pointer;
+  border-radius: 5px;
+}
+
+/* Hidden */
+.hide {
+  display: none;
+}
+
+/* Result */
+.result {
+  text-align: center;
+}
+
+/* Responsive */
+@media (max-width: 600px) {
+  .question {
+    font-size: 18px;
+  }
+}
+</style>
+
+</head>
+<body>
+
+<div class="app">
+
+  <!-- Start Screen -->
+  <div id="startScreen">
+    <h2>Quiz App</h2>
+    <button onclick="startQuiz()">Start Quiz</button>
+  </div>
+
+  <!-- Quiz Screen -->
+  <div id="quizScreen" class="hide">
+    <header>
+      <div>Question <span id="qNo">1</span>/100</div>
+      <div class="timer" id="timer">10</div>
+    </header>
+
+    <div class="question" id="question"></div>
+    <div id="options"></div>
+
+    <button onclick="nextQuestion()">Next</button>
+  </div>
+
+  <!-- Result Screen -->
+  <div id="resultScreen" class="hide result">
+    <h2>Your Score</h2>
+    <h1 id="score"></h1>
+    <button onclick="location.reload()">Play Again</button>
+  </div>
+
+</div>
+
+<script>
+const quizData = [
+
+{ question:"‘लाल’ शब्द किसका विशेषण है?", options:["संज्ञा","विशेषण","क्रिया","सर्वनाम"], answer:1 },
+{ question:"‘सुंदर लड़की’ में ‘सुंदर’ क्या है?", options:["संज्ञा","विशेषण","क्रिया","अव्यय"], answer:1 },
+{ question:"विशेषण किसकी विशेषता बताता है?", options:["क्रिया","संज्ञा/सर्वनाम","अव्यय","वाक्य"], answer:1 },
+{ question:"‘मीठा आम’ में ‘मीठा’ क्या है?", options:["विशेषण","संज्ञा","क्रिया","सर्वनाम"], answer:0 },
+{ question:"‘बड़ा घर’ में विशेषण कौन है?", options:["घर","बड़ा","बड़े","घराना"], answer:1 },
+{ question:"‘काला घोड़ा’ में ‘काला’ क्या है?", options:["क्रिया","विशेषण","संज्ञा","सर्वनाम"], answer:1 },
+{ question:"विशेषण के कितने मुख्य प्रकार होते हैं?", options:["2","3","4","5"], answer:2 },
+{ question:"‘लंबा लड़का’ में विशेषण कौन है?", options:["लड़का","लंबा","लंबे","लड़कपन"], answer:1 },
+{ question:"‘अच्छा छात्र’ में ‘अच्छा’ क्या है?", options:["संज्ञा","विशेषण","क्रिया","अव्यय"], answer:1 },
+{ question:"‘तीन किताबें’ में कौन सा विशेषण है?", options:["तीन","किताबें","किताब","तीनों"], answer:0 },
+
+{ question:"‘सुंदर फूल’ में विशेषण पहचानिए।", options:["फूल","सुंदर","फूला","फूलों"], answer:1 },
+{ question:"‘गरम चाय’ में ‘गरम’ क्या है?", options:["संज्ञा","विशेषण","क्रिया","सर्वनाम"], answer:1 },
+{ question:"‘नीला आकाश’ में विशेषण कौन है?", options:["आकाश","नीला","नीले","आक"], answer:1 },
+{ question:"‘छोटा बच्चा’ में ‘छोटा’ क्या है?", options:["विशेषण","संज्ञा","क्रिया","अव्यय"], answer:0 },
+{ question:"‘मीठी आवाज’ में विशेषण कौन है?", options:["आवाज","मीठी","मीठा","आवाज़ें"], answer:1 },
+{ question:"विशेषण का उपयोग किसलिए होता है?", options:["क्रिया बताने","विशेषता बताने","नाम बताने","स्थान बताने"], answer:1 },
+{ question:"‘पुराना घर’ में विशेषण कौन है?", options:["घर","पुराना","पुराने","घराना"], answer:1 },
+{ question:"‘तीव्र गति’ में ‘तीव्र’ क्या है?", options:["संज्ञा","विशेषण","क्रिया","सर्वनाम"], answer:1 },
+{ question:"‘मीठे फल’ में विशेषण पहचानिए।", options:["फल","मीठे","मीठा","फलों"], answer:1 },
+{ question:"‘गर्म मौसम’ में ‘गर्म’ क्या है?", options:["विशेषण","क्रिया","संज्ञा","सर्वनाम"], answer:0 },
+
+{ question:"‘अंधेरा कमरा’ में विशेषण कौन है?", options:["कमरा","अंधेरा","अंधेरे","कमरे"], answer:1 },
+{ question:"‘सफेद कपड़ा’ में ‘सफेद’ क्या है?", options:["विशेषण","क्रिया","संज्ञा","अव्यय"], answer:0 },
+{ question:"‘ठंडी हवा’ में विशेषण कौन है?", options:["हवा","ठंडी","ठंडा","हवाएं"], answer:1 },
+{ question:"‘भारी बैग’ में ‘भारी’ क्या है?", options:["विशेषण","संज्ञा","क्रिया","सर्वनाम"], answer:0 },
+{ question:"‘तेज दौड़’ में विशेषण कौन है?", options:["दौड़","तेज","तेजी","दौड़ा"], answer:1 },
+
+{ question:"‘गहरी नदी’ में ‘गहरी’ क्या है?", options:["विशेषण","संज्ञा","क्रिया","सर्वनाम"], answer:0 },
+{ question:"‘मीठा रसगुल्ला’ में विशेषण कौन है?", options:["रसगुल्ला","मीठा","मीठे","रस"], answer:1 },
+{ question:"‘पुरानी किताब’ में ‘पुरानी’ क्या है?", options:["विशेषण","संज्ञा","क्रिया","अव्यय"], answer:0 },
+{ question:"‘लंबी सड़क’ में विशेषण पहचानिए।", options:["सड़क","लंबी","लंबा","सड़के"], answer:1 },
+{ question:"‘नया फोन’ में ‘नया’ क्या है?", options:["विशेषण","क्रिया","संज्ञा","सर्वनाम"], answer:0 },
+
+{ question:"‘मोटा लड़का’ में विशेषण कौन है?", options:["लड़का","मोटा","मोटी","लड़के"], answer:1 },
+{ question:"‘पतला पेड़’ में ‘पतला’ क्या है?", options:["विशेषण","संज्ञा","क्रिया","सर्वनाम"], answer:0 },
+{ question:"‘खूबसूरत दृश्य’ में विशेषण कौन है?", options:["दृश्य","खूबसूरत","खूबसूरती","दृश्यों"], answer:1 },
+{ question:"‘तेज हवा’ में ‘तेज’ क्या है?", options:["विशेषण","संज्ञा","क्रिया","सर्वनाम"], answer:0 },
+{ question:"‘मीठा पानी’ में विशेषण पहचानिए।", options:["पानी","मीठा","मीठे","जल"], answer:1 },
+
+{ question:"‘कठिन प्रश्न’ में ‘कठिन’ क्या है?", options:["विशेषण","संज्ञा","क्रिया","सर्वनाम"], answer:0 },
+{ question:"‘सरल भाषा’ में विशेषण कौन है?", options:["भाषा","सरल","सरली","भाषाएं"], answer:1 },
+{ question:"‘गंदी सड़क’ में ‘गंदी’ क्या है?", options:["विशेषण","संज्ञा","क्रिया","सर्वनाम"], answer:0 },
+{ question:"‘स्वच्छ पानी’ में विशेषण पहचानिए।", options:["पानी","स्वच्छ","स्वच्छता","जल"], answer:1 },
+{ question:"‘बुद्धिमान छात्र’ में विशेषण कौन है?", options:["छात्र","बुद्धिमान","बुद्धि","शिक्षा"], answer:1 },
+
+{ question:"‘कमल जैसा सुंदर’ में ‘सुंदर’ क्या है?", options:["विशेषण","क्रिया","संज्ञा","सर्वनाम"], answer:0 },
+{ question:"‘मीठा स्वाद’ में विशेषण कौन है?", options:["स्वाद","मीठा","मीठे","स्वादी"], answer:1 },
+{ question:"‘लाल गुलाब’ में ‘लाल’ क्या है?", options:["विशेषण","संज्ञा","क्रिया","सर्वनाम"], answer:0 },
+{ question:"‘भारी बारिश’ में विशेषण पहचानिए।", options:["बारिश","भारी","भारीपन","वर्षा"], answer:1 },
+{ question:"‘हल्का कपड़ा’ में ‘हल्का’ क्या है?", options:["विशेषण","संज्ञा","क्रिया","सर्वनाम"], answer:0 },
+
+{ question:"‘तेज धूप’ में विशेषण कौन है?", options:["धूप","तेज","तेजी","सूर्य"], answer:1 },
+{ question:"‘सस्ता सामान’ में ‘सस्ता’ क्या है?", options:["विशेषण","संज्ञा","क्रिया","सर्वनाम"], answer:0 },
+{ question:"‘महंगा फोन’ में विशेषण पहचानिए।", options:["फोन","महंगा","महंगी","डिवाइस"], answer:1 },
+{ question:"‘गहरा घाव’ में ‘गहरा’ क्या है?", options:["विशेषण","संज्ञा","क्रिया","सर्वनाम"], answer:0 },
+{ question:"‘मीठी मुस्कान’ में विशेषण कौन है?", options:["मुस्कान","मीठी","मीठा","हँसी"], answer:1 },
+
+{ question:"‘ऊँचा पहाड़’ में विशेषण पहचानिए।", options:["पहाड़","ऊँचा","ऊँची","पर्वत"], answer:1 },
+{ question:"‘गोल गेंद’ में ‘गोल’ क्या है?", options:["विशेषण","संज्ञा","क्रिया","सर्वनाम"], answer:0 },
+{ question:"‘सुंदर चित्र’ में विशेषण कौन है?", options:["चित्र","सुंदर","चित्रकारी","रंग"], answer:1 },
+{ question:"‘कठोर निर्णय’ में ‘कठोर’ क्या है?", options:["विशेषण","संज्ञा","क्रिया","सर्वनाम"], answer:0 },
+{ question:"‘नरम तकिया’ में विशेषण पहचानिए।", options:["तकिया","नरम","नर्मी","कपड़ा"], answer:1 },
+
+{ question:"‘स्वादिष्ट भोजन’ में विशेषण कौन है?", options:["भोजन","स्वादिष्ट","स्वाद","खाना"], answer:1 },
+{ question:"‘खुश बच्चा’ में ‘खुश’ क्या है?", options:["विशेषण","संज्ञा","क्रिया","सर्वनाम"], answer:0 },
+{ question:"‘गुस्सैल व्यक्ति’ में विशेषण पहचानिए।", options:["व्यक्ति","गुस्सैल","गुस्सा","लोग"], answer:1 },
+{ question:"‘दयालु शिक्षक’ में ‘दयालु’ क्या है?", options:["विशेषण","संज्ञा","क्रिया","सर्वनाम"], answer:0 },
+{ question:"‘बुद्धिमान व्यक्ति’ में विशेषण कौन है?", options:["व्यक्ति","बुद्धिमान","बुद्धि","मनुष्य"], answer:1 },
+
+
+{ question:"‘चमकदार हीरा’ में विशेषण कौन है?", options:["हीरा","चमकदार","चमक","रत्न"], answer:1 },
+{ question:"‘मीठा सेब’ में ‘मीठा’ क्या है?", options:["विशेषण","संज्ञा","क्रिया","सर्वनाम"], answer:0 },
+{ question:"‘गर्म रोटी’ में विशेषण पहचानिए।", options:["रोटी","गर्म","गर्मी","आटा"], answer:1 },
+{ question:"‘ऊँचा पेड़’ में ‘ऊँचा’ क्या है?", options:["विशेषण","संज्ञा","क्रिया","सर्वनाम"], answer:0 },
+{ question:"‘काला बादल’ में विशेषण कौन है?", options:["बादल","काला","काले","आसमान"], answer:1 },
+
+{ question:"‘तेज रफ्तार गाड़ी’ में विशेषण कौन है?", options:["गाड़ी","तेज","रफ्तार","वाहन"], answer:1 },
+{ question:"‘सुंदर चेहरा’ में ‘सुंदर’ क्या है?", options:["विशेषण","संज्ञा","क्रिया","सर्वनाम"], answer:0 },
+{ question:"‘भारी पत्थर’ में विशेषण पहचानिए।", options:["पत्थर","भारी","भारीपन","चट्टान"], answer:1 },
+{ question:"‘मीठा दूध’ में ‘मीठा’ क्या है?", options:["विशेषण","संज्ञा","क्रिया","सर्वनाम"], answer:0 },
+{ question:"‘नया स्कूल’ में विशेषण कौन है?", options:["स्कूल","नया","नई","विद्यार्थी"], answer:1 },
+
+{ question:"‘पुराना मंदिर’ में ‘पुराना’ क्या है?", options:["विशेषण","संज्ञा","क्रिया","सर्वनाम"], answer:0 },
+{ question:"‘ठंडी रात’ में विशेषण कौन है?", options:["रात","ठंडी","ठंडा","अंधेरा"], answer:1 },
+{ question:"‘खुबसूरत लड़की’ में विशेषण पहचानिए।", options:["लड़की","खुबसूरत","खूबसूरती","नारी"], answer:1 },
+{ question:"‘गहरा समुद्र’ में ‘गहरा’ क्या है?", options:["विशेषण","संज्ञा","क्रिया","सर्वनाम"], answer:0 },
+{ question:"‘हल्की बारिश’ में विशेषण कौन है?", options:["बारिश","हल्की","हल्का","पानी"], answer:1 },
+
+{ question:"‘तेज दौड़ता लड़का’ में विशेषण कौन है?", options:["लड़का","तेज","दौड़ता","दौड़"], answer:1 },
+{ question:"‘मीठी चाय’ में ‘मीठी’ क्या है?", options:["विशेषण","संज्ञा","क्रिया","सर्वनाम"], answer:0 },
+{ question:"‘स्वच्छ नदी’ में विशेषण पहचानिए।", options:["नदी","स्वच्छ","जल","प्रवाह"], answer:1 },
+{ question:"‘गंदा कपड़ा’ में ‘गंदा’ क्या है?", options:["विशेषण","संज्ञा","क्रिया","सर्वनाम"], answer:0 },
+{ question:"‘सस्ता खिलौना’ में विशेषण कौन है?", options:["खिलौना","सस्ता","खेल","बच्चा"], answer:1 },
+
+{ question:"‘महंगा बैग’ में ‘महंगा’ क्या है?", options:["विशेषण","संज्ञा","क्रिया","सर्वनाम"], answer:0 },
+{ question:"‘लंबा रास्ता’ में विशेषण पहचानिए।", options:["रास्ता","लंबा","लंबाई","सड़क"], answer:1 },
+{ question:"‘छोटा कमरा’ में ‘छोटा’ क्या है?", options:["विशेषण","संज्ञा","क्रिया","सर्वनाम"], answer:0 },
+{ question:"‘कठिन काम’ में विशेषण कौन है?", options:["काम","कठिन","कार्य","मेहनत"], answer:1 },
+{ question:"‘सरल प्रश्न’ में ‘सरल’ क्या है?", options:["विशेषण","संज्ञा","क्रिया","सर्वनाम"], answer:0 },
+
+{ question:"‘मीठा फलदार आम’ में विशेषण कौन है?", options:["आम","मीठा","फल","पेड़"], answer:1 },
+{ question:"‘ऊँची इमारत’ में ‘ऊँची’ क्या है?", options:["विशेषण","संज्ञा","क्रिया","सर्वनाम"], answer:0 },
+{ question:"‘नरम मिट्टी’ में विशेषण पहचानिए।", options:["मिट्टी","नरम","कठोर","धूल"], answer:1 },
+{ question:"‘कठोर पत्थर’ में ‘कठोर’ क्या है?", options:["विशेषण","संज्ञा","क्रिया","सर्वनाम"], answer:0 },
+{ question:"‘सुंदर बगीचा’ में विशेषण कौन है?", options:["बगीचा","सुंदर","फूल","पेड़"], answer:1 },
+
+{ question:"‘खुशहाल जीवन’ में ‘खुशहाल’ क्या है?", options:["विशेषण","संज्ञा","क्रिया","सर्वनाम"], answer:0 },
+{ question:"‘तेज प्रकाश’ में विशेषण कौन है?", options:["प्रकाश","तेज","रोशनी","दीप"], answer:1 },
+{ question:"‘भारी सामान’ में ‘भारी’ क्या है?", options:["विशेषण","संज्ञा","क्रिया","सर्वनाम"], answer:0 },
+{ question:"‘मीठे अंगूर’ में विशेषण पहचानिए।", options:["अंगूर","मीठे","मीठा","फल"], answer:1 },
+{ question:"‘गहरी खाई’ में ‘गहरी’ क्या है?", options:["विशेषण","संज्ञा","क्रिया","सर्वनाम"], answer:0 },
+
+{ question:"‘स्वच्छ शहर’ में विशेषण कौन है?", options:["शहर","स्वच्छ","नगर","गांव"], answer:1 },
+{ question:"‘पुरानी दीवार’ में ‘पुरानी’ क्या है?", options:["विशेषण","संज्ञा","क्रिया","सर्वनाम"], answer:0 },
+{ question:"‘तेज आवाज’ में विशेषण पहचानिए।", options:["आवाज","तेज","ध्वनि","शोर"], answer:1 },
+{ question:"‘हल्का सामान’ में ‘हल्का’ क्या है?", options:["विशेषण","संज्ञा","क्रिया","सर्वनाम"], answer:0 },
+{ question:"‘मीठा पकवान’ में विशेषण कौन है?", options:["पकवान","मीठा","खाना","व्यंजन"], answer:1 }
+];
+
+
+let index = 0;
+let score = 0;
+let timer;
+let timeLeft = 10;
+
+function startQuiz() {
+  document.getElementById("startScreen").classList.add("hide");
+  document.getElementById("quizScreen").classList.remove("hide");
+  loadQuestion();
+}
+
+function loadQuestion() {
+  resetTimer();
+  let q = quizData[index];
+  document.getElementById("question").innerText = q.question;
+  document.getElementById("qNo").innerText = index + 1;
+
+  let optionsHTML = "";
+  q.options.forEach((opt, i) => {
+    optionsHTML += `<div class="option" onclick="selectOption(${i})">${opt}</div>`;
+  });
+
+  document.getElementById("options").innerHTML = optionsHTML;
+}
+
+function selectOption(selected) {
+  let correct = quizData[index].answer;
+  let options = document.querySelectorAll(".option");
+
+  options.forEach((opt, i) => {
+    if (i === correct) opt.classList.add("correct");
+    else if (i === selected) opt.classList.add("wrong");
+
+    opt.style.pointerEvents = "none";
+  });
+
+  if (selected === correct) score++;
+}
+
+function nextQuestion() {
+  index++;
+  if (index < quizData.length) {
+    loadQuestion();
+  } else {
+    showResult();
+  }
+}
+
+  function showResult() {
+  document.getElementById("quizScreen").classList.add("hide");
+  document.getElementById("resultScreen").classList.remove("hide");
+  document.getElementById("score").innerText = score + " / " + quizData.length;
+}
+
+function resetTimer() {
+  clearInterval(timer);
+  timeLeft = 10;
+  document.getElementById("timer").innerText = timeLeft;
+
+  timer = setInterval(() => {
+    timeLeft--;
+    document.getElementById("timer").innerText = timeLeft;
+
+    if (timeLeft === 0) {
+      nextQuestion();
+    }
+  }, 1000);
+}
+
+</script>
+
+</body>
+</html>

@@ -1,0 +1,340 @@
+<!DOCTYPE html>
+<html>
+<head>
+     <!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-KN4DRRWZ17"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-KN4DRRWZ17');
+</script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title> Kriya Quiz </title>
+
+<style>
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: Arial;
+}
+
+body {
+  background: #f5f5f5;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+}
+
+/* Container */
+.app {
+  width: 95%;
+  max-width: 500px;
+  background: white;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+}
+
+/* Header */
+header {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 20px;
+}
+
+.timer {
+  background: #2196F3;
+  color: white;
+  padding: 5px 10px;
+  border-radius: 5px;
+}
+
+/* Question */
+.question {
+  font-size: 20px;
+  margin-bottom: 15px;
+}
+
+/* Options */
+.option {
+  background: #eee;
+  padding: 10px;
+  margin: 8px 0;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.option:hover {
+  background: #ddd;
+}
+
+.correct {
+  background: #4CAF50 !important;
+  color: white;
+}
+
+.wrong {
+  background: #f44336 !important;
+  color: white;
+}
+
+/* Button */
+button {
+  margin-top: 15px;
+  padding: 10px;
+  width: 100%;
+  border: none;
+ background:linear-gradient(135deg,#0a2dbcf3,#779af583);
+  color: white;
+  font-size: 16px;
+  cursor: pointer;
+  border-radius: 5px;
+}
+
+/* Hidden */
+.hide {
+  display: none;
+}
+
+/* Result */
+.result {
+  text-align: center;
+}
+
+/* Responsive */
+@media (max-width: 600px) {
+  .question {
+    font-size: 18px;
+  }
+}
+</style>
+
+</head>
+<body>
+
+<div class="app">
+
+  <!-- Start Screen -->
+  <div id="startScreen">
+    <h2>Quiz App</h2>
+    <button onclick="startQuiz()">Start Quiz</button>
+  </div>
+
+  <!-- Quiz Screen -->
+  <div id="quizScreen" class="hide">
+    <header>
+      <div>Question <span id="qNo">1</span>/100</div>
+      <div class="timer" id="timer">10</div>
+    </header>
+
+    <div class="question" id="question"></div>
+    <div id="options"></div>
+
+    <button onclick="nextQuestion()">Next</button>
+  </div>
+
+  <!-- Result Screen -->
+  <div id="resultScreen" class="hide result">
+    <h2>Your Score</h2>
+    <h1 id="score"></h1>
+    <button onclick="location.reload()">Play Again</button>
+  </div>
+
+</div>
+
+<script>
+const quizData = [
+{ question:"क्रिया किसे कहते हैं?", options:["काम करने वाले शब्द","संज्ञा","सर्वनाम","विशेषण"], answer:0 },
+{ question:"'लिखना' कौन सी क्रिया है?", options:["भूतकाल","वर्तमानकाल","भविष्यकाल","सभी"], answer:3 },
+{ question:"'वह खेलता है' में क्रिया कौन सी है?", options:["वह","खेलता","है","कोई नहीं"], answer:1 },
+{ question:"'गया' किस काल की क्रिया है?", options:["वर्तमान","भूत","भविष्य","संदेह"], answer:1 },
+{ question:"'खाना' शब्द क्या है?", options:["क्रिया","संज्ञा","विशेषण","सर्वनाम"], answer:0 },
+{ question:"'दौड़ना' किस प्रकार की क्रिया है?", options:["सकर्मक","अकर्मक","दोनों","कोई नहीं"], answer:2 },
+{ question:"'मैं पढ़ता हूँ' में क्रिया क्या है?", options:["मैं","पढ़ता","हूँ","कोई नहीं"], answer:1 },
+{ question:"'सोया' किस काल का उदाहरण है?", options:["भूतकाल","वर्तमान","भविष्य","अनिश्चित"], answer:0 },
+{ question:"क्रिया कितने प्रकार की होती है?", options:["2","3","4","5"], answer:1 },
+{ question:"'चलना' क्या है?", options:["क्रिया","संज्ञा","विशेषण","सर्वनाम"], answer:0 },
+
+{ question:"'लड़का खेल रहा है' में क्रिया कौन है?", options:["लड़का","खेल रहा है","है","कोई नहीं"], answer:1 },
+{ question:"'लिखा' किस काल की क्रिया है?", options:["भूतकाल","वर्तमान","भविष्य","संदेह"], answer:0 },
+{ question:"'खेलना' क्या दर्शाता है?", options:["कार्य","नाम","गुण","स्थान"], answer:0 },
+{ question:"'वह जाएगा' में क्रिया कौन सी है?", options:["वह","जाएगा","है","कोई नहीं"], answer:1 },
+{ question:"'हँसना' किस प्रकार की क्रिया है?", options:["अकर्मक","सकर्मक","दोनों","कोई नहीं"], answer:0 },
+{ question:"'पीना' क्या है?", options:["क्रिया","संज्ञा","विशेषण","सर्वनाम"], answer:0 },
+{ question:"'वह लिख रहा है' में काल कौन सा है?", options:["भूत","वर्तमान","भविष्य","अनिश्चित"], answer:1 },
+{ question:"'खाया' शब्द क्या है?", options:["क्रिया","संज्ञा","विशेषण","सर्वनाम"], answer:0 },
+{ question:"'उड़ना' किसका उदाहरण है?", options:["क्रिया","संज्ञा","विशेषण","सर्वनाम"], answer:0 },
+{ question:"'बोलना' किस प्रकार की क्रिया है?", options:["सकर्मक","अकर्मक","दोनों","कोई नहीं"], answer:2 },
+
+{ question:"'वह दौड़ता है' में क्रिया कौन सी है?", options:["वह","दौड़ता","है","कोई नहीं"], answer:1 },
+{ question:"'गया था' किस काल में है?", options:["भूतकाल","वर्तमान","भविष्य","संदेह"], answer:0 },
+{ question:"'सीखना' क्या है?", options:["क्रिया","संज्ञा","विशेषण","सर्वनाम"], answer:0 },
+{ question:"'लिख रहा था' कौन सा काल है?", options:["भूतकाल","वर्तमान","भविष्य","अनिश्चित"], answer:0 },
+{ question:"'देखना' क्या है?", options:["क्रिया","संज्ञा","विशेषण","सर्वनाम"], answer:0 },
+{ question:"'वह खाता है' में क्रिया कौन सी है?", options:["वह","खाता","है","कोई नहीं"], answer:1 },
+{ question:"'पढ़ना' किस प्रकार की क्रिया है?", options:["अकर्मक","सकर्मक","दोनों","कोई नहीं"], answer:1 },
+{ question:"'चला' किस काल की क्रिया है?", options:["भूतकाल","वर्तमान","भविष्य","अनिश्चित"], answer:0 },
+{ question:"'कूदना' क्या है?", options:["क्रिया","संज्ञा","विशेषण","सर्वनाम"], answer:0 },
+{ question:"'सोना' किस प्रकार की क्रिया है?", options:["अकर्मक","सकर्मक","दोनों","कोई नहीं"], answer:0 },
+
+{ question:"'वह सो रहा है' में क्रिया कौन सी है?", options:["वह","सो रहा है","है","कोई नहीं"], answer:1 },
+{ question:"'लिखेगा' किस काल का उदाहरण है?", options:["भूतकाल","वर्तमान","भविष्य","अनिश्चित"], answer:2 },
+{ question:"'हँसा' क्या है?", options:["क्रिया","संज्ञा","विशेषण","सर्वनाम"], answer:0 },
+{ question:"'पढ़ रहा है' किस काल में है?", options:["भूत","वर्तमान","भविष्य","अनिश्चित"], answer:1 },
+{ question:"'खेल रहा था' कौन सा काल है?", options:["भूतकाल","वर्तमान","भविष्य","अनिश्चित"], answer:0 },
+{ question:"'आना' क्या है?", options:["क्रिया","संज्ञा","विशेषण","सर्वनाम"], answer:0 },
+{ question:"'जाना' किस प्रकार की क्रिया है?", options:["अकर्मक","सकर्मक","दोनों","कोई नहीं"], answer:0 },
+{ question:"'लिखता है' में क्रिया कौन सी है?", options:["लिखता","है","दोनों","कोई नहीं"], answer:0 },
+{ question:"'उठना' क्या है?", options:["क्रिया","संज्ञा","विशेषण","सर्वनाम"], answer:0 },
+{ question:"'देखा' किस काल की क्रिया है?", options:["भूतकाल","वर्तमान","भविष्य","अनिश्चित"], answer:0 },
+
+{ question:"'वह गाता है' में क्रिया कौन सी है?", options:["वह","गाता","है","कोई नहीं"], answer:1 },
+{ question:"'गाएगा' किस काल का उदाहरण है?", options:["भूत","वर्तमान","भविष्य","अनिश्चित"], answer:2 },
+{ question:"'सीखा' क्या है?", options:["क्रिया","संज्ञा","विशेषण","सर्वनाम"], answer:0 },
+{ question:"'रोना' किस प्रकार की क्रिया है?", options:["अकर्मक","सकर्मक","दोनों","कोई नहीं"], answer:0 },
+{ question:"'चल रहा था' किस काल में है?", options:["भूतकाल","वर्तमान","भविष्य","अनिश्चित"], answer:0 },
+{ question:"'पी रहा है' में क्रिया कौन सी है?", options:["पी","रहा","है","कोई नहीं"], answer:0 },
+{ question:"'किया' किस काल की क्रिया है?", options:["भूतकाल","वर्तमान","भविष्य","अनिश्चित"], answer:0 },
+{ question:"'हँस रहा है' क्या है?", options:["क्रिया","संज्ञा","विशेषण","सर्वनाम"], answer:0 },
+{ question:"'लिखना' किस प्रकार की क्रिया है?", options:["सकर्मक","अकर्मक","दोनों","कोई नहीं"], answer:2 },
+{ question:"'बोल रहा था' किस काल में है?", options:["भूतकाल","वर्तमान","भविष्य","अनिश्चित"], answer:0 },
+
+{ question:"'वह आया' में क्रिया कौन सी है?", options:["वह","आया","है","कोई नहीं"], answer:1 },
+{ question:"'खाएगा' किस काल का उदाहरण है?", options:["भूत","वर्तमान","भविष्य","अनिश्चित"], answer:2 },
+{ question:"'सोया था' क्या है?", options:["क्रिया","संज्ञा","विशेषण","सर्वनाम"], answer:0 },
+{ question:"'उड़ रहा है' किस काल में है?", options:["भूत","वर्तमान","भविष्य","अनिश्चित"], answer:1 },
+{ question:"'लिख रहा है' में क्रिया कौन सी है?", options:["लिख","रहा","है","कोई नहीं"], answer:0 },
+{ question:"'पढ़ेगा' किस काल की क्रिया है?", options:["भूत","वर्तमान","भविष्य","अनिश्चित"], answer:2 },
+{ question:"'चल रहा है' क्या है?", options:["क्रिया","संज्ञा","विशेषण","सर्वनाम"], answer:0 },
+{ question:"'देख रहा था' किस काल में है?", options:["भूतकाल","वर्तमान","भविष्य","अनिश्चित"], answer:0 },
+{ question:"'खेलना' किस प्रकार की क्रिया है?", options:["सकर्मक","अकर्मक","दोनों","कोई नहीं"], answer:1 },
+{ question:"'गाना' क्या है?", options:["क्रिया","संज्ञा","विशेषण","सर्वनाम"], answer:0 },
+
+{ question:"'खाना खा रहा है' में क्रिया कौन सी है?", options:["खाना","खा","रहा है","कोई नहीं"], answer:1 },
+{ question:"'वह सोएगा' किस काल का उदाहरण है?", options:["भूतकाल","वर्तमान","भविष्य","अनिश्चित"], answer:2 },
+{ question:"'लिख रहा था' क्या दर्शाता है?", options:["पूर्ण भूतकाल","अपूर्ण भूतकाल","भविष्यकाल","वर्तमान"], answer:1 },
+{ question:"'चलना' किस प्रकार की क्रिया है?", options:["अकर्मक","सकर्मक","दोनों","कोई नहीं"], answer:0 },
+{ question:"'वह खेल चुका है' में क्रिया कौन सी है?", options:["खेल","चुका है","वह","कोई नहीं"], answer:1 },
+
+{ question:"'पीता है' किस काल का उदाहरण है?", options:["भूतकाल","वर्तमान","भविष्य","अनिश्चित"], answer:1 },
+{ question:"'गया होगा' क्या है?", options:["संदिग्ध भूतकाल","वर्तमान","भविष्य","निश्चित"], answer:0 },
+{ question:"'लिख चुका था' किस काल में है?", options:["पूर्ण भूतकाल","वर्तमान","भविष्य","अनिश्चित"], answer:0 },
+{ question:"'वह आता है' में क्रिया कौन सी है?", options:["वह","आता","है","कोई नहीं"], answer:1 },
+{ question:"'दौड़ रहा था' क्या है?", options:["अपूर्ण भूतकाल","पूर्ण भूतकाल","भविष्यकाल","वर्तमान"], answer:0 },
+
+{ question:"'सोएगा होगा' किस प्रकार की क्रिया है?", options:["संदिग्ध भविष्यकाल","वर्तमान","भूतकाल","निश्चित"], answer:0 },
+{ question:"'वह लिखेगा' में क्रिया कौन सी है?", options:["वह","लिखेगा","है","कोई नहीं"], answer:1 },
+{ question:"'खेल रहा है' क्या है?", options:["वर्तमान काल","भूतकाल","भविष्यकाल","संदेह काल"], answer:0 },
+{ question:"'पढ़ चुका है' किस काल का उदाहरण है?", options:["पूर्ण वर्तमान","भूतकाल","भविष्यकाल","अनिश्चित"], answer:0 },
+{ question:"'गाता रहेगा' क्या दर्शाता है?", options:["निरंतर भविष्यकाल","भूतकाल","वर्तमान","अनिश्चित"], answer:0 },
+
+{ question:"'वह आ रहा है' में क्रिया कौन सी है?", options:["आ","रहा है","वह","कोई नहीं"], answer:0 },
+{ question:"'किया जा रहा है' क्या है?", options:["कर्मवाच्य","कर्तृवाच्य","भाववाच्य","कोई नहीं"], answer:0 },
+{ question:"'लिखा जाता है' किस वाच्य का उदाहरण है?", options:["कर्तृवाच्य","कर्मवाच्य","भाववाच्य","अनिश्चित"], answer:1 },
+{ question:"'खाना खाया गया' क्या है?", options:["कर्मवाच्य","कर्तृवाच्य","भाववाच्य","कोई नहीं"], answer:0 },
+{ question:"'वह पढ़ता है' किस प्रकार की क्रिया है?", options:["सकर्मक","अकर्मक","दोनों","कोई नहीं"], answer:0 },
+
+{ question:"'हँस रहा था' किस काल में है?", options:["भूतकाल","वर्तमान","भविष्य","अनिश्चित"], answer:0 },
+{ question:"'उड़ता है' क्या है?", options:["अकर्मक क्रिया","सकर्मक क्रिया","दोनों","कोई नहीं"], answer:0 },
+{ question:"'लिख रहा होगा' किस काल का उदाहरण है?", options:["संभावित भविष्यकाल","भूतकाल","वर्तमान","निश्चित"], answer:0 },
+{ question:"'वह खेलता रहा' क्या दर्शाता है?", options:["निरंतर भूतकाल","वर्तमान","भविष्य","अनिश्चित"], answer:0 },
+{ question:"'सोया हुआ है' में क्रिया कौन सी है?", options:["सोया","हुआ है","वह","कोई नहीं"], answer:0 },
+
+{ question:"'चल चुका है' किस काल में है?", options:["पूर्ण वर्तमान","भूतकाल","भविष्य","अनिश्चित"], answer:0 },
+{ question:"'वह जाएगा होगा' क्या है?", options:["संदिग्ध भविष्यकाल","वर्तमान","भूतकाल","निश्चित"], answer:0 },
+{ question:"'पढ़ता रहा' क्या दर्शाता है?", options:["निरंतर भूतकाल","वर्तमान","भविष्य","अनिश्चित"], answer:0 },
+{ question:"'लिखा जा रहा है' किस वाच्य का उदाहरण है?", options:["कर्मवाच्य","कर्तृवाच्य","भाववाच्य","कोई नहीं"], answer:0 },
+{ question:"'वह सो रहा था' में क्रिया कौन सी है?", options:["सो","रहा था","वह","कोई नहीं"], answer:0 },
+
+{ question:"'गाया जाएगा' किस काल का उदाहरण है?", options:["भूतकाल","वर्तमान","भविष्यकाल","अनिश्चित"], answer:2 },
+{ question:"'खेलता था' क्या है?", options:["अपूर्ण भूतकाल","पूर्ण भूतकाल","वर्तमान","भविष्य"], answer:0 },
+{ question:"'लिखा हुआ है' क्या दर्शाता है?", options:["पूर्ण वर्तमान","भूतकाल","भविष्य","अनिश्चित"], answer:0 },
+{ question:"'वह दौड़ता रहेगा' किस काल का उदाहरण है?", options:["निरंतर भविष्यकाल","भूतकाल","वर्तमान","अनिश्चित"], answer:0 },
+{ question:"'पीया जा रहा था' क्या है?", options:["कर्मवाच्य","कर्तृवाच्य","भाववाच्य","कोई नहीं"], answer:0 },
+
+{ question:"'वह हँसता रहा' किस काल में है?", options:["निरंतर भूतकाल","वर्तमान","भविष्य","अनिश्चित"], answer:0 },
+{ question:"'लिख चुका होगा' क्या है?", options:["संदिग्ध भूतकाल","वर्तमान","भविष्य","निश्चित"], answer:0 },
+{ question:"'खाया जाता है' किस वाच्य का उदाहरण है?", options:["कर्मवाच्य","कर्तृवाच्य","भाववाच्य","अनिश्चित"], answer:0 },
+{ question:"'वह बोलता है' में क्रिया कौन सी है?", options:["वह","बोलता","है","कोई नहीं"], answer:1 }
+];
+
+
+let index = 0;
+let score = 0;
+let timer;
+let timeLeft = 10;
+
+function startQuiz() {
+  document.getElementById("startScreen").classList.add("hide");
+  document.getElementById("quizScreen").classList.remove("hide");
+  loadQuestion();
+}
+
+function loadQuestion() {
+  resetTimer();
+  let q = quizData[index];
+  document.getElementById("question").innerText = q.question;
+  document.getElementById("qNo").innerText = index + 1;
+
+  let optionsHTML = "";
+  q.options.forEach((opt, i) => {
+    optionsHTML += `<div class="option" onclick="selectOption(${i})">${opt}</div>`;
+  });
+
+  document.getElementById("options").innerHTML = optionsHTML;
+}
+
+function selectOption(selected) {
+  let correct = quizData[index].answer;
+  let options = document.querySelectorAll(".option");
+
+  options.forEach((opt, i) => {
+    if (i === correct) opt.classList.add("correct");
+    else if (i === selected) opt.classList.add("wrong");
+
+    opt.style.pointerEvents = "none";
+  });
+
+  if (selected === correct) score++;
+}
+
+function nextQuestion() {
+  index++;
+  if (index < quizData.length) {
+    loadQuestion();
+  } else {
+    showResult();
+  }
+}
+
+  function showResult() {
+  document.getElementById("quizScreen").classList.add("hide");
+  document.getElementById("resultScreen").classList.remove("hide");
+  document.getElementById("score").innerText = score + " / " + quizData.length;
+}
+
+function resetTimer() {
+  clearInterval(timer);
+  timeLeft = 10;
+  document.getElementById("timer").innerText = timeLeft;
+
+  timer = setInterval(() => {
+    timeLeft--;
+    document.getElementById("timer").innerText = timeLeft;
+
+    if (timeLeft === 0) {
+      nextQuestion();
+    }
+  }, 1000);
+}
+
+</script>
+
+</body>
+</html>

@@ -1,0 +1,731 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-KN4DRRWZ17"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-KN4DRRWZ17');
+</script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Noun Quiz </title>
+
+<style>
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: Arial;
+}
+
+body {
+  background: #f5f5f5;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+}
+
+/* Container */
+.app {
+  width: 95%;
+  max-width: 500px;
+  background: white;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+}
+
+/* Header */
+header {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 20px;
+}
+
+.timer {
+  background: #2196F3;
+  color: white;
+  padding: 5px 10px;
+  border-radius: 5px;
+}
+
+/* Question */
+.question {
+  font-size: 20px;
+  margin-bottom: 15px;
+}
+
+/* Options */
+.option {
+  background: #eee;
+  padding: 10px;
+  margin: 8px 0;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.option:hover {
+  background: #ddd;
+}
+
+.correct {
+  background: #4CAF50 !important;
+  color: white;
+}
+
+.wrong {
+  background: #f44336 !important;
+  color: white;
+}
+
+/* Button */
+button {
+  margin-top: 15px;
+  padding: 10px;
+  width: 100%;
+  border: none;
+ background:linear-gradient(135deg,#0a2dbcf3,#779af583);
+  color: white;
+  font-size: 16px;
+  cursor: pointer;
+  border-radius: 5px;
+}
+
+/* Hidden */
+.hide {
+  display: none;
+}
+
+/* Result */
+.result {
+  text-align: center;
+}
+
+/* Responsive */
+@media (max-width: 600px) {
+  .question {
+    font-size: 18px;
+  }
+}
+</style>
+
+</head>
+<body>
+
+<div class="app">
+
+  <!-- Start Screen -->
+  <div id="startScreen">
+    <h2>Quiz App</h2>
+    <button onclick="startQuiz()">Start Quiz</button>
+  </div>
+
+  <!-- Quiz Screen -->
+  <div id="quizScreen" class="hide">
+    <header>
+      <div>Question <span id="qNo">1</span>/100</div>
+      <div class="timer" id="timer">10</div>
+    </header>
+
+    <div class="question" id="question"></div>
+    <div id="options"></div>
+
+    <button onclick="nextQuestion()">Next</button>
+  </div>
+
+  <!-- Result Screen -->
+  <div id="resultScreen" class="hide result">
+    <h2>Your Score</h2>
+    <h1 id="score"></h1>
+    <button onclick="location.reload()">Play Again</button>
+  </div>
+
+</div>
+
+<script>
+const quizData = [
+
+  {
+    "question": "Which of the following is a noun?",
+    "options": ["Run", "Beautiful", "School", "Quickly"],
+    "answer": 2
+  },
+  {
+    "question": "Identify the noun in the sentence: 'The dog is barking loudly.'",
+    "options": ["The", "dog", "barking", "loudly"],
+    "answer": 1
+  },
+  {
+    "question": "Which is a proper noun?",
+    "options": ["city", "river", "India", "country"],
+    "answer": 2
+  },
+  {
+    "question": "Which is a common noun?",
+    "options": ["Delhi", "Ravi", "Teacher", "India"],
+    "answer": 2
+  },
+  {
+    "question": "Which noun is a person?",
+    "options": ["Table", "Teacher", "Book", "Pen"],
+    "answer": 1
+  },
+  {
+    "question": "Which noun is a place?",
+    "options": ["School", "Boy", "Dog", "Apple"],
+    "answer": 0
+  },
+  {
+    "question": "Which noun is a thing?",
+    "options": ["Chair", "Doctor", "Mumbai", "Girl"],
+    "answer": 0
+  },
+  {
+    "question": "Identify the noun in: 'My brother plays cricket.'",
+    "options": ["My", "brother", "plays", "cricket"],
+    "answer": 1
+  },
+  {
+    "question": "Which is a collective noun?",
+    "options": ["Crowd", "Boy", "Book", "Pen"],
+    "answer": 0
+  },
+  {
+    "question": "Which is an abstract noun?",
+    "options": ["Honesty", "Chair", "Dog", "School"],
+    "answer": 0
+  },
+  {
+    "question": "Which is a material noun?",
+    "options": ["Gold", "Team", "Honesty", "Teacher"],
+    "answer": 0
+  },
+  {
+    "question": "Choose the plural form of 'Book'.",
+    "options": ["Books", "Bookes", "Bookies", "Books'"],
+    "answer": 0
+  },
+  {
+    "question": "Choose the plural form of 'City'.",
+    "options": ["Citys", "Cities", "Cityes", "Citis"],
+    "answer": 1
+  },
+  {
+    "question": "Choose the singular form of 'Children'.",
+    "options": ["Child", "Childs", "Childrens", "Kid"],
+    "answer": 0
+  },
+  {
+    "question": "Which is a proper noun?",
+    "options": ["Mountain", "River", "Himalayas", "Lake"],
+    "answer": 2
+  },
+  {
+    "question": "Identify the noun in: 'The sun rises in the east.'",
+    "options": ["sun", "rises", "east", "the"],
+    "answer": 0
+  },
+  {
+    "question": "Which is an abstract noun?",
+    "options": ["Kindness", "Bottle", "Tree", "Road"],
+    "answer": 0
+  },
+  {
+    "question": "Which is a collective noun for soldiers?",
+    "options": ["Army", "Pack", "Flock", "Team"],
+    "answer": 0
+  },
+  {
+    "question": "Which is a material noun?",
+    "options": ["Silver", "Happiness", "Class", "Teacher"],
+    "answer": 0
+  },
+  {
+    "question": "Which word is a noun?",
+    "options": ["Quickly", "Run", "Garden", "Beautiful"],
+    "answer": 2
+  },
+  {
+    "question": "Identify the noun in: 'Rita bought a new dress.'",
+    "options": ["Rita", "bought", "new", "dress"],
+    "answer": 0
+  },
+  {
+    "question": "Which is a common noun?",
+    "options": ["London", "Doctor", "Asia", "Ganga"],
+    "answer": 1
+  },
+  {
+    "question": "Which is a proper noun?",
+    "options": ["Country", "Ocean", "Pacific Ocean", "Sea"],
+    "answer": 2
+  },
+  {
+    "question": "Which noun names an animal?",
+    "options": ["Tiger", "City", "Chair", "Teacher"],
+    "answer": 0
+  },
+  {
+    "question": "Choose the plural form of 'Leaf'.",
+    "options": ["Leafs", "Leaves", "Leafes", "Leavs"],
+    "answer": 1
+  },
+  {
+    "question": "Choose the plural form of 'Man'.",
+    "options": ["Mans", "Mens", "Men", "Manes"],
+    "answer": 2
+  },
+  {
+    "question": "Which is an abstract noun?",
+    "options": ["Bravery", "Table", "School", "Dog"],
+    "answer": 0
+  },
+  {
+    "question": "Which is a collective noun?",
+    "options": ["Bunch", "Pen", "Tree", "Road"],
+    "answer": 0
+  },
+  {
+    "question": "Which is a material noun?",
+    "options": ["Iron", "Class", "Beauty", "Girl"],
+    "answer": 0
+  },
+  {
+    "question": "Identify the noun in: 'The baby is sleeping.'",
+    "options": ["baby", "sleeping", "is", "the"],
+    "answer": 0
+  },
+  
+  {
+    "question": "Which is a proper noun?",
+    "options": ["boy", "city", "Ramesh", "river"],
+    "answer": 2
+  },
+  {
+    "question": "Which is a common noun?",
+    "options": ["India", "Delhi", "Teacher", "Ganga"],
+    "answer": 2
+  },
+  {
+    "question": "Identify the noun in: 'The cat drank milk.'",
+    "options": ["cat", "drank", "milk", "The"],
+    "answer": 0
+  },
+  {
+    "question": "Which is an abstract noun?",
+    "options": ["Love", "Table", "School", "Pen"],
+    "answer": 0
+  },
+  {
+    "question": "Which is a collective noun?",
+    "options": ["Team", "Boy", "Book", "Chair"],
+    "answer": 0
+  },
+  {
+    "question": "Which is a material noun?",
+    "options": ["Wood", "Class", "Honesty", "Doctor"],
+    "answer": 0
+  },
+  {
+    "question": "Choose the plural form of 'Woman'.",
+    "options": ["Womans", "Women", "Womanes", "Womens"],
+    "answer": 1
+  },
+  {
+    "question": "Choose the plural form of 'Foot'.",
+    "options": ["Foots", "Feet", "Feets", "Footes"],
+    "answer": 1
+  },
+  {
+    "question": "Choose the plural form of 'Tooth'.",
+    "options": ["Tooths", "Teeth", "Toothes", "Teeths"],
+    "answer": 1
+  },
+  {
+    "question": "Choose the plural form of 'Mouse'.",
+    "options": ["Mouses", "Mice", "Mousees", "Mices"],
+    "answer": 1
+  },
+  {
+    "question": "Which is a noun of place?",
+    "options": ["Hospital", "Teacher", "Dog", "Apple"],
+    "answer": 0
+  },
+  {
+    "question": "Which is a noun of person?",
+    "options": ["Doctor", "School", "River", "Book"],
+    "answer": 0
+  },
+  {
+    "question": "Which is a noun of thing?",
+    "options": ["Pen", "Boy", "Delhi", "Teacher"],
+    "answer": 0
+  },
+  {
+    "question": "Identify the noun in: 'Amit plays football daily.'",
+    "options": ["Amit", "plays", "football", "daily"],
+    "answer": 0
+  },
+  {
+    "question": "Which is a proper noun?",
+    "options": ["Mountain", "Everest", "River", "Country"],
+    "answer": 1
+  },
+  {
+    "question": "Which is an abstract noun?",
+    "options": ["Wisdom", "Chair", "Bag", "Car"],
+    "answer": 0
+  },
+  {
+    "question": "Which is a collective noun for birds?",
+    "options": ["Flock", "Army", "Team", "Class"],
+    "answer": 0
+  },
+  {
+    "question": "Which is a material noun?",
+    "options": ["Cotton", "Beauty", "Family", "Teacher"],
+    "answer": 0
+  },
+  {
+    "question": "Choose the singular form of 'Men'.",
+    "options": ["Man", "Mans", "Male", "Gentleman"],
+    "answer": 0
+  },
+  {
+    "question": "Choose the singular form of 'Mice'.",
+    "options": ["Mouse", "Mouses", "Rat", "Micee"],
+    "answer": 0
+  },
+  {
+    "question": "Which is a common noun?",
+    "options": ["Amazon", "Teacher", "Asia", "Ravi"],
+    "answer": 1
+  },
+  {
+    "question": "Identify the noun in: 'The children are happy.'",
+    "options": ["children", "are", "happy", "The"],
+    "answer": 0
+  },
+  {
+    "question": "Which is an abstract noun?",
+    "options": ["Freedom", "Bottle", "Desk", "Road"],
+    "answer": 0
+  },
+  {
+    "question": "Which is a collective noun?",
+    "options": ["Committee", "Book", "Pen", "Tree"],
+    "answer": 0
+  },
+  {
+    "question": "Which is a material noun?",
+    "options": ["Plastic", "Crowd", "Truth", "Player"],
+    "answer": 0
+  },
+  {
+    "question": "Choose the plural form of 'Life'.",
+    "options": ["Lifes", "Lives", "Lifees", "Lives"],
+    "answer": 1
+  },
+  {
+    "question": "Choose the plural form of 'Knife'.",
+    "options": ["Knifes", "Knives", "Knifees", "Knivs"],
+    "answer": 1
+  },
+  {
+    "question": "Which is a noun?",
+    "options": ["Happiness", "Quickly", "Run", "Beautiful"],
+    "answer": 0
+  },
+  {
+    "question": "Which is a proper noun?",
+    "options": ["planet", "city", "Earth", "river"],
+    "answer": 2
+  },
+  {
+    "question": "Identify the noun in: 'The teacher entered the classroom.'",
+    "options": ["teacher", "entered", "classroom", "the"],
+    "answer": 0
+  },
+  {
+    "question": "Which is a proper noun?",
+    "options": ["country", "India", "city", "river"],
+    "answer": 1
+  },
+  {
+    "question": "Which is a common noun?",
+    "options": ["Ravi", "London", "Teacher", "Asia"],
+    "answer": 2
+  },
+  {
+    "question": "Identify the noun in: 'The farmer works in the field.'",
+    "options": ["farmer", "works", "in", "the"],
+    "answer": 0
+  },
+  {
+    "question": "Which is an abstract noun?",
+    "options": ["Honesty", "Chair", "Dog", "Garden"],
+    "answer": 0
+  },
+  {
+    "question": "Which is a collective noun?",
+    "options": ["Army", "Book", "Pen", "Road"],
+    "answer": 0
+  },
+  {
+    "question": "Which is a material noun?",
+    "options": ["Steel", "Family", "Kindness", "Teacher"],
+    "answer": 0
+  },
+  {
+    "question": "Choose the plural form of 'Ox'.",
+    "options": ["Oxes", "Oxen", "Oxs", "Oxens"],
+    "answer": 1
+  },
+  {
+    "question": "Choose the plural form of 'Person'.",
+    "options": ["Persons", "People", "Persones", "Peoples"],
+    "answer": 1
+  },
+  {
+    "question": "Choose the singular form of 'Teeth'.",
+    "options": ["Tooth", "Teeths", "Toothe", "Teeth"],
+    "answer": 0
+  },
+  {
+    "question": "Choose the singular form of 'Feet'.",
+    "options": ["Foot", "Feets", "Foots", "Feete"],
+    "answer": 0
+  },
+  {
+    "question": "Which is a noun of place?",
+    "options": ["Library", "Doctor", "Tiger", "Apple"],
+    "answer": 0
+  },
+  {
+    "question": "Which is a noun of person?",
+    "options": ["Engineer", "School", "Book", "Garden"],
+    "answer": 0
+  },
+  {
+    "question": "Which is a noun of thing?",
+    "options": ["Laptop", "Teacher", "Delhi", "Doctor"],
+    "answer": 0
+  },
+  {
+    "question": "Identify the noun in: 'The baby drank milk.'",
+    "options": ["baby", "drank", "milk", "the"],
+    "answer": 0
+  },
+  {
+    "question": "Which is a proper noun?",
+    "options": ["ocean", "Pacific Ocean", "sea", "river"],
+    "answer": 1
+  },
+  {
+    "question": "Which is an abstract noun?",
+    "options": ["Patience", "Table", "Pen", "Bag"],
+    "answer": 0
+  },
+  {
+    "question": "Which is a collective noun for fish?",
+    "options": ["School", "Army", "Pack", "Crowd"],
+    "answer": 0
+  },
+  {
+    "question": "Which is a material noun?",
+    "options": ["Copper", "Beauty", "Team", "Friendship"],
+    "answer": 0
+  },
+  {
+    "question": "Choose the plural form of 'Wife'.",
+    "options": ["Wifes", "Wives", "Wifees", "Wifs"],
+    "answer": 1
+  },
+  {
+    "question": "Choose the plural form of 'Wolf'.",
+    "options": ["Wolfs", "Wolves", "Wolfes", "Wolvs"],
+    "answer": 1
+  },
+  {
+    "question": "Which is a common noun?",
+    "options": ["Nile", "Doctor", "Amazon", "Everest"],
+    "answer": 1
+  },
+  {
+    "question": "Identify the noun in: 'The singer entertained the audience.'",
+    "options": ["singer", "entertained", "audience", "the"],
+    "answer": 0
+  },
+  {
+    "question": "Which is an abstract noun?",
+    "options": ["Childhood", "Chair", "Car", "Road"],
+    "answer": 0
+  },
+  {
+    "question": "Which is a collective noun?",
+    "options": ["Jury", "Tree", "Pen", "Book"],
+    "answer": 0
+  },
+  {
+    "question": "Which is a material noun?",
+    "options": ["Wool", "Crowd", "Love", "Player"],
+    "answer": 0
+  },
+  {
+    "question": "Choose the singular form of 'Children'.",
+    "options": ["Child", "Childrens", "Childs", "Kid"],
+    "answer": 0
+  },
+  {
+    "question": "Choose the singular form of 'Women'.",
+    "options": ["Woman", "Womens", "Lady", "Female"],
+    "answer": 0
+  },
+  {
+    "question": "Which is a noun?",
+    "options": ["Freedom", "Quickly", "Beautiful", "Run"],
+    "answer": 0
+  },
+  {
+    "question": "Which is a proper noun?",
+    "options": ["planet", "Earth", "star", "moon"],
+    "answer": 1
+  },
+  {
+    "question": "Identify the noun in: 'The doctor treated the patient.'",
+    "options": ["doctor", "treated", "patient", "the"],
+    "answer": 0
+  },
+  {
+    "question": "Which is an abstract noun?",
+    "options": ["Justice", "Desk", "School", "Tree"],
+    "answer": 0
+  },
+  {
+    "question": "Which is a collective noun for wolves?",
+    "options": ["Pack", "Flock", "Herd", "Team"],
+    "answer": 0
+  },
+  {
+    "question": "Which is a material noun?",
+    "options": ["Leather", "Class", "Happiness", "Boy"],
+    "answer": 0
+  },
+  {
+    "question": "Choose the plural form of 'Hero'.",
+    "options": ["Heros", "Heroes", "Heroes", "Heroses"],
+    "answer": 1
+  },
+  {
+    "question": "Choose the plural form of 'Potato'.",
+    "options": ["Potatos", "Potatoes", "Potatoes", "Potatoses"],
+    "answer": 1
+  },
+  {
+    "question": "Which is a noun of place?",
+    "options": ["Museum", "Teacher", "Dog", "Apple"],
+    "answer": 0
+  },
+  {
+    "question": "Which is a noun of person?",
+    "options": ["Pilot", "Airport", "Bag", "Road"],
+    "answer": 0
+  },
+  {
+    "question": "Which is a noun of thing?",
+    "options": ["Mobile", "Doctor", "Ramesh", "Teacher"],
+    "answer": 0
+  },
+  {
+    "question": "Identify the noun in: 'The policeman caught the thief.'",
+    "options": ["policeman", "caught", "thief", "the"],
+    "answer": 0
+  },
+  {
+    "question": "Which is an abstract noun?",
+    "options": ["Friendship", "Bottle", "Garden", "School"],
+    "answer": 0
+  }
+
+];
+
+
+let index = 0;
+let score = 0;
+let timer;
+let timeLeft = 10;
+
+function startQuiz() {
+  document.getElementById("startScreen").classList.add("hide");
+  document.getElementById("quizScreen").classList.remove("hide");
+  loadQuestion();
+}
+
+function loadQuestion() {
+  resetTimer();
+  let q = quizData[index];
+  document.getElementById("question").innerText = q.question;
+  document.getElementById("qNo").innerText = index + 1;
+
+  let optionsHTML = "";
+  q.options.forEach((opt, i) => {
+    optionsHTML += `<div class="option" onclick="selectOption(${i})">${opt}</div>`;
+  });
+
+  document.getElementById("options").innerHTML = optionsHTML;
+}
+
+function selectOption(selected) {
+  let correct = quizData[index].answer;
+  let options = document.querySelectorAll(".option");
+
+  options.forEach((opt, i) => {
+    if (i === correct) opt.classList.add("correct");
+    else if (i === selected) opt.classList.add("wrong");
+
+    opt.style.pointerEvents = "none";
+  });
+
+  if (selected === correct) score++;
+}
+
+function nextQuestion() {
+  index++;
+  if (index < quizData.length) {
+    loadQuestion();
+  } else {
+    showResult();
+  }
+}
+
+  function showResult() {
+  document.getElementById("quizScreen").classList.add("hide");
+  document.getElementById("resultScreen").classList.remove("hide");
+  document.getElementById("score").innerText = score + " / " + quizData.length;
+}
+
+function resetTimer() {
+  clearInterval(timer);
+  timeLeft = 10;
+  document.getElementById("timer").innerText = timeLeft;
+
+  timer = setInterval(() => {
+    timeLeft--;
+    document.getElementById("timer").innerText = timeLeft;
+
+    if (timeLeft === 0) {
+      nextQuestion();
+    }
+  }, 1000);
+}
+
+</script>
+
+</body>
+</html>

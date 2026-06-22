@@ -1,0 +1,349 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-KN4DRRWZ17"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-KN4DRRWZ17');
+</script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Police Exam GK Quiz </title>
+
+<style>
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: Arial;
+}
+
+body {
+  background: #f5f5f5;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+}
+
+/* Container */
+.app {
+  width: 95%;
+  max-width: 500px;
+  background: white;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+}
+
+/* Header */
+header {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 20px;
+}
+
+.timer {
+  background: #2196F3;
+  color: white;
+  padding: 5px 10px;
+  border-radius: 5px;
+}
+
+/* Question */
+.question {
+  font-size: 20px;
+  margin-bottom: 15px;
+}
+
+/* Options */
+.option {
+  background: #eee;
+  padding: 10px;
+  margin: 8px 0;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.option:hover {
+  background: #ddd;
+}
+
+.correct {
+  background: #4CAF50 !important;
+  color: white;
+}
+
+.wrong {
+  background: #f44336 !important;
+  color: white;
+}
+
+/* Button */
+button {
+  margin-top: 15px;
+  padding: 10px;
+  width: 100%;
+  border: none;
+ background:linear-gradient(135deg,#0a2dbcf3,#779af583);
+  color: white;
+  font-size: 16px;
+  cursor: pointer;
+  border-radius: 5px;
+}
+
+/* Hidden */
+.hide {
+  display: none;
+}
+
+/* Result */
+.result {
+  text-align: center;
+}
+
+/* Responsive */
+@media (max-width: 600px) {
+  .question {
+    font-size: 18px;
+  }
+}
+</style>
+
+</head>
+<body>
+
+<div class="app">
+
+  <!-- Start Screen -->
+  <div id="startScreen">
+    <h2>Quiz App</h2>
+    <button onclick="startQuiz()">Start Quiz</button>
+  </div>
+
+  <!-- Quiz Screen -->
+  <div id="quizScreen" class="hide">
+    <header>
+      <div>Question <span id="qNo">1</span>/100</div>
+      <div class="timer" id="timer">10</div>
+    </header>
+
+    <div class="question" id="question"></div>
+    <div id="options"></div>
+
+    <button onclick="nextQuestion()">Next</button>
+  </div>
+
+  <!-- Result Screen -->
+  <div id="resultScreen" class="hide result">
+    <h2>Your Score</h2>
+    <h1 id="score"></h1>
+    <button onclick="location.reload()">Play Again</button>
+  </div>
+
+</div>
+
+<script>
+const quizData = [
+
+
+{ "question":"भारतीय संविधान का निर्माता किसे कहा जाता है?", "options":["महात्मा गांधी","डॉ. बी.आर. अंबेडकर","नेहरू","पटेल"], "answer":1 },
+{ "question":"भारत का राष्ट्रीय पक्षी कौन है?", "options":["मोर","तोता","कबूतर","हंस"], "answer":0 },
+{ "question":"भारत की राजधानी क्या है?", "options":["मुंबई","दिल्ली","कोलकाता","चेन्नई"], "answer":1 },
+{ "question":"भारत का राष्ट्रीय फूल कौन सा है?", "options":["गुलाब","कमल","सूरजमुखी","लिली"], "answer":1 },
+{ "question":"ताजमहल कहाँ स्थित है?", "options":["दिल्ली","आगरा","जयपुर","लखनऊ"], "answer":1 },
+{ "question":"भारत के प्रथम प्रधानमंत्री कौन थे?", "options":["गांधी जी","नेहरू","पटेल","अंबेडकर"], "answer":1 },
+{ "question":"भारत का सबसे बड़ा राज्य क्षेत्रफल में कौन सा है?", "options":["राजस्थान","उत्तर प्रदेश","मध्य प्रदेश","महाराष्ट्र"], "answer":0 },
+{ "question":"भारतीय मुद्रा क्या है?", "options":["डॉलर","येन","रुपया","पाउंड"], "answer":2 },
+{ "question":"भारत का राष्ट्रीय गान किसने लिखा?", "options":["बंकिम चंद्र","रवीन्द्रनाथ टैगोर","महादेवी वर्मा","प्रेमचंद"], "answer":1 },
+
+{ "question":"भारत का सबसे बड़ा ग्रह कौन सा है?", "options":["शनि","बृहस्पति","मंगल","पृथ्वी"], "answer":1 },
+{ "question":"गांधी जयंती कब मनाई जाती है?", "options":["2 अक्टूबर","15 अगस्त","26 जनवरी","14 नवंबर"], "answer":0 },
+{ "question":"भारत का राष्ट्रीय खेल कौन सा है?", "options":["क्रिकेट","हॉकी","फुटबॉल","कबड्डी"], "answer":1 },
+{ "question":"भारतीय संसद में कितने सदन होते हैं?", "options":["1","2","3","4"], "answer":1 },
+{ "question":"संविधान लागू कब हुआ?", "options":["1947","1950","1952","1949"], "answer":1 },
+{ "question":"भारत का सबसे लंबा नदी कौन है?", "options":["गंगा","यमुना","गोदावरी","कृष्णा"], "answer":0 },
+{ "question":"Qutub Minar कहाँ है?", "options":["आगरा","दिल्ली","जयपुर","भोपाल"], "answer":1 },
+{ "question":"भारतीय सेना का सर्वोच्च कमांडर कौन होता है?", "options":["प्रधानमंत्री","राष्ट्रपति","रक्षा मंत्री","सेना प्रमुख"], "answer":1 },
+{ "question":"भारत का राष्ट्रीय पशु (पहले) क्या था?", "options":["शेर","बाघ","हाथी","गैंडा"], "answer":0 },
+{ "question":"विज्ञान का जनक किसे कहा जाता है?", "options":["न्यूटन","गैलीलियो","आइंस्टीन","रमन"], "answer":0 },
+
+{ "question":"भारत का स्वतंत्रता दिवस कब मनाया जाता है?", "options":["26 जनवरी","15 अगस्त","2 अक्टूबर","1 मई"], "answer":1 },
+{ "question":"भारत का संविधान किसने लिखा?", "options":["संसद","संविधान सभा","सरकार","न्यायालय"], "answer":1 },
+{ "question":"सबसे छोटा महाद्वीप कौन सा है?", "options":["एशिया","यूरोप","ऑस्ट्रेलिया","अफ्रीका"], "answer":2 },
+{ "question":"सबसे बड़ा महासागर कौन सा है?", "options":["हिंद महासागर","अटलांटिक","प्रशांत","आर्कटिक"], "answer":2 },
+{ "question":"भारत का राष्ट्रीय पेड़ कौन सा है?", "options":["नीम","बरगद","पीपल","सागौन"], "answer":1 },
+
+{ "question":"1 रुपये में कितने पैसे होते हैं?", "options":["50","100","10","1000"], "answer":1 },
+{ "question":"भारत का सबसे ऊँचा पर्वत कौन सा है?", "options":["K2","कंचनजंगा","एवरेस्ट","नंदा देवी"], "answer":2 },
+{ "question":"भारत का सबसे बड़ा शहर जनसंख्या में?", "options":["दिल्ली","मुंबई","कोलकाता","चेन्नई"], "answer":1 },
+{ "question":"विश्व का सबसे बड़ा देश कौन सा है?", "options":["भारत","अमेरिका","रूस","चीन"], "answer":2 },
+{ "question":"भारत का सर्वोच्च न्यायालय कहाँ है?", "options":["मुंबई","दिल्ली","चेन्नई","कोलकाता"], "answer":1 },
+
+{ "question":"राष्ट्रीय ध्वज में कितने रंग होते हैं?", "options":["2","3","4","5"], "answer":1 },
+{ "question":"अशोक चक्र में कितनी तीलियाँ होती हैं?", "options":["18","22","24","26"], "answer":2 },
+{ "question":"भारत का पहला राष्ट्रपति कौन था?", "options":["नेहरू","राजेंद्र प्रसाद","पटेल","अंबेडकर"], "answer":1 },
+{ "question":"डॉ. बी.आर. अंबेडकर का जन्म कब हुआ?", "options":["1891","1885","1901","1875"], "answer":0 },
+{ "question":"पृथ्वी सूर्य का चक्कर कितने दिनों में लगाती है?", "options":["365","366","364","360"], "answer":0 },
+
+{ "question":"भारत का सबसे लंबा रेलवे प्लेटफॉर्म कहाँ है?", "options":["गोरखपुर","दिल्ली","मुंबई","पटना"], "answer":0 },
+{ "question":"भारतीय रिजर्व बैंक कब स्थापित हुआ?", "options":["1935","1947","1950","1925"], "answer":0 },
+{ "question":"UNO की स्थापना कब हुई?", "options":["1945","1950","1939","1960"], "answer":0 },
+{ "question":"भारत का सबसे बड़ा बांध कौन सा है?", "options":["भाखड़ा नांगल","हीराकुंड","सरदार सरोवर","टेहरी"], "answer":1 },
+{ "question":"कौन सा ग्रह लाल ग्रह कहलाता है?", "options":["शुक्र","मंगल","बुध","शनि"], "answer":1 },
+
+{ "question":"भारत का राष्ट्रीय फल कौन सा है?", "options":["सेब","आम","केला","अंगूर"], "answer":1 },
+{ "question":"भारत का सबसे बड़ा द्वीप कौन सा है?", "options":["अंडमान","लक्षद्वीप","श्रीलंका","मालदीव"], "answer":0 },
+{ "question":"गंगा नदी कहाँ से निकलती है?", "options":["यमुनोत्री","गंगोत्री","केदारनाथ","हरिद्वार"], "answer":1 },
+{ "question":"भारत का राष्ट्रीय पशु (वर्तमान) क्या है?", "options":["शेर","बाघ","हाथी","गैंडा"], "answer":1 },
+{ "question":"भारत का सबसे पुराना विश्वविद्यालय कौन सा है?", "options":["नालंदा","दिल्ली","काशी","पुणे"], "answer":0 },
+
+{ "question":"सूर्य से सबसे निकट ग्रह कौन सा है?", "options":["शुक्र","बुध","मंगल","पृथ्वी"], "answer":1 },
+{ "question":"भारत का सबसे लंबा बांध कौन सा है?", "options":["हीराकुंड","टेहरी","भाखड़ा","सरदार सरोवर"], "answer":0 },
+{ "question":"भारत का संविधान किस तारीख को अपनाया गया?", "options":["26 जनवरी 1950","26 नवंबर 1949","15 अगस्त 1947","2 अक्टूबर 1948"], "answer":1 },
+{ "question":"कौन सा राज्य 'धान का कटोरा' कहलाता है?", "options":["पंजाब","छत्तीसगढ़","बिहार","यूपी"], "answer":1 },
+{ "question":"भारत का सबसे बड़ा बंदरगाह कौन सा है?", "options":["मुंबई","चेन्नई","कोलकाता","कोचीन"], "answer":0 },
+
+{ "question":"भारत का राष्ट्रीय जलजीव कौन सा है?", "options":["डॉल्फिन","कछुआ","मछली","केकड़ा"], "answer":0 },
+{ "question":"भारत का सबसे ऊँचा जलप्रपात कौन सा है?", "options":["जोग फॉल्स","धुआँधार","हुंडरू","कुंचिकल"], "answer":3 },
+{ "question":"भारत का सबसे बड़ा पठार कौन सा है?", "options":["दक्कन पठार","छोटा नागपुर","मालवा","मेघालय"], "answer":0 },
+{ "question":"कौन सा ग्रह 'सुबह का तारा' कहलाता है?", "options":["शुक्र","मंगल","बुध","शनि"], "answer":0 },
+{ "question":"भारत का राष्ट्रीय प्रतीक क्या है?", "options":["अशोक स्तंभ","कमल","शेर","चक्र"], "answer":0 },
+
+{ "question":"भारत का सबसे बड़ा जंगल कौन सा है?", "options":["सुंदरवन","अमेज़न","जिम कॉर्बेट","कान्हा"], "answer":0 },
+{ "question":"कौन सा राज्य सबसे अधिक चाय उत्पादन करता है?", "options":["असम","बिहार","केरल","पंजाब"], "answer":0 },
+{ "question":"भारत का सबसे पुराना शहर कौन सा है?", "options":["वाराणसी","दिल्ली","आगरा","जयपुर"], "answer":0 },
+{ "question":"भारत का सबसे बड़ा पशु मेला कहाँ लगता है?", "options":["सोनपुर","पुष्कर","पटना","जयपुर"], "answer":0 },
+{ "question":"भारत का सबसे बड़ा मरुस्थल कौन सा है?", "options":["थार","सहारा","गोबी","कालाहारी"], "answer":0 },
+
+{ "question":"भारत का सबसे बड़ा राज्य जनसंख्या में कौन सा है?", "options":["उत्तर प्रदेश","बिहार","महाराष्ट्र","राजस्थान"], "answer":0 },
+{ "question":"भारत का पहला उपग्रह कौन सा था?", "options":["आर्यभट्ट","भास्कर","INSAT","GSAT"], "answer":0 },
+{ "question":"भारत का पहला चंद्र मिशन क्या था?", "options":["चंद्रयान-1","चंद्रयान-2","मंगलयान","आदित्य"], "answer":0 },
+{ "question":"भारत का सबसे बड़ा एयरपोर्ट कौन सा है?", "options":["दिल्ली IGI","मुंबई","चेन्नई","कोलकाता"], "answer":0 },
+{ "question":"भारत का सबसे लंबा पुल कौन सा है?", "options":["बोगीबील","पंबन","हावड़ा","बांद्रा-वर्ली"], "answer":0 },
+{ "question":"भारत का राष्ट्रीय पशु कौन है?", "options":["शेर","बाघ","हाथी","गैंडा"], "answer":1 },
+
+{ "question":"भारत का राष्ट्रीय गीत कौन सा है?", "options":["वंदे मातरम्","जन गण मन","सारे जहाँ से अच्छा","जय हिंद"], "answer":0 },
+{ "question":"भारत का सबसे बड़ा उद्योग कौन सा है?", "options":["कपड़ा","इस्पात","कृषि","आईटी"], "answer":2 },
+{ "question":"भारत का सबसे बड़ा राज्य कौन सा है?", "options":["राजस्थान","एमपी","यूपी","महाराष्ट्र"], "answer":0 },
+{ "question":"भारत का सर्वोच्च नागरिक सम्मान कौन सा है?", "options":["पद्म श्री","भारत रत्न","अशोक चक्र","वीर चक्र"], "answer":1 },
+{ "question":"भारत का सबसे बड़ा बंदरगाह शहर कौन सा है?", "options":["मुंबई","चेन्नई","कोलकाता","कोचीन"], "answer":0 },
+
+{ "question":"भारत का सबसे बड़ा रेलवे नेटवर्क कौन सा है?", "options":["भारतीय रेलवे","मेट्रो","कोंकण रेलवे","DFCCIL"], "answer":0 },
+{ "question":"भारत का सबसे बड़ा राज्य क्षेत्रफल में कौन सा है?", "options":["राजस्थान","यूपी","एमपी","गुजरात"], "answer":0 },
+{ "question":"भारत का सबसे बड़ा पर्वत श्रृंखला कौन सा है?", "options":["हिमालय","अरावली","विंध्य","सतपुड़ा"], "answer":0 },
+{ "question":"भारत का सबसे बड़ा नदी डेल्टा कौन सा है?", "options":["सुंदरवन","गोदावरी","कृष्णा","महानदी"], "answer":0 },
+{ "question":"भारत का सबसे बड़ा राज्य वन क्षेत्र में कौन सा है?", "options":["मध्य प्रदेश","छत्तीसगढ़","ओडिशा","असम"], "answer":0 },
+
+{ "question":"भारत का सबसे बड़ा वैज्ञानिक संस्थान कौन सा है?", "options":["ISRO","DRDO","CSIR","BARC"], "answer":2 },
+{ "question":"भारत का सबसे बड़ा राज्य विधानसभा कहाँ है?", "options":["यूपी","बिहार","महाराष्ट्र","राजस्थान"], "answer":0 },
+{ "question":"भारत का सबसे बड़ा बांध (जल क्षमता) कौन सा है?", "options":["टेहरी","भाखड़ा","हीराकुंड","सरदार सरोवर"], "answer":3 },
+{ "question":"भारत का सबसे बड़ा राज्य शिक्षा में कौन सा है?", "options":["केरल","यूपी","बिहार","एमपी"], "answer":0 },
+{ "question":"भारत का सबसे बड़ा राज्य GDP में कौन सा है?", "options":["महाराष्ट्र","यूपी","गुजरात","कर्नाटक"], "answer":0 },
+
+
+{ "question":"भारतीय पुलिस का मुख्य कार्य क्या है?", "options":["कर वसूली","कानून व्यवस्था बनाए रखना","युद्ध करना","शिक्षा देना"], "answer":1 },
+{ "question":"IPC का पूरा नाम क्या है?", "options":["Indian Penal Code","Indian Police Code","International Penal Code","Indian Public Code"], "answer":0 },
+{ "question":"CRPF का पूरा नाम क्या है?", "options":["Central Reserve Police Force","Central Railway Police Force","Crime Response Police Force","Central Region Police Force"], "answer":0 },
+{ "question":"भारत में आपातकाल की घोषणा कौन करता है?", "options":["प्रधानमंत्री","राष्ट्रपति","गृह मंत्री","मुख्यमंत्री"], "answer":1 },
+{ "question":"भारत का सर्वोच्च पुलिस अधिकारी कौन होता है?", "options":["DGP","SP","DSP","IG"], "answer":0 },
+
+{ "question":"BNS का पूरा नाम क्या है (नया कानून)?", "options":["Bharatiya Nyaya Sanhita","British National System","Bharatiya National Security","Basic National Sanhita"], "answer":0 },
+{ "question":"FIR का पूरा नाम क्या है?", "options":["First Information Report","First Investigation Report","Final Information Report","Field Information Report"], "answer":0 },
+{ "question":"भारत में संविधान संशोधन किस अनुच्छेद के तहत होता है?", "options":["अनुच्छेद 356","अनुच्छेद 368","अनुच्छेद 360","अनुच्छेद 370"], "answer":1 },
+{ "question":"राष्ट्रीय मानवाधिकार आयोग का गठन कब हुआ?", "options":["1990","1993","2000","1985"], "answer":1 },
+{ "question":"भारत का केंद्रीय जांच ब्यूरो क्या कहलाता है?", "options":["CBI","IB","RAW","NIA"], "answer":0 },
+
+{ "question":"CRPF का मुख्यालय कहाँ है?", "options":["दिल्ली","मुंबई","कोलकाता","चेन्नई"], "answer":0 },
+{ "question":"भारत का राष्ट्रीय अपराध रिकॉर्ड कौन रखता है?", "options":["NCRB","CBI","IB","ED"], "answer":0 },
+{ "question":"पुलिस का प्रशिक्षण संस्थान कहाँ है?", "options":["Hyderabad","Delhi","Lucknow","Patna"], "answer":0 },
+{ "question":"UN का मुख्यालय कहाँ है?", "options":["जेनेवा","न्यूयॉर्क","पेरिस","लंदन"], "answer":1 },
+{ "question":"NIA का पूरा नाम क्या है?", "options":["National Investigation Agency","National Intelligence Agency","New India Agency","National Internal Agency"], "answer":0 },
+
+{ "question":"भारत में कुल कितने उच्च न्यायालय हैं (लगभग)?", "options":["10","24","15","30"], "answer":1 },
+{ "question":"आतंकवाद निरोधक कानून कौन सा था?", "options":["TADA","FIR","IPC","CrPC"], "answer":0 },
+{ "question":"CRPF का गठन कब हुआ?", "options":["1939","1949","1955","1965"], "answer":1 },
+{ "question":"भारत में कानून व्यवस्था किस सूची में आती है?", "options":["केंद्रीय सूची","राज्य सूची","समवर्ती सूची","अंतरराष्ट्रीय सूची"], "answer":1 },
+{ "question":"पुलिस का मुख्य प्रतीक क्या होता है?", "options":["तलवार","डंडा","स्टार","झंडा"], "answer":1 }
+
+];
+
+
+let index = 0;
+let score = 0;
+let timer;
+let timeLeft = 10;
+
+function startQuiz() {
+  document.getElementById("startScreen").classList.add("hide");
+  document.getElementById("quizScreen").classList.remove("hide");
+  loadQuestion();
+}
+
+function loadQuestion() {
+  resetTimer();
+  let q = quizData[index];
+  document.getElementById("question").innerText = q.question;
+  document.getElementById("qNo").innerText = index + 1;
+
+  let optionsHTML = "";
+  q.options.forEach((opt, i) => {
+    optionsHTML += `<div class="option" onclick="selectOption(${i})">${opt}</div>`;
+  });
+
+  document.getElementById("options").innerHTML = optionsHTML;
+}
+
+function selectOption(selected) {
+  let correct = quizData[index].answer;
+  let options = document.querySelectorAll(".option");
+
+  options.forEach((opt, i) => {
+    if (i === correct) opt.classList.add("correct");
+    else if (i === selected) opt.classList.add("wrong");
+
+    opt.style.pointerEvents = "none";
+  });
+
+  if (selected === correct) score++;
+}
+
+function nextQuestion() {
+  index++;
+  if (index < quizData.length) {
+    loadQuestion();
+  } else {
+    showResult();
+  }
+}
+
+  function showResult() {
+  document.getElementById("quizScreen").classList.add("hide");
+  document.getElementById("resultScreen").classList.remove("hide");
+  document.getElementById("score").innerText = score + " / " + quizData.length;
+}
+
+function resetTimer() {
+  clearInterval(timer);
+  timeLeft = 10;
+  document.getElementById("timer").innerText = timeLeft;
+
+  timer = setInterval(() => {
+    timeLeft--;
+    document.getElementById("timer").innerText = timeLeft;
+
+    if (timeLeft === 0) {
+      nextQuestion();
+    }
+  }, 1000);
+}
+
+</script>
+
+</body>
+</html>

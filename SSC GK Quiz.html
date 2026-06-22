@@ -1,0 +1,349 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-KN4DRRWZ17"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-KN4DRRWZ17');
+</script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title> ssc Gk Quiz </title>
+
+<style>
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: Arial;
+}
+
+body {
+  background: #f5f5f5;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+}
+
+/* Container */
+.app {
+  width: 95%;
+  max-width: 500px;
+  background: white;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+}
+
+/* Header */
+header {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 20px;
+}
+
+.timer {
+  background: #2196F3;
+  color: white;
+  padding: 5px 10px;
+  border-radius: 5px;
+}
+
+/* Question */
+.question {
+  font-size: 20px;
+  margin-bottom: 15px;
+}
+
+/* Options */
+.option {
+  background: #eee;
+  padding: 10px;
+  margin: 8px 0;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.option:hover {
+  background: #ddd;
+}
+
+.correct {
+  background: #4CAF50 !important;
+  color: white;
+}
+
+.wrong {
+  background: #f44336 !important;
+  color: white;
+}
+
+/* Button */
+button {
+  margin-top: 15px;
+  padding: 10px;
+  width: 100%;
+  border: none;
+ background:linear-gradient(135deg,#0a2dbcf3,#779af583);
+  color: white;
+  font-size: 16px;
+  cursor: pointer;
+  border-radius: 5px;
+}
+
+/* Hidden */
+.hide {
+  display: none;
+}
+
+/* Result */
+.result {
+  text-align: center;
+}
+
+/* Responsive */
+@media (max-width: 600px) {
+  .question {
+    font-size: 18px;
+  }
+}
+</style>
+
+</head>
+<body>
+
+<div class="app">
+
+  <!-- Start Screen -->
+  <div id="startScreen">
+    <h2>Quiz App</h2>
+    <button onclick="startQuiz()">Start Quiz</button>
+  </div>
+
+  <!-- Quiz Screen -->
+  <div id="quizScreen" class="hide">
+    <header>
+      <div>Question <span id="qNo">1</span>/100</div>
+      <div class="timer" id="timer">10</div>
+    </header>
+
+    <div class="question" id="question"></div>
+    <div id="options"></div>
+
+    <button onclick="nextQuestion()">Next</button>
+  </div>
+
+  <!-- Result Screen -->
+  <div id="resultScreen" class="hide result">
+    <h2>Your Score</h2>
+    <h1 id="score"></h1>
+    <button onclick="location.reload()">Play Again</button>
+  </div>
+
+</div>
+
+<script>
+const quizData = [
+
+  { question:"भारत का राष्ट्रीय पशु कौन है?", options:["शेर","बाघ","हाथी","गैंडा"], answer:1 },
+  { question:"भारतीय संविधान का निर्माता किसे कहा जाता है?", options:["महात्मा गांधी","डॉ. बी.आर. अंबेडकर","जवाहरलाल नेहरू","सरदार पटेल"], answer:1 },
+  { question:"भारत का राष्ट्रीय पक्षी कौन है?", options:["तोता","मोर","कबूतर","बगुला"], answer:1 },
+  { question:"भारत का राष्ट्रीय फूल कौन सा है?", options:["गुलाब","कमल","सूरजमुखी","गेंदा"], answer:1 },
+  { question:"भारत का राष्ट्रीय खेल क्या है?", options:["क्रिकेट","हॉकी","फुटबॉल","कबड्डी"], answer:1 },
+
+  { question:"ताजमहल कहाँ स्थित है?", options:["दिल्ली","आगरा","जयपुर","लखनऊ"], answer:1 },
+  { question:"भारत के प्रथम प्रधानमंत्री कौन थे?", options:["महात्मा गांधी","जवाहरलाल नेहरू","लाल बहादुर शास्त्री","पटेल"], answer:1 },
+  { question:"भारत के राष्ट्रपति का कार्यकाल कितना होता है?", options:["4 वर्ष","5 वर्ष","6 वर्ष","7 वर्ष"], answer:1 },
+  { question:"लोकसभा का कार्यकाल कितना होता है?", options:["4 वर्ष","5 वर्ष","6 वर्ष","7 वर्ष"], answer:1 },
+  { question:"राज्यसभा एक स्थायी सदन है, इसका एक तिहाई सदस्य कितने वर्षों में बदलते हैं?", options:["2 वर्ष","3 वर्ष","4 वर्ष","6 वर्ष"], answer:3 },
+
+  { question:"भारतीय रिज़र्व बैंक (RBI) की स्थापना कब हुई?", options:["1935","1947","1950","1965"], answer:0 },
+  { question:"भारत का सबसे बड़ा राज्य क्षेत्रफल के अनुसार कौन सा है?", options:["मध्य प्रदेश","महाराष्ट्र","राजस्थान","उत्तर प्रदेश"], answer:2 },
+  { question:"भारत की राजधानी क्या है?", options:["मुंबई","कोलकाता","नई दिल्ली","चेन्नई"], answer:2 },
+  { question:"विश्व का सबसे बड़ा महासागर कौन सा है?", options:["अटलांटिक","हिंद","आर्कटिक","प्रशांत"], answer:3 },
+  { question:"पृथ्वी सूर्य के चारों ओर घूमने में कितना समय लेती है?", options:["365 दिन","30 दिन","24 घंटे","12 महीने"], answer:0 },
+
+  { question:"भारत का सबसे ऊँचा पर्वत कौन सा है (भारत में स्थित)?", options:["कंचनजंगा","एवरेस्ट","नंदा देवी","के2"], answer:0 },
+  { question:"भारत में कितने राज्य हैं (2026 के अनुसार)?", options:["28","29","30","27"], answer:0 },
+  { question:"कौन सा ग्रह लाल ग्रह कहलाता है?", options:["पृथ्वी","मंगल","शुक्र","बृहस्पति"], answer:1 },
+  { question:"मानव शरीर का सबसे बड़ा अंग कौन सा है?", options:["हृदय","त्वचा","यकृत","फेफड़ा"], answer:1 },
+  { question:"भारत का राष्ट्रीय गीत कौन सा है?", options:["वंदे मातरम्","जन गण मन","सारे जहाँ से अच्छा","ए मेरे वतन"], answer:0 },
+
+  { question:"कौन सा देश 'उगते सूरज की भूमि' कहलाता है?", options:["चीन","जापान","कोरिया","थाईलैंड"], answer:1 },
+  { question:"कंप्यूटर का जनक किसे कहा जाता है?", options:["चार्ल्स बैबेज","आइंस्टीन","न्यूटन","गैलीलियो"], answer:0 },
+  { question:"ओलंपिक खेलों की शुरुआत कहाँ हुई?", options:["रोम","ग्रीस","फ्रांस","अमेरिका"], answer:1 },
+  { question:"भारत का सबसे लंबा नदी कौन सी है?", options:["यमुना","गंगा","ब्रह्मपुत्र","गोदावरी"], answer:1 },
+  { question:"स्वतंत्र भारत के प्रथम गवर्नर जनरल कौन थे?", options:["लॉर्ड माउंटबेटन","नेहरू","पटेल","राजेन्द्र प्रसाद"], answer:0 },
+
+  { question:"UN (संयुक्त राष्ट्र) की स्थापना कब हुई?", options:["1945","1935","1950","1960"], answer:0 },
+  { question:"भारत का सबसे बड़ा डेल्टा कौन सा है?", options:["सुंदरबन","कच्छ","गोदावरी","महानदी"], answer:0 },
+  { question:"हवा में सबसे अधिक कौन सी गैस होती है?", options:["ऑक्सीजन","नाइट्रोजन","कार्बन डाइऑक्साइड","हाइड्रोजन"], answer:1 },
+  { question:"भारत में पहला आम चुनाव कब हुआ?", options:["1947","1951","1955","1960"], answer:1 },
+  { question:"भारतीय अंतरिक्ष अनुसंधान संगठन (ISRO) की स्थापना कब हुई?", options:["1969","1950","1975","1980"], answer:0 },
+
+  { question:"चंद्रमा पर पहला कदम किसने रखा?", options:["यूरी गागरिन","नील आर्मस्ट्रांग","बज़ एल्ड्रिन","राकेश शर्मा"], answer:1 },
+  { question:"भारत का सबसे बड़ा बंदरगाह कौन सा है?", options:["मुंबई","कोलकाता","चेन्नई","कांडला"], answer:0 },
+  { question:"मानव शरीर में कितनी हड्डियाँ होती हैं?", options:["206","201","210","195"], answer:0 },
+  { question:"विटामिन C की कमी से कौन सा रोग होता है?", options:["रक्ताल्पता","स्कर्वी","रातांधापन","रिकेट्स"], answer:1 },
+  { question:"भारत का राष्ट्रीय ध्वज किसने डिजाइन किया?", options:["पिंगली वेंकैया","नेहरू","गांधी","पटेल"], answer:0 },
+
+  { question:"सबसे तेज़ धावक भूमि पशु कौन है?", options:["शेर","चीता","बाघ","हिरण"], answer:1 },
+  { question:"भारत में पहला मेट्रो शहर कौन सा था?", options:["दिल्ली","मुंबई","कोलकाता","चेन्नई"], answer:2 },
+  { question:"माउंट एवरेस्ट की ऊँचाई लगभग कितनी है?", options:["8848 मीटर","8000 मीटर","9000 मीटर","8700 मीटर"], answer:0 },
+  { question:"कौन सा ग्रह 'पृथ्वी का जुड़वां' कहलाता है?", options:["मंगल","शुक्र","बृहस्पति","शनि"], answer:1 },
+  { question:"गांधी जी का जन्म कहाँ हुआ था?", options:["राजकोट","पोरबंदर","सूरत","अहमदाबाद"], answer:1 },
+
+  { question:"भारत का सबसे बड़ा राज्य जनसंख्या के अनुसार?", options:["महाराष्ट्र","उत्तर प्रदेश","बिहार","पश्चिम बंगाल"], answer:1 },
+  { question:"भारत का संविधान कब लागू हुआ?", options:["1947","1950","1952","1949"], answer:1 },
+  { question:"भारत का राष्ट्रीय वृक्ष कौन सा है?", options:["नीम","बरगद","पीपल","आम"], answer:1 },
+  { question:"डॉ. एपीजे अब्दुल कलाम किस क्षेत्र से संबंधित थे?", options:["राजनीति","विज्ञान","खेल","संगीत"], answer:1 },
+  { question:"कौन सा ग्रह सबसे बड़ा है?", options:["पृथ्वी","शनि","बृहस्पति","मंगल"], answer:2 },
+
+  { question:"कौन सा देश क्षेत्रफल में सबसे बड़ा है?", options:["भारत","रूस","चीन","अमेरिका"], answer:1 },
+  { question:"भारत का सबसे ऊँचा जलप्रपात कौन सा है?", options:["जोग फॉल्स","नियाग्रा","हुंडरू","बूढ़ा"], answer:0 },
+  { question:"ICSE का पूरा नाम क्या है?", options:["Indian Certificate of Secondary Education","Indian Central School Exam","International Certificate of School Education","Indian Council of Secondary Exam"], answer:0 },
+  { question:"सबसे हल्की गैस कौन सी है?", options:["ऑक्सीजन","हाइड्रोजन","हीलियम","नाइट्रोजन"], answer:1 },
+  { question:"भारत का सबसे बड़ा बांध कौन सा है?", options:["भाखड़ा नांगल","हीराकुंड","टिहरी","सरदार सरोवर"], answer:1 },
+
+  { question:"कौन सा शहर 'पिंक सिटी' कहलाता है?", options:["जयपुर","दिल्ली","आगरा","उदयपुर"], answer:0 },
+  { question:"भारत का सबसे बड़ा रेगिस्तान कौन सा है?", options:["थार","कच्छ","लद्दाख","राजस्थान डेजर्ट"], answer:0 },
+  { question:"मानव शरीर में रक्त का रंग क्या होता है?", options:["लाल","नीला","हरा","पीला"], answer:0 },
+  { question:"भारत का सर्वोच्च नागरिक सम्मान कौन सा है?", options:["पद्म श्री","भारत रत्न","पद्म भूषण","वीर चक्र"], answer:1 },
+  { question:"कौन सा ग्रह 'शनि' कहलाता है?", options:["गैस जाइंट","लाल ग्रह","बर्फीला ग्रह","पृथ्वी जैसा"], answer:0 },
+
+  { question:"भारत में कुल कितने केंद्र शासित प्रदेश हैं (2026)?", options:["8","9","10","7"], answer:0 },
+  { question:"भारत का सबसे पुराना बंदरगाह कौन सा है?", options:["मुंबई","चेन्नई","कोलकाता","कांडला"], answer:1 },
+  { question:"इंद्रधनुष में कितने रंग होते हैं?", options:["5","6","7","8"], answer:2 },
+  { question:"कौन सा रक्त समूह 'यूनिवर्सल डोनर' कहलाता है?", options:["A","B","AB","O"], answer:3 },
+  { question:"भारत में पहला परमाणु परीक्षण कब हुआ?", options:["1974","1964","1984","1954"], answer:0 },
+
+  { question:"राष्ट्रीय गान किसने लिखा?", options:["रवीन्द्रनाथ टैगोर","बंकिम चंद्र","प्रेमचंद","दिनकर"], answer:0 },
+  { question:"सबसे अधिक मीठा फल कौन सा है?", options:["सेब","आम","केला","अंगूर"], answer:1 },
+  { question:"भारत का सबसे बड़ा रेलवे स्टेशन कौन सा है?", options:["हावड़ा","नई दिल्ली","मुंबई CST","चेन्नई"], answer:0 },
+  { question:"कौन सा ग्रह सबसे छोटा है?", options:["बुध","मंगल","शुक्र","पृथ्वी"], answer:0 },
+  { question:"पानी का रासायनिक सूत्र क्या है?", options:["H2O","CO2","O2","H2SO4"], answer:0 },
+
+  { question:"भारत का पहला राष्ट्रपति कौन था?", options:["नेहरू","राजेन्द्र प्रसाद","पटेल","कलाम"], answer:1 },
+  { question:"कौन सा राज्य 'धान का कटोरा' कहलाता है?", options:["पंजाब","छत्तीसगढ़","बिहार","ओडिशा"], answer:1 },
+  { question:"भारत का सबसे लंबा बांध कौन सा है?", options:["हीराकुंड","भाखड़ा","टिहरी","सरदार सरोवर"], answer:0 },
+  { question:"कौन सा ग्रह 'लाल ग्रह' कहलाता है?", options:["मंगल","शुक्र","बृहस्पति","शनि"], answer:0 },
+  { question:"भारत का राष्ट्रीय मिठाई क्या मानी जाती है?", options:["जलेबी","लड्डू","रसगुल्ला","गुलाब जामुन"], answer:0 },
+
+  { question:"विश्व का सबसे बड़ा देश कौन सा है?", options:["रूस","चीन","अमेरिका","कनाडा"], answer:0 },
+  { question:"भारत का सबसे ऊँचा बांध कौन सा है?", options:["टिहरी","हीराकुंड","भाखड़ा","सरदार सरोवर"], answer:0 },
+  { question:"कौन सा विटामिन सूर्य से मिलता है?", options:["A","B","C","D"], answer:3 },
+  { question:"भारत में सबसे पहले स्वतंत्रता किस राज्य ने पाई?", options:["गोवा","केरल","बिहार","कोई नहीं"], answer:3 },
+  { question:"कौन सा ग्रह 'नीला ग्रह' कहलाता है?", options:["पृथ्वी","मंगल","शुक्र","बुध"], answer:0 },
+
+  { question:"भारत का सबसे बड़ा द्वीप कौन सा है?", options:["अंडमान","माजुली","लक्षद्वीप","दीव"], answer:1 },
+  { question:"कौन सा देश 'कंगारू देश' कहलाता है?", options:["न्यूजीलैंड","ऑस्ट्रेलिया","कनाडा","अमेरिका"], answer:1 },
+  { question:"भारत का सबसे पुराना विश्वविद्यालय कौन सा है?", options:["नालंदा","दिल्ली विश्वविद्यालय","काशी","पुणे"], answer:0 },
+  { question:"मानव शरीर का सबसे छोटा अंग कौन सा है?", options:["आंख","नाक","कान की हड्डी (स्टेप्स)","जीभ"], answer:2 },
+  { question:"भारत का राष्ट्रीय पंचांग क्या है?", options:["शक संवत","विक्रम संवत","हिजरी","ग्रेगोरियन"], answer:0 },
+
+  { question:"भारत का सबसे बड़ा राज्य (क्षेत्रफल) कौन सा है?", options:["राजस्थान","मध्य प्रदेश","महाराष्ट्र","गुजरात"], answer:0 },
+  { question:"कौन सा ग्रह सूर्य के सबसे पास है?", options:["बुध","शुक्र","पृथ्वी","मंगल"], answer:0 },
+  { question:"भारत का पहला उपग्रह कौन सा था?", options:["आर्यभट्ट","रोहिणी","चंद्रयान","आकाश"], answer:0 },
+  { question:"कौन सा देश 'लैंड ऑफ राइजिंग सन' है?", options:["जापान","चीन","कोरिया","थाईलैंड"], answer:0 },
+  { question:"भारत का सबसे बड़ा समुद्र तट कौन सा है?", options:["मरीना बीच","गोवा बीच","पुरी बीच","कोवलम"], answer:0 },
+
+  { question:"कौन सा विटामिन खून जमाने में मदद करता है?", options:["A","B","C","K"], answer:3 },
+  { question:"भारत का सबसे बड़ा शहर जनसंख्या के अनुसार?", options:["दिल्ली","मुंबई","कोलकाता","चेन्नई"], answer:1 },
+  { question:"कौन सा देश 'फ्रांस' की राजधानी है?", options:["पेरिस","लंदन","रोम","मॉस्को"], answer:0 },
+  { question:"भारत का सबसे बड़ा बांध कौन सा है?", options:["हीराकुंड","टिहरी","भाखड़ा","सरदार सरोवर"], answer:0 },
+  { question:"कौन सा ग्रह 'गैस जाइंट' कहलाता है?", options:["बृहस्पति","पृथ्वी","मंगल","शुक्र"], answer:0 },
+
+  { question:"भारत का सबसे बड़ा संग्रहालय कहाँ है?", options:["कोलकाता","दिल्ली","मुंबई","चेन्नई"], answer:0 },
+  { question:"कौन सा देश सबसे अधिक जनसंख्या वाला है?", options:["भारत","चीन","अमेरिका","रूस"], answer:0 },
+  { question:"भारत का राष्ट्रीय पशु कौन सा है?", options:["बाघ","शेर","हाथी","गैंडा"], answer:0 },
+  
+{ question:"भारतीय अंतरिक्ष यात्री राकेश शर्मा ने अंतरिक्ष की यात्रा कब की थी?", options:["1984","1975","1990","1969"], answer:0 },
+  { question:"भारत का सबसे बड़ा राज्य (जनसंख्या के अनुसार) 2026 में कौन सा है?", options:["उत्तर प्रदेश","बिहार","महाराष्ट्र","राजस्थान"], answer:0 },
+  { question:"कौन सा तत्व ‘पारा’ (Mercury) कहलाता है?", options:["Hg","Ag","Au","Fe"], answer:0 },
+  { question:"भारत का सबसे बड़ा डेल्टा कौन सा है?", options:["सुंदरबन डेल्टा","कावेरी डेल्टा","गोदावरी डेल्टा","महानदी डेल्टा"], answer:0 },
+  { question:"कौन सा ग्रह ‘सुबह का तारा’ कहलाता है?", options:["शुक्र","मंगल","बुध","शनि"], answer:0 },
+  { question:"भारत में ‘हरित क्रांति’ के जनक कौन माने जाते हैं?", options:["एम. एस. स्वामीनाथन","डॉ. कलाम","नेहरू","पटेल"], answer:0 },
+  { question:"कौन सा देश संयुक्त राष्ट्र सुरक्षा परिषद का स्थायी सदस्य नहीं है?", options:["भारत","चीन","रूस","अमेरिका"], answer:0 }
+
+];
+
+
+let index = 0;
+let score = 0;
+let timer;
+let timeLeft = 10;
+
+function startQuiz() {
+  document.getElementById("startScreen").classList.add("hide");
+  document.getElementById("quizScreen").classList.remove("hide");
+  loadQuestion();
+}
+
+function loadQuestion() {
+  resetTimer();
+  let q = quizData[index];
+  document.getElementById("question").innerText = q.question;
+  document.getElementById("qNo").innerText = index + 1;
+
+  let optionsHTML = "";
+  q.options.forEach((opt, i) => {
+    optionsHTML += `<div class="option" onclick="selectOption(${i})">${opt}</div>`;
+  });
+
+  document.getElementById("options").innerHTML = optionsHTML;
+}
+
+function selectOption(selected) {
+  let correct = quizData[index].answer;
+  let options = document.querySelectorAll(".option");
+
+  options.forEach((opt, i) => {
+    if (i === correct) opt.classList.add("correct");
+    else if (i === selected) opt.classList.add("wrong");
+
+    opt.style.pointerEvents = "none";
+  });
+
+  if (selected === correct) score++;
+}
+
+function nextQuestion() {
+  index++;
+  if (index < quizData.length) {
+    loadQuestion();
+  } else {
+    showResult();
+  }
+}
+
+  function showResult() {
+  document.getElementById("quizScreen").classList.add("hide");
+  document.getElementById("resultScreen").classList.remove("hide");
+  document.getElementById("score").innerText = score + " / " + quizData.length;
+}
+
+function resetTimer() {
+  clearInterval(timer);
+  timeLeft = 10;
+  document.getElementById("timer").innerText = timeLeft;
+
+  timer = setInterval(() => {
+    timeLeft--;
+    document.getElementById("timer").innerText = timeLeft;
+
+    if (timeLeft === 0) {
+      nextQuestion();
+    }
+  }, 1000);
+}
+
+</script>
+
+</body>
+</html>

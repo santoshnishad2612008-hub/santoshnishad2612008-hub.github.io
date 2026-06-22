@@ -1,0 +1,494 @@
+<!DOCTYPE html>
+<html>
+<head>
+   <!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-KN4DRRWZ17"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-KN4DRRWZ17');
+</script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Computer Basices Quiz</title>
+
+<style>
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: Arial;
+}
+
+body {
+  background: #f5f5f5;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+}
+
+/* Container */
+.app {
+  width: 95%;
+  max-width: 500px;
+  background: white;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+}
+
+/* Header */
+header {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 20px;
+}
+
+.timer {
+  background: #2196F3;
+  color: white;
+  padding: 5px 10px;
+  border-radius: 5px;
+}
+
+/* Question */
+.question {
+  font-size: 20px;
+  margin-bottom: 15px;
+}
+
+/* Options */
+.option {
+  background: #eee;
+  padding: 10px;
+  margin: 8px 0;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.option:hover {
+  background: #ddd;
+}
+
+.correct {
+  background: #4CAF50 !important;
+  color: white;
+}
+
+.wrong {
+  background: #f44336 !important;
+  color: white;
+}
+
+/* Button */
+button {
+  margin-top: 15px;
+  padding: 10px;
+  width: 100%;
+  border: none;
+ background:linear-gradient(135deg,#0a2dbcf3,#779af583);
+  color: white;
+  font-size: 16px;
+  cursor: pointer;
+  border-radius: 5px;
+}
+
+/* Hidden */
+.hide {
+  display: none;
+}
+
+/* Result */
+.result {
+  text-align: center;
+}
+
+/* Responsive */
+@media (max-width: 600px) {
+  .question {
+    font-size: 18px;
+  }
+}
+</style>
+
+</head>
+<body>
+
+<div class="app">
+
+  <!-- Start Screen -->
+  <div id="startScreen">
+    <h2>Quiz App</h2>
+    <button onclick="startQuiz()">Start Quiz</button>
+  </div>
+
+  <!-- Quiz Screen -->
+  <div id="quizScreen" class="hide">
+    <header>
+      <div>Question <span id="qNo">1</span>/133</div>
+      <div class="timer" id="timer">10</div>
+    </header>
+
+    <div class="question" id="question"></div>
+    <div id="options"></div>
+
+    <button onclick="nextQuestion()">Next</button>
+  </div>
+
+  <!-- Result Screen -->
+  <div id="resultScreen" class="hide result">
+    <h2>Your Score</h2>
+    <h1 id="score"></h1>
+    <button onclick="location.reload()">Play Again</button>
+  </div>
+
+</div>
+
+<script>
+const quizData = [
+
+{ question:"कंप्यूटर का पूरा नाम क्या है?", options:["Common Operating Machine Particularly Used for Technical and Educational Research","Common Output Machine","Computer Operating Manual","None"], answer:0 },
+
+{ question:"CPU का पूरा नाम क्या है?", options:["Central Processing Unit","Central Program Unit","Control Processing Unit","Computer Personal Unit"], answer:0 },
+
+{ question:"कंप्यूटर का मस्तिष्क किसे कहा जाता है?", options:["CPU","RAM","Hard Disk","Monitor"], answer:0 },
+
+{ question:"इनपुट डिवाइस कौन सा है?", options:["कीबोर्ड","मॉनिटर","प्रिंटर","स्पीकर"], answer:0 },
+
+{ question:"आउटपुट डिवाइस कौन सा है?", options:["मॉनिटर","कीबोर्ड","माउस","स्कैनर"], answer:0 },
+
+{ question:"RAM का पूरा नाम क्या है?", options:["Random Access Memory","Read Access Memory","Run Access Memory","Rapid Access Memory"], answer:0 },
+
+{ question:"ROM का पूरा नाम क्या है?", options:["Read Only Memory","Random Only Memory","Run Only Memory","Read Output Memory"], answer:0 },
+
+{ question:"कंप्यूटर की स्थायी मेमोरी कौन सी है?", options:["ROM","RAM","Cache","Register"], answer:0 },
+
+{ question:"कंप्यूटर की अस्थायी मेमोरी कौन सी है?", options:["RAM","ROM","Hard Disk","DVD"], answer:0 },
+
+{ question:"माउस किस प्रकार का डिवाइस है?", options:["इनपुट डिवाइस","आउटपुट डिवाइस","स्टोरेज डिवाइस","CPU"], answer:0 },
+
+{ question:"कीबोर्ड में कितनी फंक्शन कीज होती हैं?", options:["12","10","14","16"], answer:0 },
+
+{ question:"सबसे तेज मेमोरी कौन सी है?", options:["Cache Memory","RAM","Hard Disk","ROM"], answer:0 },
+
+{ question:"कंप्यूटर का आविष्कार किसने किया?", options:["चार्ल्स बैबेज","न्यूटन","आइंस्टीन","गैलीलियो"], answer:0 },
+
+{ question:"प्रथम प्रोग्रामर किसे कहा जाता है?", options:["एडा लवलेस","चार्ल्स बैबेज","ट्यूरिंग","गेट्स"], answer:0 },
+
+{ question:"MS Word किस प्रकार का सॉफ्टवेयर है?", options:["वर्ड प्रोसेसिंग","ग्राफिक्स","डेटाबेस","ओएस"], answer:0 },
+
+{ question:"MS Excel किस लिए उपयोग होता है?", options:["स्प्रेडशीट","वर्ड प्रोसेसिंग","इमेज एडिटिंग","ब्राउज़िंग"], answer:0 },
+
+{ question:"PowerPoint किस लिए उपयोग होता है?", options:["प्रेजेंटेशन","कोडिंग","ब्राउज़िंग","डिजाइनिंग"], answer:0 },
+
+{ question:"Windows क्या है?", options:["Operating System","Hardware","Browser","Application"], answer:0 },
+
+{ question:"Linux क्या है?", options:["Operating System","Software","Game","App"], answer:0 },
+
+{ question:"Computer का मुख्य भाग कौन सा है?", options:["Hardware और Software","Only Hardware","Only Software","Internet"], answer:0 },
+
+{ question:"Binary भाषा में कितने अंक होते हैं?", options:["2","10","8","16"], answer:0 },
+
+{ question:"Bit का मतलब क्या है?", options:["Binary Digit","Binary Data","Basic Input","Best Information"], answer:0 },
+
+{ question:"1 Byte में कितने बिट होते हैं?", options:["8","4","16","2"], answer:0 },
+
+{ question:"CPU के कितने भाग होते हैं?", options:["3","2","4","5"], answer:0 },
+
+{ question:"ALU का पूरा नाम क्या है?", options:["Arithmetic Logic Unit","Array Logic Unit","Arithmetic Local Unit","None"], answer:0 },
+
+{ question:"Control Unit का काम क्या है?", options:["निर्देश नियंत्रित करना","डेटा स्टोर करना","प्रिंट करना","स्कैन करना"], answer:0 },
+
+{ question:"Internet क्या है?", options:["Network of Networks","Single Computer","Software","Hardware"], answer:0 },
+
+{ question:"WWW का पूरा नाम क्या है?", options:["World Wide Web","World Web Window","Wide World Web","Web World Wide"], answer:0 },
+
+{ question:"Browser का उदाहरण कौन सा है?", options:["Chrome","MS Word","Excel","Paint"], answer:0 },
+
+{ question:"Search Engine कौन सा है?", options:["Google","Windows","Linux","Word"], answer:0 },
+
+{ question:"Email का उपयोग किस लिए होता है?", options:["संदेश भेजने के लिए","गेम खेलने के लिए","कोडिंग","डिजाइन"], answer:0 },
+
+{ question:"URL का पूरा नाम क्या है?", options:["Uniform Resource Locator","Universal Resource Link","Uniform Route Link","None"], answer:0 },
+
+{ question:"IP का पूरा नाम क्या है?", options:["Internet Protocol","Internal Protocol","Internet Program","Input Process"], answer:0 },
+
+{ question:"Computer Virus क्या है?", options:["हानिकारक प्रोग्राम","हार्डवेयर","डिवाइस","नेटवर्क"], answer:0 },
+
+{ question:"Antivirus का काम क्या है?", options:["वायरस हटाना","गेम चलाना","डिजाइन","कोडिंग"], answer:0 },
+
+{ question:"Keyboard में कितनी keys होती हैं?", options:["लगभग 104","50","80","200"], answer:0 },
+
+{ question:"Printer किस प्रकार का डिवाइस है?", options:["आउटपुट डिवाइस","इनपुट डिवाइस","CPU","स्टोरेज"], answer:0 },
+
+{ question:"Scanner किस प्रकार का डिवाइस है?", options:["इनपुट डिवाइस","आउटपुट डिवाइस","CPU","नेटवर्क"], answer:0 },
+
+{ question:"Monitor का दूसरा नाम क्या है?", options:["VDU","CPU","GPU","RAM"], answer:0 },
+
+{ question:"Hard Disk क्या है?", options:["स्टोरेज डिवाइस","इनपुट डिवाइस","CPU","OS"], answer:0 },
+
+{ question:"SSD का पूरा नाम क्या है?", options:["Solid State Drive","System Storage Disk","Safe Storage Device","None"], answer:0 },
+
+{ question:"Pen Drive किस प्रकार का है?", options:["Portable Storage","Input Device","CPU","Software"], answer:0 },
+
+{ question:"Bluetooth क्या है?", options:["Wireless Communication","Software","Hardware","Game"], answer:0 },
+
+{ question:"WiFi का उपयोग क्या है?", options:["Internet कनेक्शन","प्रिंटिंग","कोडिंग","स्टोरेज"], answer:0 },
+
+{ question:"LAN का पूरा नाम क्या है?", options:["Local Area Network","Large Area Network","Long Area Network","None"], answer:0 },
+
+{ question:"WAN का पूरा नाम क्या है?", options:["Wide Area Network","World Area Network","Web Area Network","None"], answer:0 },
+
+{ question:"MS Paint किस लिए उपयोग होता है?", options:["ड्राइंग","कोडिंग","डेटा","नेटवर्क"], answer:0 },
+
+{ question:"Computer कितने प्रकार के होते हैं?", options:["3","2","4","5"], answer:0 },
+
+{ question:"Super Computer किस लिए उपयोग होता है?", options:["जटिल गणनाएँ","गेम","ब्राउज़िंग","टाइपिंग"], answer:0 },
+
+{ question:"Keyboard का मुख्य उपयोग क्या है?", options:["टाइपिंग","प्रिंटिंग","स्कैनिंग","डिस्प्ले"], answer:0 },
+
+{ question:"Mouse में कितने बटन होते हैं?", options:["2","1","3","4"], answer:0 },
+
+{ question:"Operating System का काम क्या है?", options:["हार्डवेयर और सॉफ्टवेयर को नियंत्रित करना","केवल गेम चलाना","इंटरनेट","डिजाइन"], answer:0 },
+
+{ question:"Compiler क्या करता है?", options:["कोड को मशीन भाषा में बदलता है","इंटरनेट चलाता है","डेटा स्टोर करता है","प्रिंट करता है"], answer:0 },
+
+{ question:"Interpreter क्या करता है?", options:["लाइन बाय लाइन कोड चलाता है","डाटा हटाता है","स्टोरेज बढ़ाता है","नेटवर्क बनाता है"], answer:0 },
+
+{ question:"Database क्या है?", options:["डेटा का संग्रह","हार्डवेयर","नेटवर्क","CPU"], answer:0 },
+
+{ question:"DBMS का पूरा नाम क्या है?", options:["Database Management System","Data Basic Management System","Digital Base Machine System","None"], answer:0 },
+
+{ question:"Excel में row और column का intersection क्या कहलाता है?", options:["Cell","Box","Table","Field"], answer:0 },
+
+{ question:"Internet किस प्रकार का नेटवर्क है?", options:["Global Network","Local Network","Private Network","City Network"], answer:0 },
+
+{ question:"Google Chrome क्या है?", options:["Web Browser","Operating System","Game","Software"], answer:0 },
+
+{ question:"Ctrl + C का उपयोग क्या है?", options:["Copy","Paste","Cut","Save"], answer:0 },
+
+{ question:"Ctrl + V का उपयोग क्या है?", options:["Paste","Copy","Cut","Delete"], answer:0 },
+
+{ question:"Ctrl + X का उपयोग क्या है?", options:["Cut","Copy","Paste","Save"], answer:0 },
+
+{ question:"File एक्सटेंशन .doc किसका है?", options:["MS Word","Excel","Image","Video"], answer:0 },
+
+{ question:"File एक्सटेंशन .xls किसका है?", options:["MS Excel","MS Word","Paint","PDF"], answer:0 },
+
+{ question:"File एक्सटेंशन .ppt किसका है?", options:["PowerPoint","Word","Excel","Image"], answer:0 },
+
+{ question:"Cloud Storage क्या है?", options:["Online Storage","Offline Storage","Hardware","CPU"], answer:0 },
+
+{ question:"AI का पूरा नाम क्या है?", options:["Artificial Intelligence","Automatic Input","Advanced Internet","None"], answer:0 },
+
+{ question:"Keyboard में Enter key का काम क्या है?", options:["New line / command execute","Delete","Copy","Paste"], answer:0 },
+
+{ question:"Esc key का उपयोग क्या है?", options:["Exit/Cancel","Enter","Copy","Paste"], answer:0 },
+
+{ question:"Shift key का उपयोग क्या है?", options:["Capital letters","Delete","Save","Open"], answer:0 },
+
+{ question:"Caps Lock का उपयोग क्या है?", options:["All letters capital","Delete","Paste","Save"], answer:0 },
+
+{ question:"Internet की शुरुआत किस देश में हुई?", options:["USA","India","UK","China"], answer:0 },
+
+{ question:"Email किसने बनाया?", options:["Ray Tomlinson","Bill Gates","Steve Jobs","Linus"], answer:0 },
+
+{ question:"Computer की पीढ़ी कितनी हैं?", options:["5","3","4","6"], answer:0 },
+
+{ question:"First Generation computer में क्या उपयोग होता था?", options:["Vacuum Tubes","Transistor","IC","Microprocessor"], answer:0 },
+
+{ question:"Second Generation में क्या उपयोग हुआ?", options:["Transistor","Vacuum Tube","IC","AI"], answer:0 },
+
+{ question:"Third Generation में क्या उपयोग हुआ?", options:["IC (Integrated Circuit)","Vacuum Tube","Transistor","None"], answer:0 },
+
+{ question:"Fourth Generation में क्या उपयोग हुआ?", options:["Microprocessor","IC","Vacuum Tube","Transistor"], answer:0 },
+
+{ question:"Fifth Generation में फोकस क्या है?", options:["AI","Vacuum Tube","IC","Transistor"], answer:0 },
+
+{ question:"Computer का मुख्य उद्देश्य क्या है?", options:["Data processing","Cooking","Driving","Painting"], answer:0 },
+
+{ question:"Output का मतलब क्या है?", options:["Result","Input","Process","Storage"], answer:0 },
+
+{ question:"Input का मतलब क्या है?", options:["Data देना","Result लेना","Delete करना","Print करना"], answer:0 },
+
+{ question:"Processing का मतलब क्या है?", options:["Data को बदलना","Data देना","Data हटाना","Print करना"], answer:0 },
+
+{ question:"Shortcut key Ctrl + S का उपयोग क्या है?", options:["Save","Copy","Paste","Cut"], answer:0 },
+
+{ question:"कंप्यूटर का पूरा नाम क्या है?", options:["Common Operating Machine Particularly Used for Technical and Educational Research","Common Output Machine","Computer Operating Manual","None"], answer:0 },
+
+{ question:"CPU का पूरा नाम क्या है?", options:["Central Processing Unit","Central Program Unit","Control Processing Unit","Computer Personal Unit"], answer:0 },
+
+{ question:"कंप्यूटर का मस्तिष्क किसे कहा जाता है?", options:["CPU","RAM","Hard Disk","Monitor"], answer:0 },
+
+{ question:"इनपुट डिवाइस कौन सा है?", options:["कीबोर्ड","मॉनिटर","प्रिंटर","स्पीकर"], answer:0 },
+
+{ question:"आउटपुट डिवाइस कौन सा है?", options:["मॉनिटर","कीबोर्ड","माउस","स्कैनर"], answer:0 },
+
+{ question:"RAM का पूरा नाम क्या है?", options:["Random Access Memory","Read Access Memory","Run Access Memory","Rapid Access Memory"], answer:0 },
+
+{ question:"ROM का पूरा नाम क्या है?", options:["Read Only Memory","Random Only Memory","Run Only Memory","Read Output Memory"], answer:0 },
+
+{ question:"कंप्यूटर की स्थायी मेमोरी कौन सी है?", options:["ROM","RAM","Cache","Register"], answer:0 },
+
+{ question:"कंप्यूटर की अस्थायी मेमोरी कौन सी है?", options:["RAM","ROM","Hard Disk","DVD"], answer:0 },
+
+{ question:"माउस किस प्रकार का डिवाइस है?", options:["इनपुट डिवाइस","आउटपुट डिवाइस","स्टोरेज डिवाइस","CPU"], answer:0 },
+
+{ question:"कीबोर्ड में कितनी फंक्शन कीज होती हैं?", options:["12","10","14","16"], answer:0 },
+
+{ question:"सबसे तेज मेमोरी कौन सी है?", options:["Cache Memory","RAM","Hard Disk","ROM"], answer:0 },
+
+{ question:"कंप्यूटर का आविष्कार किसने किया?", options:["चार्ल्स बैबेज","न्यूटन","आइंस्टीन","गैलीलियो"], answer:0 },
+
+{ question:"प्रथम प्रोग्रामर किसे कहा जाता है?", options:["एडा लवलेस","चार्ल्स बैबेज","ट्यूरिंग","गेट्स"], answer:0 },
+
+{ question:"MS Word किस प्रकार का सॉफ्टवेयर है?", options:["वर्ड प्रोसेसिंग","ग्राफिक्स","डेटाबेस","ओएस"], answer:0 },
+
+{ question:"MS Excel किस लिए उपयोग होता है?", options:["स्प्रेडशीट","वर्ड प्रोसेसिंग","इमेज एडिटिंग","ब्राउज़िंग"], answer:0 },
+
+{ question:"PowerPoint किस लिए उपयोग होता है?", options:["प्रेजेंटेशन","कोडिंग","ब्राउज़िंग","डिजाइनिंग"], answer:0 },
+
+{ question:"Windows क्या है?", options:["Operating System","Hardware","Browser","Application"], answer:0 },
+
+{ question:"Linux क्या है?", options:["Operating System","Software","Game","App"], answer:0 },
+
+{ question:"Computer का मुख्य भाग कौन सा है?", options:["Hardware और Software","Only Hardware","Only Software","Internet"], answer:0 },
+
+{ question:"Binary भाषा में कितने अंक होते हैं?", options:["2","10","8","16"], answer:0 },
+
+{ question:"Bit का मतलब क्या है?", options:["Binary Digit","Binary Data","Basic Input","Best Information"], answer:0 },
+
+{ question:"1 Byte में कितने बिट होते हैं?", options:["8","4","16","2"], answer:0 },
+
+{ question:"ALU का पूरा नाम क्या है?", options:["Arithmetic Logic Unit","Array Logic Unit","Arithmetic Local Unit","None"], answer:0 },
+
+{ question:"Internet क्या है?", options:["Network of Networks","Single Computer","Software","Hardware"], answer:0 },
+
+{ question:"WWW का पूरा नाम क्या है?", options:["World Wide Web","World Web Window","Wide World Web","Web World Wide"], answer:0 },
+
+{ question:"Browser का उदाहरण कौन सा है?", options:["Chrome","MS Word","Excel","Paint"], answer:0 },
+
+{ question:"Search Engine कौन सा है?", options:["Google","Windows","Linux","Word"], answer:0 },
+
+{ question:"Email का उपयोग किस लिए होता है?", options:["संदेश भेजने के लिए","गेम खेलने के लिए","कोडिंग","डिजाइन"], answer:0 },
+
+{ question:"URL का पूरा नाम क्या है?", options:["Uniform Resource Locator","Universal Resource Link","Uniform Route Link","None"], answer:0 },
+
+{ question:"IP का पूरा नाम क्या है?", options:["Internet Protocol","Internal Protocol","Internet Program","Input Process"], answer:0 },
+
+{ question:"Computer Virus क्या है?", options:["हानिकारक प्रोग्राम","हार्डवेयर","डिवाइस","नेटवर्क"], answer:0 },
+
+{ question:"Antivirus का काम क्या है?", options:["वायरस हटाना","गेम चलाना","डिजाइन","कोडिंग"], answer:0 },
+
+{ question:"Bluetooth क्या है?", options:["Wireless Communication","Software","Hardware","Game"], answer:0 },
+
+{ question:"WiFi का उपयोग क्या है?", options:["Internet कनेक्शन","प्रिंटिंग","कोडिंग","स्टोरेज"], answer:0 },
+
+{ question:"LAN का पूरा नाम क्या है?", options:["Local Area Network","Large Area Network","Long Area Network","None"], answer:0 },
+
+{ question:"WAN का पूरा नाम क्या है?", options:["Wide Area Network","World Area Network","Web Area Network","None"], answer:0 },
+
+{ question:"Super Computer किस लिए उपयोग होता है?", options:["जटिल गणनाएँ","गेम","ब्राउज़िंग","टाइपिंग"], answer:0 },
+
+{ question:"Operating System का काम क्या है?", options:["हार्डवेयर और सॉफ्टवेयर को नियंत्रित करना","केवल गेम चलाना","इंटरनेट","डिजाइन"], answer:0 },
+
+{ question:"Database क्या है?", options:["डेटा का संग्रह","हार्डवेयर","नेटवर्क","CPU"], answer:0 },
+
+{ question:"DBMS का पूरा नाम क्या है?", options:["Database Management System","Data Basic Management System","Digital Base Machine System","None"], answer:0 },
+
+{ question:"Cloud Storage क्या है?", options:["Online Storage","Offline Storage","Hardware","CPU"], answer:0 },
+
+{ question:"AI का पूरा नाम क्या है?", options:["Artificial Intelligence","Automatic Input","Advanced Internet","None"], answer:0 },
+
+{ question:"Computer की पीढ़ियाँ कितनी हैं?", options:["5","3","4","6"], answer:0 },
+
+{ question:"First Generation computer में क्या उपयोग होता था?", options:["Vacuum Tubes","Transistor","IC","Microprocessor"], answer:0 },
+
+{ question:"Second Generation में क्या उपयोग हुआ?", options:["Transistor","Vacuum Tube","IC","AI"], answer:0 },
+
+{ question:"Third Generation में क्या उपयोग हुआ?", options:["IC (Integrated Circuit)","Vacuum Tube","Transistor","None"], answer:0 },
+
+{ question:"Fourth Generation में क्या उपयोग हुआ?", options:["Microprocessor","IC","Vacuum Tube","Transistor"], answer:0 },
+
+{ question:"Fifth Generation में फोकस क्या है?", options:["AI","Vacuum Tube","IC","Transistor"], answer:0 }
+];
+
+
+let index = 0;
+let score = 0;
+let timer;
+let timeLeft = 10;
+
+function startQuiz() {
+  document.getElementById("startScreen").classList.add("hide");
+  document.getElementById("quizScreen").classList.remove("hide");
+  loadQuestion();
+}
+
+function loadQuestion() {
+  resetTimer();
+  let q = quizData[index];
+  document.getElementById("question").innerText = q.question;
+  document.getElementById("qNo").innerText = index + 1;
+
+  let optionsHTML = "";
+  q.options.forEach((opt, i) => {
+    optionsHTML += `<div class="option" onclick="selectOption(${i})">${opt}</div>`;
+  });
+
+  document.getElementById("options").innerHTML = optionsHTML;
+}
+
+function selectOption(selected) {
+  let correct = quizData[index].answer;
+  let options = document.querySelectorAll(".option");
+
+  options.forEach((opt, i) => {
+    if (i === correct) opt.classList.add("correct");
+    else if (i === selected) opt.classList.add("wrong");
+
+    opt.style.pointerEvents = "none";
+  });
+
+  if (selected === correct) score++;
+}
+
+function nextQuestion() {
+  index++;
+  if (index < quizData.length) {
+    loadQuestion();
+  } else {
+    showResult();
+  }
+}
+
+  function showResult() {
+  document.getElementById("quizScreen").classList.add("hide");
+  document.getElementById("resultScreen").classList.remove("hide");
+  document.getElementById("score").innerText = score + " / " + quizData.length;
+}
+
+function resetTimer() {
+  clearInterval(timer);
+  timeLeft = 10;
+  document.getElementById("timer").innerText = timeLeft;
+
+  timer = setInterval(() => {
+    timeLeft--;
+    document.getElementById("timer").innerText = timeLeft;
+
+    if (timeLeft === 0) {
+      nextQuestion();
+    }
+  }, 1000);
+}
+
+</script>
+
+</body>
+</html>

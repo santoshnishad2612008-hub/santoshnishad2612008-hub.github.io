@@ -1,0 +1,733 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-KN4DRRWZ17"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-KN4DRRWZ17');
+</script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title> paryayavachi Quiz</title>
+
+<style>
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: Arial;
+}
+
+body {
+  background: #f5f5f5;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+}
+
+/* Container */
+.app {
+  width: 95%;
+  max-width: 500px;
+  background: white;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+}
+
+/* Header */
+header {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 20px;
+}
+
+.timer {
+  background: #2196F3;
+  color: white;
+  padding: 5px 10px;
+  border-radius: 5px;
+}
+
+/* Question */
+.question {
+  font-size: 20px;
+  margin-bottom: 15px;
+}
+
+/* Options */
+.option {
+  background: #eee;
+  padding: 10px;
+  margin: 8px 0;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.option:hover {
+  background: #ddd;
+}
+
+.correct {
+  background: #4CAF50 !important;
+  color: white;
+}
+
+.wrong {
+  background: #f44336 !important;
+  color: white;
+}
+
+/* Button */
+button {
+  margin-top: 15px;
+  padding: 10px;
+  width: 100%;
+  border: none;
+ background:linear-gradient(135deg,#0a2dbcf3,#779af583);
+  color: white;
+  font-size: 16px;
+  cursor: pointer;
+  border-radius: 5px;
+}
+
+/* Hidden */
+.hide {
+  display: none;
+}
+
+/* Result */
+.result {
+  text-align: center;
+}
+
+/* Responsive */
+@media (max-width: 600px) {
+  .question {
+    font-size: 18px;
+  }
+}
+</style>
+
+</head>
+<body>
+
+<div class="app">
+
+  <!-- Start Screen -->
+  <div id="startScreen">
+    <h2>Quiz App</h2>
+    <button onclick="startQuiz()">Start Quiz</button>
+  </div>
+
+  <!-- Quiz Screen -->
+  <div id="quizScreen" class="hide">
+    <header>
+      <div>Question <span id="qNo">1</span>/100</div>
+      <div class="timer" id="timer">10</div>
+    </header>
+
+    <div class="question" id="question"></div>
+    <div id="options"></div>
+
+    <button onclick="nextQuestion()">Next</button>
+  </div>
+
+  <!-- Result Screen -->
+  <div id="resultScreen" class="hide result">
+    <h2>Your Score</h2>
+    <h1 id="score"></h1>
+    <button onclick="location.reload()">Play Again</button>
+  </div>
+
+</div>
+
+<script>
+const quizData = [
+
+
+  {
+    "question": "'सूर्य' का पर्यायवाची शब्द कौन-सा है?",
+    "options": ["चंद्र", "भानु", "तारा", "नभ"],
+    "answer": 1
+  },
+  {
+    "question": "'चंद्रमा' का पर्यायवाची शब्द कौन-सा है?",
+    "options": ["शशि", "भानु", "दिनकर", "रवि"],
+    "answer": 0
+  },
+  {
+    "question": "'पृथ्वी' का पर्यायवाची शब्द कौन-सा है?",
+    "options": ["धरती", "गगन", "नभ", "अंबर"],
+    "answer": 0
+  },
+  {
+    "question": "'आकाश' का पर्यायवाची शब्द कौन-सा है?",
+    "options": ["भूतल", "नभ", "जल", "सागर"],
+    "answer": 1
+  },
+  {
+    "question": "'जल' का पर्यायवाची शब्द कौन-सा है?",
+    "options": ["नीर", "अग्नि", "वायु", "धरा"],
+    "answer": 0
+  },
+  {
+    "question": "'अग्नि' का पर्यायवाची शब्द कौन-सा है?",
+    "options": ["अनल", "नीर", "समीर", "गगन"],
+    "answer": 0
+  },
+  {
+    "question": "'वायु' का पर्यायवाची शब्द कौन-सा है?",
+    "options": ["पवन", "जल", "अग्नि", "भूमि"],
+    "answer": 0
+  },
+  {
+    "question": "'समुद्र' का पर्यायवाची शब्द कौन-सा है?",
+    "options": ["पर्वत", "सागर", "वन", "नदी"],
+    "answer": 1
+  },
+  {
+    "question": "'नदी' का पर्यायवाची शब्द कौन-सा है?",
+    "options": ["सरिता", "सागर", "झील", "ताल"],
+    "answer": 0
+  },
+  {
+    "question": "'पर्वत' का पर्यायवाची शब्द कौन-सा है?",
+    "options": ["शिखर", "गिरि", "वन", "झरना"],
+    "answer": 1
+  },
+  {
+    "question": "'वन' का पर्यायवाची शब्द कौन-सा है?",
+    "options": ["उद्यान", "अरण्य", "पर्वत", "सरोवर"],
+    "answer": 1
+  },
+  {
+    "question": "'कमल' का पर्यायवाची शब्द कौन-सा है?",
+    "options": ["पंकज", "गुलाब", "चंपा", "कनेर"],
+    "answer": 0
+  },
+  {
+    "question": "'फूल' का पर्यायवाची शब्द कौन-सा है?",
+    "options": ["पुष्प", "फल", "पत्र", "बीज"],
+    "answer": 0
+  },
+  {
+    "question": "'वृक्ष' का पर्यायवाची शब्द कौन-सा है?",
+    "options": ["तरु", "लता", "पुष्प", "बीज"],
+    "answer": 0
+  },
+  {
+    "question": "'राजा' का पर्यायवाची शब्द कौन-सा है?",
+    "options": ["नरेश", "सेवक", "प्रजा", "मंत्री"],
+    "answer": 0
+  },
+  {
+    "question": "'रानी' का पर्यायवाची शब्द कौन-सा है?",
+    "options": ["महारानी", "दासी", "राजकुमारी", "सेविका"],
+    "answer": 0
+  },
+  {
+    "question": "'पुत्र' का पर्यायवाची शब्द कौन-सा है?",
+    "options": ["तनय", "जननी", "कन्या", "माता"],
+    "answer": 0
+  },
+  {
+    "question": "'पुत्री' का पर्यायवाची शब्द कौन-सा है?",
+    "options": ["जननी", "तनया", "बहन", "माता"],
+    "answer": 1
+  },
+  {
+    "question": "'माता' का पर्यायवाची शब्द कौन-सा है?",
+    "options": ["जननी", "तनया", "भगिनी", "सखी"],
+    "answer": 0
+  },
+  {
+    "question": "'पिता' का पर्यायवाची शब्द कौन-सा है?",
+    "options": ["जनक", "तनय", "भ्राता", "मित्र"],
+    "answer": 0
+  },
+  {
+    "question": "'मित्र' का पर्यायवाची शब्द कौन-सा है?",
+    "options": ["शत्रु", "सखा", "विरोधी", "प्रतिद्वंद्वी"],
+    "answer": 1
+  },
+  {
+    "question": "'शत्रु' का पर्यायवाची शब्द कौन-सा है?",
+    "options": ["मित्र", "अरि", "सखा", "बंधु"],
+    "answer": 1
+  },
+  {
+    "question": "'विद्या' का पर्यायवाची शब्द कौन-सा है?",
+    "options": ["ज्ञान", "धन", "बल", "कला"],
+    "answer": 0
+  },
+  {
+    "question": "'धन' का पर्यायवाची शब्द कौन-सा है?",
+    "options": ["सम्पत्ति", "गरीबी", "कष्ट", "ऋण"],
+    "answer": 0
+  },
+  {
+    "question": "'गरीब' का पर्यायवाची शब्द कौन-सा है?",
+    "options": ["निर्धन", "धनवान", "समृद्ध", "संपन्न"],
+    "answer": 0
+  },
+  {
+    "question": "'धनी' का पर्यायवाची शब्द कौन-सा है?",
+    "options": ["निर्धन", "सम्पन्न", "गरीब", "दरिद्र"],
+    "answer": 1
+  },
+  {
+    "question": "'घर' का पर्यायवाची शब्द कौन-सा है?",
+    "options": ["भवन", "वन", "विद्यालय", "कार्यालय"],
+    "answer": 0
+  },
+  {
+    "question": "'विद्यालय' का पर्यायवाची शब्द कौन-सा है?",
+    "options": ["पाठशाला", "अस्पताल", "कार्यालय", "मंदिर"],
+    "answer": 0
+  },
+  {
+    "question": "'गुरु' का पर्यायवाची शब्द कौन-सा है?",
+    "options": ["आचार्य", "शिष्य", "विद्यार्थी", "सेवक"],
+    "answer": 0
+  },
+  {
+    "question": "'विद्यार्थी' का पर्यायवाची शब्द कौन-सा है?",
+    "options": ["आचार्य", "शिष्य", "गुरु", "शिक्षक"],
+    "answer": 1
+  },
+  
+  {
+    "question": "'शिक्षक' का पर्यायवाची शब्द कौन-सा है?",
+    "options": ["आचार्य", "विद्यार्थी", "सेवक", "मित्र"],
+    "answer": 0
+  },
+  {
+    "question": "'पुस्तक' का पर्यायवाची शब्द कौन-सा है?",
+    "options": ["ग्रंथ", "पत्र", "लेख", "कविता"],
+    "answer": 0
+  },
+  {
+    "question": "'कवि' का पर्यायवाची शब्द कौन-सा है?",
+    "options": ["लेखक", "रचनाकार", "गायक", "कलाकार"],
+    "answer": 1
+  },
+  {
+    "question": "'भाषा' का पर्यायवाची शब्द कौन-सा है?",
+    "options": ["वाणी", "लिपि", "शब्द", "व्याकरण"],
+    "answer": 0
+  },
+  {
+    "question": "'आंख' का पर्यायवाची शब्द कौन-सा है?",
+    "options": ["लोचन", "मुख", "कर्ण", "नासिका"],
+    "answer": 0
+  },
+  {
+    "question": "'कान' का पर्यायवाची शब्द कौन-सा है?",
+    "options": ["नेत्र", "कर्ण", "मुख", "नासिका"],
+    "answer": 1
+  },
+  {
+    "question": "'मुख' का पर्यायवाची शब्द कौन-सा है?",
+    "options": ["वदन", "कर्ण", "नयन", "ग्रीवा"],
+    "answer": 0
+  },
+  {
+    "question": "'हाथ' का पर्यायवाची शब्द कौन-सा है?",
+    "options": ["चरण", "कर", "भुजा", "पाद"],
+    "answer": 1
+  },
+  {
+    "question": "'पैर' का पर्यायवाची शब्द कौन-सा है?",
+    "options": ["कर", "भुजा", "पाद", "ग्रीवा"],
+    "answer": 2
+  },
+  {
+    "question": "'सूरज' का पर्यायवाची शब्द कौन-सा है?",
+    "options": ["रवि", "शशि", "इंदु", "निशाकर"],
+    "answer": 0
+  },
+  {
+    "question": "'चाँद' का पर्यायवाची शब्द कौन-सा है?",
+    "options": ["दिनकर", "रवि", "इंदु", "भास्कर"],
+    "answer": 2
+  },
+  {
+    "question": "'तारा' का पर्यायवाची शब्द कौन-सा है?",
+    "options": ["नक्षत्र", "सूर्य", "चंद्र", "ग्रह"],
+    "answer": 0
+  },
+  {
+    "question": "'बादल' का पर्यायवाची शब्द कौन-सा है?",
+    "options": ["मेघ", "पवन", "धूप", "वर्षा"],
+    "answer": 0
+  },
+  {
+    "question": "'वर्षा' का पर्यायवाची शब्द कौन-सा है?",
+    "options": ["ग्रीष्म", "बरखा", "शीत", "धूप"],
+    "answer": 1
+  },
+  {
+    "question": "'बिजली' का पर्यायवाची शब्द कौन-सा है?",
+    "options": ["दामिनी", "वर्षा", "मेघ", "अग्नि"],
+    "answer": 0
+  },
+  {
+    "question": "'पृथ्वी' का पर्यायवाची शब्द कौन-सा है?",
+    "options": ["वसुधा", "नभ", "अंबर", "गगन"],
+    "answer": 0
+  },
+  {
+    "question": "'आकाश' का पर्यायवाची शब्द कौन-सा है?",
+    "options": ["वसुंधरा", "गगन", "धरा", "भूमि"],
+    "answer": 1
+  },
+  {
+    "question": "'सागर' का पर्यायवाची शब्द कौन-सा है?",
+    "options": ["नदी", "सरोवर", "रत्नाकर", "तालाब"],
+    "answer": 2
+  },
+  {
+    "question": "'नदी' का पर्यायवाची शब्द कौन-सा है?",
+    "options": ["तड़ाग", "तरंगिणी", "सागर", "कूप"],
+    "answer": 1
+  },
+  {
+    "question": "'कमल' का पर्यायवाची शब्द कौन-सा है?",
+    "options": ["पंकज", "गुलाब", "चंपा", "जूही"],
+    "answer": 0
+  },
+  {
+    "question": "'गुलाब' का पर्यायवाची शब्द कौन-सा है?",
+    "options": ["पाटल", "कमल", "कुमुद", "चंपा"],
+    "answer": 0
+  },
+  {
+    "question": "'शेर' का पर्यायवाची शब्द कौन-सा है?",
+    "options": ["व्याघ्र", "मृगेन्द्र", "गज", "अश्व"],
+    "answer": 1
+  },
+  {
+    "question": "'हाथी' का पर्यायवाची शब्द कौन-सा है?",
+    "options": ["गज", "अश्व", "सिंह", "मृग"],
+    "answer": 0
+  },
+  {
+    "question": "'घोड़ा' का पर्यायवाची शब्द कौन-सा है?",
+    "options": ["गज", "अश्व", "व्याघ्र", "सिंह"],
+    "answer": 1
+  },
+  {
+    "question": "'गाय' का पर्यायवाची शब्द कौन-सा है?",
+    "options": ["धेनु", "महिषी", "अजा", "हस्तिनी"],
+    "answer": 0
+  },
+  {
+    "question": "'राजा' का पर्यायवाची शब्द कौन-सा है?",
+    "options": ["भूप", "सेवक", "मंत्री", "प्रजा"],
+    "answer": 0
+  },
+  {
+    "question": "'रानी' का पर्यायवाची शब्द कौन-सा है?",
+    "options": ["महारानी", "दासी", "सेविका", "सखी"],
+    "answer": 0
+  },
+  {
+    "question": "'सेना' का पर्यायवाची शब्द कौन-सा है?",
+    "options": ["वाहिनी", "सभा", "समूह", "दल"],
+    "answer": 0
+  },
+  {
+    "question": "'युद्ध' का पर्यायवाची शब्द कौन-सा है?",
+    "options": ["संधि", "संग्राम", "मेल", "शांति"],
+    "answer": 1
+  },
+  {
+    "question": "'शांति' का पर्यायवाची शब्द कौन-सा है?",
+    "options": ["कोलाहल", "अशांति", "अमन", "विवाद"],
+    "answer": 2
+  },
+  
+  {
+    "question": "'प्रेम' का पर्यायवाची शब्द कौन-सा है?",
+    "options": ["घृणा", "अनुराग", "क्रोध", "द्वेष"],
+    "answer": 1
+  },
+  {
+    "question": "'क्रोध' का पर्यायवाची शब्द कौन-सा है?",
+    "options": ["रोष", "प्रेम", "करुणा", "स्नेह"],
+    "answer": 0
+  },
+  {
+    "question": "'दया' का पर्यायवाची शब्द कौन-सा है?",
+    "options": ["क्रूरता", "करुणा", "घृणा", "रोष"],
+    "answer": 1
+  },
+  {
+    "question": "'आनंद' का पर्यायवाची शब्द कौन-सा है?",
+    "options": ["विषाद", "प्रसन्नता", "शोक", "पीड़ा"],
+    "answer": 1
+  },
+  {
+    "question": "'दुख' का पर्यायवाची शब्द कौन-सा है?",
+    "options": ["आनंद", "हर्ष", "विषाद", "उल्लास"],
+    "answer": 2
+  },
+  {
+    "question": "'भय' का पर्यायवाची शब्द कौन-सा है?",
+    "options": ["निर्भयता", "डर", "साहस", "पराक्रम"],
+    "answer": 1
+  },
+  {
+    "question": "'साहस' का पर्यायवाची शब्द कौन-सा है?",
+    "options": ["पराक्रम", "भय", "कायरता", "डर"],
+    "answer": 0
+  },
+  {
+    "question": "'ज्ञान' का पर्यायवाची शब्द कौन-सा है?",
+    "options": ["अज्ञान", "विद्या", "मूर्खता", "भ्रम"],
+    "answer": 1
+  },
+  {
+    "question": "'अज्ञान' का पर्यायवाची शब्द कौन-सा है?",
+    "options": ["विद्या", "ज्ञान", "मूढ़ता", "बुद्धि"],
+    "answer": 2
+  },
+  {
+    "question": "'बुद्धि' का पर्यायवाची शब्द कौन-सा है?",
+    "options": ["मति", "मूर्खता", "अज्ञान", "भ्रम"],
+    "answer": 0
+  },
+  {
+    "question": "'सत्य' का पर्यायवाची शब्द कौन-सा है?",
+    "options": ["झूठ", "यथार्थ", "असत्य", "भ्रम"],
+    "answer": 1
+  },
+  {
+    "question": "'असत्य' का पर्यायवाची शब्द कौन-सा है?",
+    "options": ["सत्य", "यथार्थ", "झूठ", "तथ्य"],
+    "answer": 2
+  },
+  {
+    "question": "'धन' का पर्यायवाची शब्द कौन-सा है?",
+    "options": ["निर्धनता", "सम्पत्ति", "दरिद्रता", "कंगाली"],
+    "answer": 1
+  },
+  {
+    "question": "'गरीबी' का पर्यायवाची शब्द कौन-सा है?",
+    "options": ["समृद्धि", "धन", "दरिद्रता", "वैभव"],
+    "answer": 2
+  },
+  {
+    "question": "'सुंदर' का पर्यायवाची शब्द कौन-सा है?",
+    "options": ["कुरूप", "मनोहर", "भद्दा", "अप्रिय"],
+    "answer": 1
+  },
+  {
+    "question": "'कुरूप' का पर्यायवाची शब्द कौन-सा है?",
+    "options": ["सुंदर", "आकर्षक", "बदसूरत", "मनोहर"],
+    "answer": 2
+  },
+  {
+    "question": "'वीर' का पर्यायवाची शब्द कौन-सा है?",
+    "options": ["कायर", "शूर", "डरपोक", "भयभीत"],
+    "answer": 1
+  },
+  {
+    "question": "'कायर' का पर्यायवाची शब्द कौन-सा है?",
+    "options": ["बहादुर", "वीर", "डरपोक", "शूर"],
+    "answer": 2
+  },
+  {
+    "question": "'मित्र' का पर्यायवाची शब्द कौन-सा है?",
+    "options": ["सखा", "शत्रु", "अरि", "दुश्मन"],
+    "answer": 0
+  },
+  {
+    "question": "'शत्रु' का पर्यायवाची शब्द कौन-सा है?",
+    "options": ["बंधु", "सखा", "अरि", "मित्र"],
+    "answer": 2
+  },
+  {
+    "question": "'स्त्री' का पर्यायवाची शब्द कौन-सा है?",
+    "options": ["नारी", "पुरुष", "बालक", "युवक"],
+    "answer": 0
+  },
+  {
+    "question": "'पुरुष' का पर्यायवाची शब्द कौन-सा है?",
+    "options": ["नारी", "मानव", "स्त्री", "महिला"],
+    "answer": 1
+  },
+  {
+    "question": "'बालक' का पर्यायवाची शब्द कौन-सा है?",
+    "options": ["शिशु", "वृद्ध", "युवा", "प्रौढ़"],
+    "answer": 0
+  },
+  {
+    "question": "'वृद्ध' का पर्यायवाची शब्द कौन-सा है?",
+    "options": ["युवा", "बालक", "बूढ़ा", "किशोर"],
+    "answer": 2
+  },
+  {
+    "question": "'नगर' का पर्यायवाची शब्द कौन-सा है?",
+    "options": ["ग्राम", "शहर", "कस्बा", "खेड़ा"],
+    "answer": 1
+  },
+  {
+    "question": "'ग्राम' का पर्यायवाची शब्द कौन-सा है?",
+    "options": ["महानगर", "नगर", "गाँव", "शहर"],
+    "answer": 2
+  },
+  {
+    "question": "'मार्ग' का पर्यायवाची शब्द कौन-सा है?",
+    "options": ["रास्ता", "दीवार", "छत", "खिड़की"],
+    "answer": 0
+  },
+  {
+    "question": "'घर' का पर्यायवाची शब्द कौन-सा है?",
+    "options": ["वन", "आवास", "पर्वत", "विद्यालय"],
+    "answer": 1
+  },
+  {
+    "question": "'वस्त्र' का पर्यायवाची शब्द कौन-सा है?",
+    "options": ["आभूषण", "परिधान", "जूता", "टोपी"],
+    "answer": 1
+  },
+  {
+    "question": "'आभूषण' का पर्यायवाची शब्द कौन-सा है?",
+    "options": ["भोजन", "वस्त्र", "अलंकार", "औषधि"],
+    "answer": 2
+  },
+  {
+    "question": "'भोजन' का पर्यायवाची शब्द कौन-सा है?",
+    "options": ["आहार", "वस्त्र", "औषधि", "अलंकार"],
+    "answer": 0
+  },
+  {
+    "question": "'औषधि' का पर्यायवाची शब्द कौन-सा है?",
+    "options": ["रोग", "दवा", "पीड़ा", "व्याधि"],
+    "answer": 1
+  },
+  {
+    "question": "'रोग' का पर्यायवाची शब्द कौन-सा है?",
+    "options": ["स्वास्थ्य", "तंदुरुस्ती", "व्याधि", "बल"],
+    "answer": 2
+  },
+  {
+    "question": "'स्वास्थ्य' का पर्यायवाची शब्द कौन-सा है?",
+    "options": ["रोग", "आरोग्य", "व्याधि", "पीड़ा"],
+    "answer": 1
+  },
+  {
+    "question": "'प्रकाश' का पर्यायवाची शब्द कौन-सा है?",
+    "options": ["अंधकार", "रोशनी", "छाया", "तम"],
+    "answer": 1
+  },
+  {
+    "question": "'अंधकार' का पर्यायवाची शब्द कौन-सा है?",
+    "options": ["उजाला", "प्रकाश", "तम", "दीप्ति"],
+    "answer": 2
+  },
+  {
+    "question": "'जीवन' का पर्यायवाची शब्द कौन-सा है?",
+    "options": ["मृत्यु", "जिंदगी", "अंत", "विनाश"],
+    "answer": 1
+  },
+  {
+    "question": "'मृत्यु' का पर्यायवाची शब्द कौन-सा है?",
+    "options": ["जीवन", "जन्म", "मरण", "उत्पत्ति"],
+    "answer": 2
+  },
+  {
+    "question": "'आरंभ' का पर्यायवाची शब्द कौन-सा है?",
+    "options": ["अंत", "समाप्ति", "शुरुआत", "विराम"],
+    "answer": 2
+  },
+  {
+    "question": "'अंत' का पर्यायवाची शब्द कौन-सा है?",
+    "options": ["आरंभ", "समापन", "शुरुआत", "उद्घाटन"],
+    "answer": 1
+  }
+
+];
+
+
+let index = 0;
+let score = 0;
+let timer;
+let timeLeft = 10;
+
+function startQuiz() {
+  document.getElementById("startScreen").classList.add("hide");
+  document.getElementById("quizScreen").classList.remove("hide");
+  loadQuestion();
+}
+
+function loadQuestion() {
+  resetTimer();
+  let q = quizData[index];
+  document.getElementById("question").innerText = q.question;
+  document.getElementById("qNo").innerText = index + 1;
+
+  let optionsHTML = "";
+  q.options.forEach((opt, i) => {
+    optionsHTML += `<div class="option" onclick="selectOption(${i})">${opt}</div>`;
+  });
+
+  document.getElementById("options").innerHTML = optionsHTML;
+}
+
+function selectOption(selected) {
+  let correct = quizData[index].answer;
+  let options = document.querySelectorAll(".option");
+
+  options.forEach((opt, i) => {
+    if (i === correct) opt.classList.add("correct");
+    else if (i === selected) opt.classList.add("wrong");
+
+    opt.style.pointerEvents = "none";
+  });
+
+  if (selected === correct) score++;
+}
+
+function nextQuestion() {
+  index++;
+  if (index < quizData.length) {
+    loadQuestion();
+  } else {
+    showResult();
+  }
+}
+
+  function showResult() {
+  document.getElementById("quizScreen").classList.add("hide");
+  document.getElementById("resultScreen").classList.remove("hide");
+  document.getElementById("score").innerText = score + " / " + quizData.length;
+}
+
+function resetTimer() {
+  clearInterval(timer);
+  timeLeft = 10;
+  document.getElementById("timer").innerText = timeLeft;
+
+  timer = setInterval(() => {
+    timeLeft--;
+    document.getElementById("timer").innerText = timeLeft;
+
+    if (timeLeft === 0) {
+      nextQuestion();
+    }
+  }, 1000);
+}
+
+</script>
+
+</body>
+</html>

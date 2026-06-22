@@ -1,0 +1,729 @@
+<!DOCTYPE html>
+<html>
+<head>
+   <!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-KN4DRRWZ17"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-KN4DRRWZ17');
+</script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Capitals and Countries Quiz</title>
+
+<style>
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: Arial;
+}
+
+body {
+  background: #f5f5f5;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+}
+
+/* Container */
+.app {
+  width: 95%;
+  max-width: 500px;
+  background: white;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+}
+
+/* Header */
+header {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 20px;
+}
+
+.timer {
+  background: #2196F3;
+  color: white;
+  padding: 5px 10px;
+  border-radius: 5px;
+}
+
+/* Question */
+.question {
+  font-size: 20px;
+  margin-bottom: 15px;
+}
+
+/* Options */
+.option {
+  background: #eee;
+  padding: 10px;
+  margin: 8px 0;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.option:hover {
+  background: #ddd;
+}
+
+.correct {
+  background: #4CAF50 !important;
+  color: white;
+}
+
+.wrong {
+  background: #f44336 !important;
+  color: white;
+}
+
+/* Button */
+button {
+  margin-top: 15px;
+  padding: 10px;
+  width: 100%;
+  border: none;
+ background:linear-gradient(135deg,#0a2dbcf3,#779af583);
+  color: white;
+  font-size: 16px;
+  cursor: pointer;
+  border-radius: 5px;
+}
+
+/* Hidden */
+.hide {
+  display: none;
+}
+
+/* Result */
+.result {
+  text-align: center;
+}
+
+/* Responsive */
+@media (max-width: 600px) {
+  .question {
+    font-size: 18px;
+  }
+}
+</style>
+
+</head>
+<body>
+
+<div class="app">
+
+  <!-- Start Screen -->
+  <div id="startScreen">
+    <h2>Quiz App</h2>
+    <button onclick="startQuiz()">Start Quiz</button>
+  </div>
+
+  <!-- Quiz Screen -->
+  <div id="quizScreen" class="hide">
+    <header>
+      <div>Question <span id="qNo">1</span>/100</div>
+      <div class="timer" id="timer">10</div>
+    </header>
+
+    <div class="question" id="question"></div>
+    <div id="options"></div>
+
+    <button onclick="nextQuestion()">Next</button>
+  </div>
+
+  <!-- Result Screen -->
+  <div id="resultScreen" class="hide result">
+    <h2>Your Score</h2>
+    <h1 id="score"></h1>
+    <button onclick="location.reload()">Play Again</button>
+  </div>
+
+</div>
+
+<script>
+const quizData = [
+{
+question:"भारत की राजधानी क्या है?",
+options:["मुंबई","नई दिल्ली","कोलकाता","चेन्नई"],
+answer:1
+},
+{
+question:"फ्रांस की राजधानी क्या है?",
+options:["पेरिस","लंदन","रोम","बर्लिन"],
+answer:0
+},
+{
+question:"जापान की राजधानी क्या है?",
+options:["बीजिंग","सियोल","टोक्यो","हनोई"],
+answer:2
+},
+{
+question:"अमेरिका की राजधानी क्या है?",
+options:["न्यूयॉर्क","वाशिंगटन डी.सी.","लॉस एंजिल्स","शिकागो"],
+answer:1
+},
+{
+question:"चीन की राजधानी क्या है?",
+options:["शंघाई","बीजिंग","हांगकांग","ग्वांगझोउ"],
+answer:1
+},
+{
+question:"रूस की राजधानी क्या है?",
+options:["मॉस्को","सेंट पीटर्सबर्ग","कीव","कज़ान"],
+answer:0
+},
+{
+question:"जर्मनी की राजधानी क्या है?",
+options:["म्यूनिख","बर्लिन","हम्बर्ग","फ्रैंकफर्ट"],
+answer:1
+},
+{
+question:"इटली की राजधानी क्या है?",
+options:["रोम","मिलान","नेपल्स","वेनिस"],
+answer:0
+},
+{
+question:"कनाडा की राजधानी क्या है?",
+options:["टोरंटो","वैंकूवर","ओटावा","मॉन्ट्रियल"],
+answer:2
+},
+{
+question:"ऑस्ट्रेलिया की राजधानी क्या है?",
+options:["सिडनी","मेलबर्न","कैनबरा","पर्थ"],
+answer:2
+},
+{
+question:"ब्राजील की राजधानी क्या है?",
+options:["रियो डी जेनेरियो","ब्रासीलिया","साओ पाउलो","सल्वाडोर"],
+answer:1
+},
+{
+question:"इंग्लैंड (UK) की राजधानी क्या है?",
+options:["मैनचेस्टर","लंदन","लिवरपूल","बर्मिंघम"],
+answer:1
+},
+{
+question:"दक्षिण अफ्रीका की प्रशासनिक राजधानी क्या है?",
+options:["जोहान्सबर्ग","केपटाउन","प्रिटोरिया","डरबन"],
+answer:2
+},
+{
+question:"पाकिस्तान की राजधानी क्या है?",
+options:["कराची","लाहौर","इस्लामाबाद","पेशावर"],
+answer:2
+},
+{
+question:"नेपाल की राजधानी क्या है?",
+options:["पोखरा","काठमांडू","ललितपुर","बीरतनगर"],
+answer:1
+},
+{
+question:"श्रीलंका की राजधानी क्या है?",
+options:["कोलंबो","कैंडी","श्री जयवर्धनेपुरा कोट्टे","गाले"],
+answer:2
+},
+{
+question:"बांग्लादेश की राजधानी क्या है?",
+options:["चटगांव","ढाका","खुलना","सिलहट"],
+answer:1
+},
+{
+question:"मिस्र की राजधानी क्या है?",
+options:["अलेक्जेंड्रिया","काहिरा","लक्सर","गीज़ा"],
+answer:1
+},
+{
+question:"तुर्की की राजधानी क्या है?",
+options:["इस्तांबुल","अंकारा","इजमिर","बर्सा"],
+answer:1
+},
+{
+question:"ईरान की राजधानी क्या है?",
+options:["तेहरान","इस्फहान","शिराज","मशहद"],
+answer:0
+},
+{
+question:"इराक की राजधानी क्या है?",
+options:["बसरा","बगदाद","मोसुल","कर्बला"],
+answer:1
+},
+{
+question:"सऊदी अरब की राजधानी क्या है?",
+options:["जेद्दा","मक्का","रियाद","मदीना"],
+answer:2
+},
+{
+question:"यूएई (UAE) की राजधानी क्या है?",
+options:["दुबई","अबू धाबी","शारजाह","अजमान"],
+answer:1
+},
+{
+question:"इज़राइल की राजधानी क्या है?",
+options:["तेल अवीव","हाइफा","यरूशलम","बेयरशेबा"],
+answer:2
+},
+{
+question:"इंडोनेशिया की राजधानी क्या है?",
+options:["जकार्ता","बाली","सुरबाया","बांडुंग"],
+answer:0
+},
+{
+question:"मलेशिया की राजधानी क्या है?",
+options:["कुआलालंपुर","पेनांग","जोहर बाहरू","कोटा किनाबालू"],
+answer:0
+},
+{
+question:"थाईलैंड की राजधानी क्या है?",
+options:["फुकेट","बैंकॉक","चियांग माई","पटाया"],
+answer:1
+},
+{
+question:"वियतनाम की राजधानी क्या है?",
+options:["हो ची मिन्ह सिटी","हनोई","दा नांग","ह्यू"],
+answer:1
+},
+{
+question:"दक्षिण कोरिया की राजधानी क्या है?",
+options:["बुसान","सियोल","इंचियोन","डाएगू"],
+answer:1
+},
+{
+question:"उत्तर कोरिया की राजधानी क्या है?",
+options:["प्योंगयांग","हैसन","वॉनसान","चोंगजिन"],
+answer:0
+},
+{
+question:"अफगानिस्तान की राजधानी क्या है?",
+options:["कंधार","काबुल","हेरात","मजार-ए-शरीफ"],
+answer:1
+},
+{
+question:"कजाकिस्तान की राजधानी क्या है?",
+options:["अल्माटी","नूर-सुल्तान","अस्ताना (पुराना नाम)","शिमकेंट"],
+answer:1
+},
+{
+question:"मेक्सिको की राजधानी क्या है?",
+options:["कैनकून","मेक्सिको सिटी","ग्वाडलाजारा","मॉन्टेरी"],
+answer:1
+},
+{
+question:"अर्जेंटीना की राजधानी क्या है?",
+options:["ब्यूनस आयर्स","रोसारियो","मेंडोज़ा","लाप्लाटा"],
+answer:0
+},
+{
+question:"चिली की राजधानी क्या है?",
+options:["वालपाराइसो","सैंटियागो","पुंटा एरेनास","टेमुको"],
+answer:1
+},
+{
+question:"पेरू की राजधानी क्या है?",
+options:["कुस्को","लिमा","अरेक्विपा","ट्रूजिलो"],
+answer:1
+},
+{
+question:"कोलंबिया की राजधानी क्या है?",
+options:["मेडेलिन","बोगोटा","काली","कार्टाजेना"],
+answer:1
+},
+{
+question:"स्विट्ज़रलैंड की राजधानी क्या है?",
+options:["ज्यूरिख","जिनेवा","बर्न","लुसाने"],
+answer:2
+},
+{
+question:"स्वीडन की राजधानी क्या है?",
+options:["गोथेनबर्ग","स्टॉकहोम","माल्मो","उप्साला"],
+answer:1
+},
+{
+question:"नॉर्वे की राजधानी क्या है?",
+options:["बर्गन","ओस्लो","ट्रोम्सो","स्टावेंजर"],
+answer:1
+},
+{
+question:"न्यूजीलैंड की राजधानी क्या है?",
+options:["ऑकलैंड","वेलिंगटन","क्राइस्टचर्च","हैमिल्टन"],
+answer:1
+},
+{
+question:"मिस्र की राजधानी क्या है?",
+options:["अलेक्जेंड्रिया","काहिरा","लक्सर","गीज़ा"],
+answer:1
+},
+{
+question:"ग्रीस की राजधानी क्या है?",
+options:["थेसालोनिकी","एथेंस","पात्रास","हेराक्लिओन"],
+answer:1
+},
+{
+question:"स्पेन की राजधानी क्या है?",
+options:["बार्सिलोना","मैड्रिड","सेविले","वालेंसिया"],
+answer:1
+},
+{
+question:"पुर्तगाल की राजधानी क्या है?",
+options:["पोर्टो","लिस्बन","फारो","कोइम्ब्रा"],
+answer:1
+},
+{
+question:"नीदरलैंड्स की राजधानी क्या है?",
+options:["रॉटरडैम","एम्स्टर्डम","द हेग","उट्रेक्ट"],
+answer:1
+},
+{
+question:"बेल्जियम की राजधानी क्या है?",
+options:["ब्रसेल्स","एंटवर्प","ब्रुग्स","घेंट"],
+answer:0
+},
+{
+question:"ऑस्ट्रिया की राजधानी क्या है?",
+options:["साल्ज़बर्ग","वियना","इन्सब्रुक","ग्राज़"],
+answer:1
+},
+{
+question:"पोलैंड की राजधानी क्या है?",
+options:["क्राको","वारसॉ","ग्दान्स्क","लॉड्ज़"],
+answer:1
+},
+{
+question:"चेक गणराज्य की राजधानी क्या है?",
+options:["ब्रनो","प्राग","ओस्ट्रावा","प्लज़ेन"],
+answer:1
+},
+{
+question:"हंगरी की राजधानी क्या है?",
+options:["बुडापेस्ट","डेब्रेसेन","सेजेड","मिकोल्स"],
+answer:0
+},
+{
+question:"फिनलैंड की राजधानी क्या है?",
+options:["टैम्पेरे","हेलसिंकी","तुर्कु","ओउलु"],
+answer:1
+},
+{
+question:"डेनमार्क की राजधानी क्या है?",
+options:["आरहूस","कोपेनहेगन","ओडेंस","आलबोर्ग"],
+answer:1
+},
+{
+question:"आयरलैंड की राजधानी क्या है?",
+options:["कॉर्क","डबलिन","गॉलवे","लिमरिक"],
+answer:1
+},
+{
+question:"आइसलैंड की राजधानी क्या है?",
+options:["अकुरेरी","रेकजाविक","हफनारफ्योर्डुर","केफ्लाविक"],
+answer:1
+},
+{
+question:"सऊदी अरब की राजधानी क्या है?",
+options:["रियाद","मक्का","जेद्दा","मदीना"],
+answer:0
+},
+{
+question:"इराक की राजधानी क्या है?",
+options:["बगदाद","बसरा","मोसुल","कर्बला"],
+answer:0
+},
+{
+question:"सीरिया की राजधानी क्या है?",
+options:["अलेप्पो","दमिश्क","होम्स","लताकिया"],
+answer:1
+},
+{
+question:"लेबनान की राजधानी क्या है?",
+options:["त्रिपोली","बेरूत","सिडोन","बेक्का"],
+answer:1
+},
+{
+question:"जॉर्डन की राजधानी क्या है?",
+options:["अम्मान","अकाबा","इरबिद","मदाबा"],
+answer:0
+},
+{
+question:"ईरान की राजधानी क्या है?",
+options:["तेहरान","शिराज","इस्फहान","मशहद"],
+answer:0
+},
+{
+question:"अफगानिस्तान की राजधानी क्या है?",
+options:["काबुल","कंधार","हेरात","जालालाबाद"],
+answer:0
+},
+{
+question:"म्यांमार की राजधानी क्या है?",
+options:["यांगून","नैप्यीडॉ","मांडले","बागो"],
+answer:1
+},
+{
+question:"लाओस की राजधानी क्या है?",
+options:["लुआंग प्रबांग","वियनतियाने","पाक्से","सेवान्नाखेत"],
+answer:1
+},
+{
+question:"कंबोडिया की राजधानी क्या है?",
+options:["सिएम रीप","नोम पेन्ह","बट्टामबांग","सिहानोकविले"],
+answer:1
+},
+{
+question:"फिलीपींस की राजधानी क्या है?",
+options:["सेबू","मनीला","डावाओ","क्वेज़ोन सिटी"],
+answer:1
+},
+{
+question:"मंगोलिया की राजधानी क्या है?",
+options:["उलानबटोर","डार्खान","एर्डेनेट","चोइबाल्सान"],
+answer:0
+},
+{
+question:"पेरू की राजधानी क्या है?",
+options:["लिमा","कुस्को","अरेक्विपा","इक्वितोस"],
+answer:0
+},
+{
+question:"कोलंबिया की राजधानी क्या है?",
+options:["बोगोटा","मेडेलिन","काली","बैरांक्विला"],
+answer:0
+},
+{
+question:"वेनेजुएला की राजधानी क्या है?",
+options:["कराकास","वालेंसिया","माराकाइबो","बार्क्विसिमेटो"],
+answer:0
+},
+{
+question:"बोलिविया की राजधानी क्या है?",
+options:["ला पाज़","सुक्रे","सांता क्रूज़","कोचाबांबा"],
+answer:1
+},
+{
+question:"उरुग्वे की राजधानी क्या है?",
+options:["मोंटेवीडियो","पेसांडू","साल्टो","रिवेरा"],
+answer:0
+},
+{
+question:"पैराग्वे की राजधानी क्या है?",
+options:["असुनसियोन","स्यूदाद डेल एस्ते","पेड्रो जुआन","एनकार्नासिओन"],
+answer:0
+},
+{
+question:"क्यूबा की राजधानी क्या है?",
+options:["हवाना","सैंटियागो","कैमागुए","सांता क्लारा"],
+answer:0
+},
+{
+question:"जमैका की राजधानी क्या है?",
+options:["मोंटेगो बे","किंग्स्टन","स्पेनिश टाउन","ओचो रियोस"],
+answer:1
+},
+{
+question:"हैती की राजधानी क्या है?",
+options:["पोर्ट-ऑ-प्रिंस","कप हैतीयन","जैकमेल","लेस कायेस"],
+answer:0
+},
+{
+question:"डोमिनिकन गणराज्य की राजधानी क्या है?",
+options:["सैंटो डोमिंगो","पुंटा काना","सैंटियागो","ला रोमाना"],
+answer:0
+},
+{
+question:"ईरान की मुद्रा क्या है?",
+options:["रियाल","दिनार","रुपया","पाउंड"],
+answer:0
+},
+{
+question:"स्विट्जरलैंड की राजधानी क्या है?",
+options:["बर्न","ज्यूरिख","जिनेवा","बेसल"],
+answer:0
+},
+{
+question:"दक्षिण सूडान की राजधानी क्या है?",
+options:["जुबा","खार्तूम","मालाकाल","वास"],
+answer:0
+},
+
+{
+question:"मेक्सिको की राजधानी क्या है?",
+options:["कैनकुन","मेक्सिको सिटी","ग्वाडलाजारा","मॉन्टेरी"],
+answer:1
+},
+{
+question:"अर्जेंटीना की राजधानी क्या है?",
+options:["ब्यूनस आयर्स","रोसारियो","मेंडोज़ा","लाप्लाटा"],
+answer:0
+},
+{
+question:"चिली की राजधानी क्या है?",
+options:["वालपाराइसो","सैंटियागो","टेमुको","पुंटा एरेनास"],
+answer:1
+},
+{
+question:"ब्राजील की राजधानी क्या है?",
+options:["रियो डी जेनेरियो","ब्रासीलिया","साओ पाउलो","सल्वाडोर"],
+answer:1
+},
+{
+question:"पेरू की राजधानी क्या है?",
+options:["कुस्को","लिमा","अरेक्विपा","ट्रूजिलो"],
+answer:1
+},
+{
+question:"कोलंबिया की राजधानी क्या है?",
+options:["मेडेलिन","बोगोटा","काली","कार्टाजेना"],
+answer:1
+},
+{
+question:"वेनेजुएला की राजधानी क्या है?",
+options:["कराकास","माराकाइबो","वालेंसिया","बार्क्विसिमेटो"],
+answer:0
+},
+{
+question:"बोलिविया की राजधानी (संवैधानिक) क्या है?",
+options:["ला पाज़","सुक्रे","सांता क्रूज़","कोचाबांबा"],
+answer:1
+},
+{
+question:"उरुग्वे की राजधानी क्या है?",
+options:["मोंटेवीडियो","पेसांडू","साल्टो","रिवेरा"],
+answer:0
+},
+{
+question:"पैराग्वे की राजधानी क्या है?",
+options:["असुनसियोन","स्यूदाद डेल एस्ते","पेड्रो जुआन","एनकार्नासिओन"],
+answer:0
+},
+{
+question:"क्यूबा की राजधानी क्या है?",
+options:["हवाना","सैंटियागो","कैमागुए","सांता क्लारा"],
+answer:0
+},
+{
+question:"जमैका की राजधानी क्या है?",
+options:["किंग्स्टन","मोंटेगो बे","ओचो रियोस","स्पेनिश टाउन"],
+answer:0
+},
+{
+question:"हैती की राजधानी क्या है?",
+options:["पोर्ट-ऑ-प्रिंस","कप हैतीयन","जैकमेल","लेस कायेस"],
+answer:0
+},
+{
+question:"डोमिनिकन गणराज्य की राजधानी क्या है?",
+options:["सैंटो डोमिंगो","सैंटियागो","पुंटा काना","ला रोमाना"],
+answer:0
+},
+{
+question:"न्यूजीलैंड की राजधानी क्या है?",
+options:["ऑकलैंड","वेलिंगटन","क्राइस्टचर्च","हैमिल्टन"],
+answer:1
+},
+{
+question:"आइसलैंड की राजधानी क्या है?",
+options:["रेकजाविक","अकुरेरी","केफ्लाविक","हफनारफ्योर्डुर"],
+answer:0
+},
+{
+question:"नॉर्वे की राजधानी क्या है?",
+options:["ओस्लो","बर्गन","ट्रोम्सो","स्टावेंजर"],
+answer:0
+},
+{
+question:"स्वीडन की राजधानी क्या है?",
+options:["स्टॉकहोम","गोथेनबर्ग","माल्मो","उप्साला"],
+answer:0
+},
+{
+question:"फिनलैंड की राजधानी क्या है?",
+options:["हेलसिंकी","टैम्पेरे","तुर्कु","ओउलु"],
+answer:0
+},
+{
+question:"डेनमार्क की राजधानी क्या है?",
+options:["कोपेनहेगन","आरहूस","ओडेंस","आलबोर्ग"],
+answer:0
+}
+];
+
+
+let index = 0;
+let score = 0;
+let timer;
+let timeLeft = 10;
+
+function startQuiz() {
+  document.getElementById("startScreen").classList.add("hide");
+  document.getElementById("quizScreen").classList.remove("hide");
+  loadQuestion();
+}
+
+function loadQuestion() {
+  resetTimer();
+  let q = quizData[index];
+  document.getElementById("question").innerText = q.question;
+  document.getElementById("qNo").innerText = index + 1;
+
+  let optionsHTML = "";
+  q.options.forEach((opt, i) => {
+    optionsHTML += `<div class="option" onclick="selectOption(${i})">${opt}</div>`;
+  });
+
+  document.getElementById("options").innerHTML = optionsHTML;
+}
+
+function selectOption(selected) {
+  let correct = quizData[index].answer;
+  let options = document.querySelectorAll(".option");
+
+  options.forEach((opt, i) => {
+    if (i === correct) opt.classList.add("correct");
+    else if (i === selected) opt.classList.add("wrong");
+
+    opt.style.pointerEvents = "none";
+  });
+
+  if (selected === correct) score++;
+}
+
+function nextQuestion() {
+  index++;
+  if (index < quizData.length) {
+    loadQuestion();
+  } else {
+    showResult();
+  }
+}
+
+  function showResult() {
+  document.getElementById("quizScreen").classList.add("hide");
+  document.getElementById("resultScreen").classList.remove("hide");
+  document.getElementById("score").innerText = score + " / " + quizData.length;
+}
+
+function resetTimer() {
+  clearInterval(timer);
+  timeLeft = 10;
+  document.getElementById("timer").innerText = timeLeft;
+
+  timer = setInterval(() => {
+    timeLeft--;
+    document.getElementById("timer").innerText = timeLeft;
+
+    if (timeLeft === 0) {
+      nextQuestion();
+    }
+  }, 1000);
+}
+
+</script>
+
+</body>
+</html>

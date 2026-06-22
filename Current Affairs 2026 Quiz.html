@@ -1,0 +1,348 @@
+<!DOCTYPE html>
+<html>
+<head>
+   <!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-KN4DRRWZ17"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-KN4DRRWZ17');
+</script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Current Affairs 2026</title>
+
+<style>
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: Arial;
+}
+
+body {
+  background: #f5f5f5;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+}
+
+/* Container */
+.app {
+  width: 95%;
+  max-width: 500px;
+  background: white;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+}
+
+/* Header */
+header {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 20px;
+}
+
+.timer {
+  background: #2196F3;
+  color: white;
+  padding: 5px 10px;
+  border-radius: 5px;
+}
+
+/* Question */
+.question {
+  font-size: 20px;
+  margin-bottom: 15px;
+}
+
+/* Options */
+.option {
+  background: #eee;
+  padding: 10px;
+  margin: 8px 0;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.option:hover {
+  background: #ddd;
+}
+
+.correct {
+  background: #4CAF50 !important;
+  color: white;
+}
+
+.wrong {
+  background: #f44336 !important;
+  color: white;
+}
+
+/* Button */
+button {
+  margin-top: 15px;
+  padding: 10px;
+  width: 100%;
+  border: none;
+ background:linear-gradient(135deg,#0a2dbcf3,#779af583);
+  color: white;
+  font-size: 16px;
+  cursor: pointer;
+  border-radius: 5px;
+}
+
+/* Hidden */
+.hide {
+  display: none;
+}
+
+/* Result */
+.result {
+  text-align: center;
+}
+
+/* Responsive */
+@media (max-width: 600px) {
+  .question {
+    font-size: 18px;
+  }
+}
+</style>
+
+</head>
+<body>
+
+<div class="app">
+
+  <!-- Start Screen -->
+  <div id="startScreen">
+    <h2>Quiz App</h2>
+    <button onclick="startQuiz()">Start Quiz</button>
+  </div>
+
+  <!-- Quiz Screen -->
+  <div id="quizScreen" class="hide">
+    <header>
+      <div>Question <span id="qNo">1</span>/99</div>
+      <div class="timer" id="timer">10</div>
+    </header>
+
+    <div class="question" id="question"></div>
+    <div id="options"></div>
+
+    <button onclick="nextQuestion()">Next</button>
+  </div>
+
+  <!-- Result Screen -->
+  <div id="resultScreen" class="hide result">
+    <h2>Your Score</h2>
+    <h1 id="score"></h1>
+    <button onclick="location.reload()">Play Again</button>
+  </div>
+
+</div>
+
+<script>
+const quizData = [
+  
+{ "question":"G20 का 2025 अध्यक्ष देश कौन है?", "options":["भारत","ब्राज़ील","इटली","जापान"], "answer":1 },
+{ "question":"भारत ने G20 की अध्यक्षता कब संभाली थी?", "options":["2021","2022","2023","2024"], "answer":2 },
+{ "question":"चंद्रयान-3 का प्रज्ञान रोवर किस एजेंसी द्वारा विकसित किया गया?", "options":["NASA","ISRO","ESA","JAXA"], "answer":1 },
+{ "question":"Aditya-L1 मिशन का मुख्य उद्देश्य क्या है?", "options":["चंद्र अध्ययन","सूर्य अध्ययन","मंगल अध्ययन","ग्रह निर्माण"], "answer":1 },
+{ "question":"भारत का पहला AI मिशन किस वर्ष घोषित हुआ?", "options":["2020","2021","2023","2024"], "answer":2 },
+
+{ "question":"भारत का पहला क्वांटम कंप्यूटिंग मिशन किस मंत्रालय ने शुरू किया?", "options":["गृह मंत्रालय","विज्ञान एवं प्रौद्योगिकी मंत्रालय","रक्षा मंत्रालय","शिक्षा मंत्रालय"], "answer":1 },
+{ "question":"IMF की प्रमुख Kristalina Georgieva किस देश से हैं?", "options":["बुल्गारिया","फ्रांस","जर्मनी","कनाडा"], "answer":0 },
+{ "question":"UNFCCC COP-28 2023 कहाँ आयोजित हुआ?", "options":["दुबई","पेरिस","टोक्यो","नई दिल्ली"], "answer":0 },
+{ "question":"BRICS 2024 विस्तार के बाद कितने सदस्य हो गए?", "options":["5","8","10","12"], "answer":2 },
+{ "question":"New Development Bank (NDB) का मुख्यालय कहाँ है?", "options":["बीजिंग","शंघाई","नई दिल्ली","मॉस्को"], "answer":1 },
+
+{ "question":"भारत का Digital Public Infrastructure (DPI) किस मॉडल पर आधारित है?", "options":["Aadhaar-India Stack","Blockchain only","AI only","Cloud only"], "answer":0 },
+{ "question":"UPI का संचालन कौन करता है?", "options":["RBI","NPCI","SEBI","SBI"], "answer":1 },
+{ "question":"भारत में पहला 5G लॉन्च कब हुआ?", "options":["2020","2021","2022","2023"], "answer":2 },
+{ "question":"ISRO का Gaganyaan मिशन किससे संबंधित है?", "options":["चंद्रमा","मानव अंतरिक्ष उड़ान","सूर्य","मंगल"], "answer":1 },
+{ "question":"भारत का सबसे बड़ा AI भाषा मॉडल किस संस्था ने विकसित किया?", "options":["OpenAI","Google","IIT Bombay","ISRO"], "answer":2 },
+
+{ "question":"QS World University Ranking 2025 में भारत का टॉप संस्थान कौन है?", "options":["IIT Bombay","IIT Delhi","IISc Bangalore","IIT Madras"], "answer":2 },
+{ "question":"भारत का पहला semiconductor plant कहाँ स्थापित किया जा रहा है?", "options":["गुजरात","UP","बिहार","केरल"], "answer":0 },
+{ "question":"Mission LiFE किससे संबंधित है?", "options":["अर्थव्यवस्था","पर्यावरण संरक्षण","शिक्षा","स्वास्थ्य"], "answer":1 },
+{ "question":"भारत का सबसे बड़ा विदेशी निवेशक देश कौन है?", "options":["USA","UK","Singapore","Japan"], "answer":0 },
+{ "question":"RBI डिजिटल रुपया किस श्रेणी का है?", "options":["क्रिप्टोकरेंसी","CBDC","शेयर","बॉन्ड"], "answer":1 },
+
+{ "question":"UN Security Council के कितने स्थायी सदस्य हैं?", "options":["3","4","5","6"], "answer":2 },
+{ "question":"India की पहली indigenous aircraft carrier कौन है?", "options":["INS Vikramaditya","INS Vikrant","INS Delhi","INS Arihant"], "answer":1 },
+{ "question":"INS Vikrant को कब कमीशन किया गया?", "options":["2020","2021","2022","2023"], "answer":2 },
+{ "question":"DRDO का मुख्य उद्देश्य क्या है?", "options":["रेलवे","रक्षा तकनीक विकास","शिक्षा","स्वास्थ्य"], "answer":1 },
+{ "question":"India का first private space mission किसने किया?", "options":["Skyroot","ISRO","NASA","Blue Origin"], "answer":0 },
+
+{ "question":"World Bank का मुख्यालय कहाँ है?", "options":["न्यूयॉर्क","वॉशिंगटन DC","लंदन","पेरिस"], "answer":1 },
+{ "question":"AI regulation EU में किस नाम से जाना जाता है?", "options":["AI Act","Digital Act","Tech Law","Cyber Law"], "answer":0 },
+{ "question":"India की G20 presidency theme क्या थी?", "options":["One Earth One Family One Future","Digital India","Green Growth","New World Order"], "answer":0 },
+{ "question":"UNESCO का मुख्य कार्य क्या है?", "options":["युद्ध","शिक्षा, विज्ञान, संस्कृति","व्यापार","रक्षा"], "answer":1 },
+{ "question":"India का पहला AI policy draft किस वर्ष आया?", "options":["2020","2022","2023","2024"], "answer":2 },
+
+{ "question":"भारत का सबसे बड़ा IPO (recent years) किस कंपनी का था?", "options":["LIC","TCS","Reliance","Adani Enterprises"], "answer":0 },
+{ "question":"SEBI की स्थापना कब हुई?", "options":["1988","1992","1995","2000"], "answer":0 },
+{ "question":"भारत का पहला digital bank कौन सा है?", "options":["Paytm Payments Bank","SBI","HDFC","ICICI"], "answer":0 },
+{ "question":"India का fastest growing state economy कौन सा है (recent trends)?", "options":["UP","Gujarat","Maharashtra","Bihar"], "answer":0 },
+{ "question":"NITI Aayog का गठन कब हुआ?", "options":["2014","2015","2016","2017"], "answer":1 },
+
+{ "question":"NASA Artemis program किससे संबंधित है?", "options":["Mars mission","Moon mission","Sun mission","Venus mission"], "answer":1 },
+{ "question":"India-Middle East-Europe Economic Corridor (IMEEC) किस वर्ष लॉन्च हुआ?", "options":["2021","2022","2023","2024"], "answer":2 },
+{ "question":"India का पहला hydrogen train किसने विकसित किया?", "options":["ISRO","Indian Railways","DRDO","BHEL"], "answer":1 },
+{ "question":"WHO का मुख्यालय कहाँ है?", "options":["पेरिस","जेनेवा","न्यूयॉर्क","लंदन"], "answer":1 },
+{ "question":"India का पहला AI supercomputer project किससे जुड़ा है?", "options":["PARAM","INSAT","Aryabhata","Agni"], "answer":0 },
+
+{ "question":"India की first AI university किस राज्य में प्रस्तावित है?", "options":["UP","MP","Karnataka","Tamil Nadu"], "answer":0 },
+{ "question":"Indian Space Policy 2023 किसे बढ़ावा देती है?", "options":["Private space sector","Only ISRO","Foreign control","Defense only"], "answer":0 },
+{ "question":"India का first space tourism company कौन है?", "options":["Skyroot","ISRO","Blue Origin","NASA"], "answer":0 },
+{ "question":"Global Hunger Index 2024 में भारत की स्थिति कैसी रही?", "options":["Top 10","Moderate","Low rank","Top 5"], "answer":2 },
+{ "question":"India का first AI chip design कहाँ हुआ?", "options":["IIT Madras","IIT Delhi","IISc","DRDO"], "answer":0 },
+
+{ "question":"RBI का मुख्यालय कहाँ है?", "options":["दिल्ली","मुंबई","कोलकाता","चेन्नई"], "answer":1 },
+{ "question":"India का largest export sector कौन सा है?", "options":["IT services","Agriculture","Steel","Coal"], "answer":0 },
+{ "question":"World Economic Forum कहाँ होता है?", "options":["दावोस","पेरिस","न्यूयॉर्क","टोक्यो"], "answer":0 },
+{ "question":"India का first AI defence system किसने बनाया?", "options":["DRDO","ISRO","HAL","BEL"], "answer":0 },
+{ "question":"India का semiconductor mission किस year शुरू हुआ?", "options":["2020","2021","2022","2023"], "answer":2 },
+
+{ "question":"India का first AI robotics lab कहाँ है?", "options":["IIT Madras","IIT Bombay","IIT Kanpur","IISc"], "answer":0 },
+{ "question":"India का first digital currency pilot किस शहर में शुरू हुआ?", "options":["Delhi","Mumbai","Bengaluru","Kolkata"], "answer":1 },
+{ "question":"India का most valuable company (recent years) कौन है?", "options":["Reliance","TCS","Infosys","HDFC Bank"], "answer":0 },
+{ "question":"India का first space dock mission किस year planned है?", "options":["2024","2025","2026","2027"], "answer":2 },
+{ "question":"India का largest port कौन सा है?", "options":["Kandla","Mumbai Port","Chennai Port","Kolkata Port"], "answer":0 },
+
+{ "question":"India का first AI based election system किसने propose किया?", "options":["ECI","RBI","SEBI","DRDO"], "answer":0 },
+{ "question":"India का national AI strategy किस year आया?", "options":["2017","2018","2019","2020"], "answer":1 },
+{ "question":"India का first hyperloop project कहाँ है?", "options":["UP","Maharashtra","Gujarat","Karnataka"], "answer":1 },
+{ "question":"India का largest river island कौन सा है?", "options":["Majuli","Diu","Bhavani","Sagar"], "answer":0 },
+
+{ "question":"भारत ने डिजिटल पब्लिक इंफ्रास्ट्रक्चर (DPI) को किस वैश्विक मंच पर प्रमुख रूप से प्रस्तुत किया?", "options":["G7","G20","BRICS","ASEAN"], "answer":1 },
+{ "question":"India का पहला indigenous 4G/5G stack किसने विकसित किया?", "options":["TCS","C-DOT","Infosys","ISRO"], "answer":1 },
+{ "question":"India AI Mission 2024 का मुख्य उद्देश्य क्या है?", "options":["कृषि सुधार","AI ecosystem development","Space exploration","Defence export"], "answer":1 },
+{ "question":"India का first AI semiconductor chip किस वर्ष घोषित हुआ?", "options":["2022","2023","2024","2025"], "answer":2 },
+{ "question":"Global AI Safety Summit 2023 कहाँ हुआ?", "options":["UK","USA","India","France"], "answer":0 },
+
+{ "question":"India का first hydrogen powered train किस संगठन द्वारा विकसित किया जा रहा है?", "options":["ISRO","Indian Railways","DRDO","BHEL"], "answer":1 },
+{ "question":"India का fastest growing digital payment system कौन सा है?", "options":["NEFT","RTGS","UPI","IMPS"], "answer":2 },
+{ "question":"India का first quantum computer hub कहाँ स्थापित किया जा रहा है?", "options":["Delhi","Bengaluru","Pune","Hyderabad"], "answer":1 },
+{ "question":"India Semiconductor Mission का बजट लगभग कितना है?", "options":["5 billion USD","10 billion USD","15 billion USD","20 billion USD"], "answer":1 },
+{ "question":"India का first AI policy किस संस्था ने तैयार किया?", "options":["NITI Aayog","RBI","SEBI","DRDO"], "answer":0 },
+
+{ "question":"UN Climate Change Conference COP-29 कहाँ प्रस्तावित है?", "options":["Azerbaijan","India","Brazil","Japan"], "answer":0 },
+{ "question":"India का first AI defence drone किसने विकसित किया?", "options":["HAL","DRDO","ISRO","BEL"], "answer":1 },
+{ "question":"India का first private satellite launch company कौन है?", "options":["Skyroot","ISRO","NASA","Blue Origin"], "answer":0 },
+{ "question":"India का first space tourism mission किसने शुरू किया?", "options":["ISRO","Skyroot","NASA","SpaceX"], "answer":1 },
+{ "question":"India की G20 presidency का मुख्य फोकस क्या था?", "options":["War","Development","Digital transformation","Sports"], "answer":2 },
+
+{ "question":"World Bank की मुख्य रिपोर्ट किस पर आधारित होती है?", "options":["GDP only","Development indicators","Military power","Sports"], "answer":1 },
+{ "question":"IMF का मुख्य उद्देश्य क्या है?", "options":["Education","Financial stability","Defence","Health"], "answer":1 },
+{ "question":"India का first AI-powered education platform कौन सा है?", "options":["DIKSHA","SWAYAM","eVidya","AI Classroom"], "answer":0 },
+{ "question":"India का largest renewable energy producer state कौन है?", "options":["Gujarat","Rajasthan","Tamil Nadu","Maharashtra"], "answer":1 },
+{ "question":"India का first AI super app किस sector में है?", "options":["Health","Finance","Agriculture","Education"], "answer":1 },
+
+{ "question":"India का first hyperloop test track किस राज्य में है?", "options":["UP","Maharashtra","Gujarat","Karnataka"], "answer":1 },
+{ "question":"NASA Artemis mission का उद्देश्य क्या है?", "options":["Mars landing","Moon exploration","Sun study","Asteroid mining"], "answer":1 },
+{ "question":"India का first deep sea mission किस वर्ष लॉन्च हुआ?", "options":["2020","2021","2023","2024"], "answer":2 },
+{ "question":"India का Samudrayaan mission किससे संबंधित है?", "options":["Space","Deep sea exploration","Defence","AI"], "answer":1 },
+{ "question":"India का first AI-based railway system कहाँ शुरू हुआ?", "options":["Delhi","Mumbai","Bengaluru","Chennai"], "answer":0 },
+
+{ "question":"India का first 6G testbed किसने लॉन्च किया?", "options":["IITs","DRDO","ISRO","NITI Aayog"], "answer":0 },
+{ "question":"India का Digital Rupee किस प्रकार की मुद्रा है?", "options":["Crypto","CBDC","Gold backed","Paper note"], "answer":1 },
+{ "question":"World Economic Forum का मुख्यालय कहाँ है?", "options":["Geneva","Davos","New York","Paris"], "answer":1 },
+{ "question":"India का first AI research park कहाँ बन रहा है?", "options":["Kerala","Karnataka","UP","MP"], "answer":1 },
+{ "question":"India का largest IT exporter कौन है?", "options":["Infosys","TCS","Wipro","HCL"], "answer":1 },
+
+{ "question":"India का first AI health mission किससे जुड़ा है?", "options":["Ayushman Bharat","Digital India","Make in India","Skill India"], "answer":0 },
+{ "question":"India का largest startup ecosystem किस शहर में है?", "options":["Delhi","Mumbai","Bengaluru","Pune"], "answer":2 },
+{ "question":"India का first AI-based election monitoring system किसने बनाया?", "options":["ECI","RBI","DRDO","SEBI"], "answer":0 },
+{ "question":"India का first semiconductor fab plant कहाँ है?", "options":["Gujarat","UP","Bihar","Rajasthan"], "answer":0 },
+{ "question":"India का first AI global summit किस वर्ष हुआ?", "options":["2022","2023","2024","2025"], "answer":1 },
+
+{ "question":"India का first AI governance framework किसने जारी किया?", "options":["NITI Aayog","RBI","SEBI","DRDO"], "answer":0 },
+{ "question":"India का largest port container handling कौन सा है?", "options":["Mumbai","Kandla","Jawaharlal Nehru Port","Chennai"], "answer":2 },
+{ "question":"India का first AI robotics institute कहाँ है?", "options":["IIT Madras","IIT Delhi","IISc","DRDO"], "answer":0 },
+{ "question":"India का first AI agriculture drone किसने बनाया?", "options":["ISRO","DRDO","Private startups","HAL"], "answer":2 },
+{ "question":"India का national AI strategy किस वर्ष प्रकाशित हुआ?", "options":["2017","2018","2019","2020"], "answer":1 }
+
+  ];
+
+
+let index = 0;
+let score = 0;
+let timer;
+let timeLeft = 10;
+
+function startQuiz() {
+  document.getElementById("startScreen").classList.add("hide");
+  document.getElementById("quizScreen").classList.remove("hide");
+  loadQuestion();
+}
+
+function loadQuestion() {
+  resetTimer();
+  let q = quizData[index];
+  document.getElementById("question").innerText = q.question;
+  document.getElementById("qNo").innerText = index + 1;
+
+  let optionsHTML = "";
+  q.options.forEach((opt, i) => {
+    optionsHTML += `<div class="option" onclick="selectOption(${i})">${opt}</div>`;
+  });
+
+  document.getElementById("options").innerHTML = optionsHTML;
+}
+
+function selectOption(selected) {
+  let correct = quizData[index].answer;
+  let options = document.querySelectorAll(".option");
+
+  options.forEach((opt, i) => {
+    if (i === correct) opt.classList.add("correct");
+    else if (i === selected) opt.classList.add("wrong");
+
+    opt.style.pointerEvents = "none";
+  });
+
+  if (selected === correct) score++;
+}
+
+function nextQuestion() {
+  index++;
+  if (index < quizData.length) {
+    loadQuestion();
+  } else {
+    showResult();
+  }
+}
+
+  function showResult() {
+  document.getElementById("quizScreen").classList.add("hide");
+  document.getElementById("resultScreen").classList.remove("hide");
+  document.getElementById("score").innerText = score + " / " + quizData.length;
+}
+
+function resetTimer() {
+  clearInterval(timer);
+  timeLeft = 10;
+  document.getElementById("timer").innerText = timeLeft;
+
+  timer = setInterval(() => {
+    timeLeft--;
+    document.getElementById("timer").innerText = timeLeft;
+
+    if (timeLeft === 0) {
+      nextQuestion();
+    }
+  }, 1000);
+}
+
+</script>
+
+</body>
+</html>

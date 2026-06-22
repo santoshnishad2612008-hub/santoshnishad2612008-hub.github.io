@@ -1,0 +1,347 @@
+<!DOCTYPE html>
+<html>
+<head>
+     <!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-KN4DRRWZ17"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-KN4DRRWZ17');
+</script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Indian Economy Quiz</title>
+
+<style>
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: Arial;
+}
+
+body {
+  background: #f5f5f5;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+}
+
+/* Container */
+.app {
+  width: 95%;
+  max-width: 500px;
+  background: white;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+}
+
+/* Header */
+header {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 20px;
+}
+
+.timer {
+  background: #2196F3;
+  color: white;
+  padding: 5px 10px;
+  border-radius: 5px;
+}
+
+/* Question */
+.question {
+  font-size: 20px;
+  margin-bottom: 15px;
+}
+
+/* Options */
+.option {
+  background: #eee;
+  padding: 10px;
+  margin: 8px 0;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.option:hover {
+  background: #ddd;
+}
+
+.correct {
+  background: #4CAF50 !important;
+  color: white;
+}
+
+.wrong {
+  background: #f44336 !important;
+  color: white;
+}
+
+/* Button */
+button {
+  margin-top: 15px;
+  padding: 10px;
+  width: 100%;
+  border: none;
+ background:linear-gradient(135deg,#0a2dbcf3,#779af583);
+  color: white;
+  font-size: 16px;
+  cursor: pointer;
+  border-radius: 5px;
+}
+
+/* Hidden */
+.hide {
+  display: none;
+}
+
+/* Result */
+.result {
+  text-align: center;
+}
+
+/* Responsive */
+@media (max-width: 600px) {
+  .question {
+    font-size: 18px;
+  }
+}
+</style>
+
+</head>
+<body>
+
+<div class="app">
+
+  <!-- Start Screen -->
+  <div id="startScreen">
+    <h2>Quiz App</h2>
+    <button onclick="startQuiz()">Start Quiz</button>
+  </div>
+
+  <!-- Quiz Screen -->
+  <div id="quizScreen" class="hide">
+    <header>
+      <div>Question <span id="qNo">1</span>/100</div>
+      <div class="timer" id="timer">10</div>
+    </header>
+
+    <div class="question" id="question"></div>
+    <div id="options"></div>
+
+    <button onclick="nextQuestion()">Next</button>
+  </div>
+
+  <!-- Result Screen -->
+  <div id="resultScreen" class="hide result">
+    <h2>Your Score</h2>
+    <h1 id="score"></h1>
+    <button onclick="location.reload()">Play Again</button>
+  </div>
+
+</div>
+
+<script>
+const quizData = [
+
+{ question:"भारत की अर्थव्यवस्था किस प्रकार की है?", options:["पूंजीवादी","मिश्रित","समाजवादी","स्थिर"], answer:1 },
+{ question:"भारत का केंद्रीय बैंक कौन सा है?", options:["SBI","RBI","PNB","BOB"], answer:1 },
+{ question:"RBI की स्थापना कब हुई थी?", options:["1935","1947","1950","1920"], answer:0 },
+{ question:"GDP का पूरा नाम क्या है?", options:["Gross Domestic Product","General Domestic Product","Gross Development Plan","General Development Product"], answer:0 },
+{ question:"भारत में योजना आयोग की जगह किसने ली?", options:["NITI Aayog","Finance Commission","RBI","Parliament"], answer:0 },
+{ question:"भारत की पहली पंचवर्षीय योजना कब शुरू हुई?", options:["1947","1951","1955","1961"], answer:1 },
+{ question:"GST भारत में कब लागू हुआ?", options:["2015","2016","2017","2018"], answer:2 },
+{ question:"भारत का सबसे बड़ा सार्वजनिक बैंक कौन सा है?", options:["BOB","SBI","PNB","Canara Bank"], answer:1 },
+{ question:"मुद्रास्फीति किससे संबंधित है?", options:["जनसंख्या","कीमतों में वृद्धि","उत्पादन","निर्यात"], answer:1 },
+{ question:"भारत में कृषि किस क्षेत्र में आती है?", options:["प्राथमिक","द्वितीयक","तृतीयक","चतुर्थक"], answer:0 },
+
+{ question:"NITI Aayog की स्थापना कब हुई?", options:["2014","2015","2016","2017"], answer:1 },
+{ question:"भारत की मुद्रा कौन जारी करता है?", options:["SBI","RBI","Finance Ministry","SEBI"], answer:1 },
+{ question:"बजट कौन प्रस्तुत करता है?", options:["प्रधानमंत्री","वित्त मंत्री","RBI गवर्नर","राष्ट्रपति"], answer:1 },
+{ question:"भारत में सबसे बड़ा रोजगार क्षेत्र कौन सा है?", options:["IT","कृषि","उद्योग","सेवा"], answer:1 },
+{ question:"HDI का पूरा नाम क्या है?", options:["Human Development Index","Human Design Index","Health Development Index","Home Development Index"], answer:0 },
+
+{ question:"भारत में सबसे अधिक योगदान किस क्षेत्र का GDP में है?", options:["कृषि","उद्योग","सेवा","खनन"], answer:2 },
+{ question:"SEBI का पूरा नाम क्या है?", options:["Securities and Exchange Board of India","Stock Exchange Bureau of India","Security Bank of India","Share Exchange Board of India"], answer:0 },
+{ question:"भारत में पहला बैंक कौन सा था?", options:["SBI","Bank of Hindustan","PNB","BOB"], answer:1 },
+{ question:"भारतीय अर्थव्यवस्था का मुख्य आधार क्या है?", options:["कृषि","IT","बैंकिंग","उद्योग"], answer:0 },
+{ question:"मौद्रिक नीति कौन बनाता है?", options:["RBI","SEBI","Finance Ministry","NITI Aayog"], answer:0 },
+
+{ question:"राजकोषीय नीति किससे संबंधित है?", options:["बैंकिंग","सरकारी खर्च और कर","निर्यात","कृषि"], answer:1 },
+{ question:"भारत का सबसे बड़ा निर्यात क्षेत्र कौन सा है?", options:["कृषि","सेवा","खनिज","हथियार"], answer:1 },
+{ question:"GDP में 'P' का मतलब क्या है?", options:["Product","Profit","Plan","Policy"], answer:0 },
+{ question:"भारत में विदेशी निवेश को क्या कहते हैं?", options:["FDI","GDP","CPI","PPP"], answer:0 },
+{ question:"CPI का पूरा नाम क्या है?", options:["Consumer Price Index","Central Price Index","Common Price Index","Consumer Product Index"], answer:0 },
+
+{ question:"भारत में सबसे अधिक रोजगार किसमें है?", options:["कृषि","सेवा","IT","बैंकिंग"], answer:0 },
+{ question:"भारत में टैक्स कौन वसूलता है?", options:["RBI","CBDT","SEBI","NITI Aayog"], answer:1 },
+{ question:"प्रत्यक्ष कर का उदाहरण क्या है?", options:["GST","आयकर","VAT","Excise Duty"], answer:1 },
+{ question:"अप्रत्यक्ष कर का उदाहरण क्या है?", options:["Income Tax","GST","Wealth Tax","Corporate Tax"], answer:1 },
+{ question:"भारत का सबसे बड़ा व्यापारिक बंदरगाह कौन सा है?", options:["मुंबई","चेन्नई","कोलकाता","कांडला"], answer:0 },
+
+{ question:"World Bank का मुख्यालय कहाँ है?", options:["नई दिल्ली","वॉशिंगटन DC","लंदन","पेरिस"], answer:1 },
+{ question:"IMF का पूरा नाम क्या है?", options:["International Monetary Fund","International Money Fund","Indian Monetary Fund","International Market Fund"], answer:0 },
+{ question:"भारत में शेयर बाजार का नियामक कौन है?", options:["RBI","SEBI","NITI Aayog","Finance Ministry"], answer:1 },
+{ question:"BSE का पूरा नाम क्या है?", options:["Bombay Stock Exchange","Bharat Stock Exchange","Business Stock Exchange","Bank Stock Exchange"], answer:0 },
+{ question:"NSE का पूरा नाम क्या है?", options:["National Stock Exchange","New Stock Exchange","National Share Exchange","Net Stock Exchange"], answer:0 },
+
+{ question:"भारत में गरीबी मापने का पैमाना क्या है?", options:["HDI","BPL","GDP","CPI"], answer:1 },
+{ question:"BPL का मतलब क्या है?", options:["Below Poverty Line","Basic Poverty Level","Below Profit Line","Better Poverty Level"], answer:0 },
+{ question:"भारत का सबसे बड़ा उद्योग क्षेत्र कौन सा है?", options:["सूचना प्रौद्योगिकी","कृषि","उत्पादन","खनन"], answer:0 },
+{ question:"स्टार्टअप इंडिया योजना कब शुरू हुई?", options:["2014","2015","2016","2017"], answer:1 },
+{ question:"Make in India का उद्देश्य क्या है?", options:["आयात बढ़ाना","उत्पादन बढ़ाना","बैंकिंग सुधार","कृषि सुधार"], answer:1 },
+
+{ question:"भारत में सबसे अधिक कर कौन सा है?", options:["GST","Income Tax","Custom Duty","Excise"], answer:0 },
+{ question:"Repo Rate किससे संबंधित है?", options:["RBI","SEBI","NITI Aayog","Parliament"], answer:0 },
+{ question:"Reverse Repo Rate कौन तय करता है?", options:["RBI","Finance Ministry","SEBI","World Bank"], answer:0 },
+{ question:"भारत की अर्थव्यवस्था का प्रकार क्या है?", options:["Mixed Economy","Capitalist","Socialist","Traditional"], answer:0 },
+{ question:"Inflation का मतलब क्या है?", options:["कीमतों में गिरावट","कीमतों में वृद्धि","उत्पादन वृद्धि","निर्यात वृद्धि"], answer:1 },
+
+{ question:"Deflation क्या है?", options:["कीमत बढ़ना","कीमत घटना","GDP बढ़ना","टैक्स बढ़ना"], answer:1 },
+{ question:"भारत में सबसे बड़ा बैंक कौन सा है?", options:["SBI","PNB","BOB","Canara Bank"], answer:0 },
+{ question:"Forex Reserve किससे संबंधित है?", options:["विदेशी मुद्रा","सोना","कृषि","टैक्स"], answer:0 },
+{ question:"भारत में बजट किस महीने प्रस्तुत होता है?", options:["जनवरी","फरवरी","मार्च","अप्रैल"], answer:1 },
+{ question:"Direct Tax किस पर लगता है?", options:["वस्तुओं पर","आय पर","सेवा पर","निर्यात पर"], answer:1 },
+
+{ question:"Indirect Tax किस पर लगता है?", options:["आय पर","वस्तुओं और सेवाओं पर","भूमि पर","मजदूरी पर"], answer:1 },
+{ question:"भारत का सबसे बड़ा IT हब कौन सा है?", options:["मुंबई","बैंगलोर","दिल्ली","चेन्नई"], answer:1 },
+{ question:"Fiscal Deficit क्या होता है?", options:["आय-व्यय का अंतर","निर्यात","GDP","मुद्रा"], answer:0 },
+{ question:"Economic Growth मापने का मुख्य तरीका क्या है?", options:["HDI","GDP","CPI","PPP"], answer:1 },
+{ question:"PPP का पूरा नाम क्या है?", options:["Purchasing Power Parity","Public Private Partnership","Price Policy Plan","Private Product Plan"], answer:0 },
+
+{ question:"भारत में सबसे बड़ा रेलवे नेटवर्क किसका है?", options:["USA","China","India","Russia"], answer:2 },
+{ question:"Budget शब्द किससे संबंधित है?", options:["सरकारी आय-व्यय","कृषि","IT","शिक्षा"], answer:0 },
+{ question:"भारत का सबसे बड़ा निर्यात उत्पाद क्या है?", options:["सोना","पेट्रोलियम उत्पाद","कपड़ा","चावल"], answer:1 },
+{ question:"MSME का पूरा नाम क्या है?", options:["Micro Small Medium Enterprises","Market Small Medium Economy","Main Sector Medium Enterprises","Micro State Medium Economy"], answer:0 },
+{ question:"भारत में सबसे अधिक रोजगार किस क्षेत्र में है?", options:["सेवा","कृषि","उद्योग","IT"], answer:1 },
+
+{ question:"भारत का सबसे बड़ा आयात क्या है?", options:["तेल","कपड़ा","चावल","सोना"], answer:0 },
+{ question:"भारत में मुद्रा स्फीति को कौन नियंत्रित करता है?", options:["RBI","SEBI","NITI Aayog","World Bank"], answer:0 },
+{ question:"Industrial Policy किससे संबंधित है?", options:["उद्योग","कृषि","बैंकिंग","शिक्षा"], answer:0 },
+{ question:"भारत में आर्थिक योजना कौन बनाता था?", options:["NITI Aayog","Planning Commission","RBI","SEBI"], answer:1 },
+{ question:"Goods and Services Tax का संक्षेप क्या है?", options:["GST","GAT","GSP","GIT"], answer:0 },
+
+{ question:"भारत में सबसे बड़ा विदेशी निवेशक देश कौन सा है?", options:["USA","UK","Mauritius","China"], answer:2 },
+{ question:"Current Account किससे संबंधित है?", options:["विदेशी व्यापार","कृषि","बैंकिंग","IT"], answer:0 },
+{ question:"Capital Account किससे संबंधित है?", options:["निवेश","कृषि","शिक्षा","स्वास्थ्य"], answer:0 },
+{ question:"भारत की अर्थव्यवस्था किस पर आधारित है?", options:["कृषि और सेवा","केवल उद्योग","केवल IT","केवल व्यापार"], answer:0 },
+{ question:"Economic Survey कौन जारी करता है?", options:["RBI","Finance Ministry","SEBI","NITI Aayog"], answer:1 },
+
+{ question:"भारत में बैंक दर (Bank Rate) कौन तय करता है?", options:["SEBI","RBI","Finance Ministry","NITI Aayog"], answer:1 },
+{ question:"भारत में सबसे बड़ा सार्वजनिक क्षेत्र उद्योग कौन सा है?", options:["रेलवे","IT","बैंकिंग","कृषि"], answer:0 },
+{ question:"CRR का पूरा नाम क्या है?", options:["Cash Reserve Ratio","Credit Reserve Ratio","Central Revenue Rate","Cash Return Ratio"], answer:0 },
+{ question:"SLR का पूरा नाम क्या है?", options:["Statutory Liquidity Ratio","Standard Loan Rate","State Liquidity Reserve","Secure Loan Ratio"], answer:0 },
+{ question:"भारत में मौद्रिक नीति समिति (MPC) का प्रमुख कौन होता है?", options:["प्रधानमंत्री","RBI गवर्नर","वित्त मंत्री","राष्ट्रपति"], answer:1 },
+
+{ question:"भारत का सबसे बड़ा कृषि उत्पाद कौन सा है?", options:["गेहूं","चावल","गन्ना","कपास"], answer:1 },
+{ question:"हरित क्रांति का मुख्य उद्देश्य क्या था?", options:["उद्योग बढ़ाना","कृषि उत्पादन बढ़ाना","निर्यात बढ़ाना","शिक्षा सुधार"], answer:1 },
+{ question:"भारत में गरीबी रेखा किस पर आधारित है?", options:["आय","शिक्षा","उम्र","लिंग"], answer:0 },
+{ question:"NABARD का पूरा नाम क्या है?", options:["National Bank for Agriculture and Rural Development","National Bank for Asset and Rural Development","New Agricultural Bank of Rural Development","National Bureau of Agriculture"], answer:0 },
+{ question:"भारत में ग्रामीण विकास का मुख्य बैंक कौन सा है?", options:["SBI","NABARD","RBI","SEBI"], answer:1 },
+
+{ question:"भारत में सबसे बड़ा सेवा क्षेत्र कौन सा है?", options:["IT और ITES","कृषि","खनन","निर्माण"], answer:0 },
+{ question:"भारत में औद्योगिक उत्पादन सूचकांक क्या मापता है?", options:["GDP","उत्पादन वृद्धि","मुद्रा स्फीति","जनसंख्या"], answer:1 },
+{ question:"IIP का पूरा नाम क्या है?", options:["Index of Industrial Production","Indian Industrial Policy","Internal Industry Plan","Index of Inflation Production"], answer:0 },
+{ question:"भारत में आयकर कौन वसूलता है?", options:["CBDT","CBIC","RBI","SEBI"], answer:0 },
+{ question:"CBIC का पूरा नाम क्या है?", options:["Central Board of Indirect Taxes and Customs","Central Bank of India Council","Customs Board of Internal Commerce","Central Bureau of Income Control"], answer:0 },
+
+{ question:"भारत का सबसे बड़ा आयात भागीदार कौन सा देश है?", options:["USA","China","UK","Russia"], answer:1 },
+{ question:"भारत का सबसे बड़ा निर्यात भागीदार कौन सा देश है?", options:["USA","UK","UAE","Japan"], answer:0 },
+{ question:"वित्तीय वर्ष भारत में कब से कब तक होता है?", options:["जनवरी-दिसंबर","अप्रैल-मार्च","मार्च-अप्रैल","जुलाई-जून"], answer:1 },
+{ question:"भारत में सबसे बड़ा बंदरगाह कौन सा है?", options:["मुंबई","कांडला","चेन्नई","कोलकाता"], answer:1 },
+{ question:"Forex का पूरा नाम क्या है?", options:["Foreign Exchange","Foreign Export","Financial Exchange","Free Exchange"], answer:0 },
+
+{ question:"भारत में मुद्रा आपूर्ति कौन नियंत्रित करता है?", options:["RBI","SEBI","NITI Aayog","Finance Ministry"], answer:0 },
+{ question:"भारत में सबसे अधिक रोजगार किस क्षेत्र में उत्पन्न होता है?", options:["कृषि","सेवा","उद्योग","IT"], answer:0 },
+{ question:"भारत का सबसे बड़ा निजी बैंक कौन सा है?", options:["HDFC Bank","SBI","PNB","BOB"], answer:0 },
+{ question:"HDFC का पूरा नाम क्या है?", options:["Housing Development Finance Corporation","Home Development Finance Company","Housing Domestic Finance Corporation","High Development Finance Company"], answer:0 },
+{ question:"भारत में बैंकिंग सुधार किस समिति से जुड़े हैं?", options:["नरसिम्हम समिति","अंबेडकर समिति","राधाकृष्णन समिति","माल्या समिति"], answer:0 },
+
+{ question:"भारत में GDP की गणना कौन करता है?", options:["CSO","RBI","SEBI","NITI Aayog"], answer:0 },
+{ question:"CSO का पूरा नाम क्या है?", options:["Central Statistics Office","Central State Office","Chief Statistical Office","Central Survey Office"], answer:0 },
+{ question:"भारत में सबसे बड़ा विदेशी मुद्रा भंडार किसमें रखा जाता है?", options:["RBI","World Bank","IMF","SEBI"], answer:0 },
+{ question:"भारत में आर्थिक सर्वेक्षण कब जारी होता है?", options:["बजट से पहले","बजट के बाद","पूरे वर्ष","हर 5 साल में"], answer:0 },
+{ question:"भारत का सबसे बड़ा ऊर्जा स्रोत क्या है?", options:["कोयला","सौर ऊर्जा","पवन ऊर्जा","जल"], answer:0 }
+];
+
+
+let index = 0;
+let score = 0;
+let timer;
+let timeLeft = 10;
+
+function startQuiz() {
+  document.getElementById("startScreen").classList.add("hide");
+  document.getElementById("quizScreen").classList.remove("hide");
+  loadQuestion();
+}
+
+function loadQuestion() {
+  resetTimer();
+  let q = quizData[index];
+  document.getElementById("question").innerText = q.question;
+  document.getElementById("qNo").innerText = index + 1;
+
+  let optionsHTML = "";
+  q.options.forEach((opt, i) => {
+    optionsHTML += `<div class="option" onclick="selectOption(${i})">${opt}</div>`;
+  });
+
+  document.getElementById("options").innerHTML = optionsHTML;
+}
+
+function selectOption(selected) {
+  let correct = quizData[index].answer;
+  let options = document.querySelectorAll(".option");
+
+  options.forEach((opt, i) => {
+    if (i === correct) opt.classList.add("correct");
+    else if (i === selected) opt.classList.add("wrong");
+
+    opt.style.pointerEvents = "none";
+  });
+
+  if (selected === correct) score++;
+}
+
+function nextQuestion() {
+  index++;
+  if (index < quizData.length) {
+    loadQuestion();
+  } else {
+    showResult();
+  }
+}
+
+  function showResult() {
+  document.getElementById("quizScreen").classList.add("hide");
+  document.getElementById("resultScreen").classList.remove("hide");
+  document.getElementById("score").innerText = score + " / " + quizData.length;
+}
+
+function resetTimer() {
+  clearInterval(timer);
+  timeLeft = 10;
+  document.getElementById("timer").innerText = timeLeft;
+
+  timer = setInterval(() => {
+    timeLeft--;
+    document.getElementById("timer").innerText = timeLeft;
+
+    if (timeLeft === 0) {
+      nextQuestion();
+    }
+  }, 1000);
+}
+
+</script>
+
+</body>
+</html>

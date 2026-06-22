@@ -1,0 +1,347 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-KN4DRRWZ17"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-KN4DRRWZ17');
+</script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Chemistry Quiz</title>
+
+<style>
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: Arial;
+}
+
+body {
+  background: #f5f5f5;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+}
+
+/* Container */
+.app {
+  width: 95%;
+  max-width: 500px;
+  background: white;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+}
+
+/* Header */
+header {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 20px;
+}
+
+.timer {
+  background: #2196F3;
+  color: white;
+  padding: 5px 10px;
+  border-radius: 5px;
+}
+
+/* Question */
+.question {
+  font-size: 20px;
+  margin-bottom: 15px;
+}
+
+/* Options */
+.option {
+  background: #eee;
+  padding: 10px;
+  margin: 8px 0;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.option:hover {
+  background: #ddd;
+}
+
+.correct {
+  background: #4CAF50 !important;
+  color: white;
+}
+
+.wrong {
+  background: #f44336 !important;
+  color: white;
+}
+
+/* Button */
+button {
+  margin-top: 15px;
+  padding: 10px;
+  width: 100%;
+  border: none;
+ background:linear-gradient(135deg,#0a2dbcf3,#779af583);
+  color: white;
+  font-size: 16px;
+  cursor: pointer;
+  border-radius: 5px;
+}
+
+/* Hidden */
+.hide {
+  display: none;
+}
+
+/* Result */
+.result {
+  text-align: center;
+}
+
+/* Responsive */
+@media (max-width: 600px) {
+  .question {
+    font-size: 18px;
+  }
+}
+</style>
+
+</head>
+<body>
+
+<div class="app">
+
+  <!-- Start Screen -->
+  <div id="startScreen">
+    <h2>Quiz App</h2>
+    <button onclick="startQuiz()">Start Quiz</button>
+  </div>
+
+  <!-- Quiz Screen -->
+  <div id="quizScreen" class="hide">
+    <header>
+      <div>Question <span id="qNo">1</span>/100</div>
+      <div class="timer" id="timer">10</div>
+    </header>
+
+    <div class="question" id="question"></div>
+    <div id="options"></div>
+
+    <button onclick="nextQuestion()">Next</button>
+  </div>
+
+  <!-- Result Screen -->
+  <div id="resultScreen" class="hide result">
+    <h2>Your Score</h2>
+    <h1 id="score"></h1>
+    <button onclick="location.reload()">Play Again</button>
+  </div>
+
+</div>
+
+<script>
+const quizData = [
+
+{ question:"पानी का रासायनिक सूत्र क्या है?", options:["CO2","H2O","O2","NaCl"], answer:1 },
+{ question:"ऑक्सीजन का परमाणु क्रमांक क्या है?", options:["6","7","8","9"], answer:2 },
+{ question:"NaCl किसका उदाहरण है?", options:["अम्ल","क्षार","लवण","धातु"], answer:2 },
+{ question:"pH स्केल का रेंज क्या होता है?", options:["0-7","7-14","0-14","1-10"], answer:2 },
+{ question:"लोहे का रासायनिक प्रतीक क्या है?", options:["Ir","Fe","In","I"], answer:1 },
+{ question:"जल का कठोरता का कारण क्या है?", options:["NaCl","Ca और Mg लवण","KCl","Fe"], answer:1 },
+{ question:"आवर्त सारणी में कुल कितने समूह हैं?", options:["7","16","18","20"], answer:2 },
+{ question:"CO2 किस प्रकार की गैस है?", options:["ज्वलनशील","अम्लीय ऑक्साइड","क्षारीय ऑक्साइड","निष्क्रिय"], answer:1 },
+{ question:"सोडियम का प्रतीक क्या है?", options:["So","Sd","Na","Sm"], answer:2 },
+{ question:"हाइड्रोजन का परमाणु क्रमांक क्या है?", options:["1","2","3","4"], answer:0 },
+
+{ question:"अम्ल का स्वाद कैसा होता है?", options:["मीठा","खट्टा","कड़वा","नमकीन"], answer:1 },
+{ question:"क्षार का pH कितना होता है?", options:["7 से कम","7","7 से अधिक","0"], answer:2 },
+{ question:"लवण का उदाहरण क्या है?", options:["HCl","NaOH","NaCl","NH3"], answer:2 },
+{ question:"ऑक्सीजन गैस का उपयोग क्या है?", options:["श्वसन","ईंधन","जंग हटाना","रंग"], answer:0 },
+{ question:"आवर्त सारणी के आविष्कारक कौन हैं?", options:["न्यूटन","मेंडेलीव","आइंस्टीन","रदरफोर्ड"], answer:1 },
+
+{ question:"जल में कौन सा गैस घुलती है?", options:["ऑक्सीजन","हाइड्रोजन","नाइट्रोजन","हीलियम"], answer:0 },
+{ question:"हवा में सबसे अधिक गैस कौन सी है?", options:["ऑक्सीजन","कार्बन डाइऑक्साइड","नाइट्रोजन","हीलियम"], answer:2 },
+{ question:"NaOH किस प्रकार का यौगिक है?", options:["अम्ल","क्षार","लवण","ऑक्साइड"], answer:1 },
+{ question:"HCl किसका उदाहरण है?", options:["अम्ल","क्षार","लवण","धातु"], answer:0 },
+{ question:"रासायनिक अभिक्रिया में ऊर्जा का रूपांतरण होता है?", options:["नहीं","कभी नहीं","हाँ","केवल गर्मी"], answer:2 },
+
+{ question:"लोहे में जंग लगने की प्रक्रिया क्या है?", options:["ऑक्सीकरण","अपचयन","वाष्पीकरण","संघनन"], answer:0 },
+{ question:"जल का pH कितना होता है?", options:["5","7","9","11"], answer:1 },
+{ question:"CO का पूरा नाम क्या है?", options:["Carbon Oxygen","Carbon Monoxide","Calcium Oxide","Carbon Ore"], answer:1 },
+{ question:"O3 किसे कहते हैं?", options:["ऑक्सीजन","ओजोन","कार्बन","नाइट्रोजन"], answer:1 },
+{ question:"सभी धातुएँ कैसी होती हैं?", options:["भंगुर","चालक","गैसीय","अक्रिय"], answer:1 },
+
+{ question:"सबसे हल्की गैस कौन सी है?", options:["हीलियम","हाइड्रोजन","ऑक्सीजन","नाइट्रोजन"], answer:1 },
+{ question:"H2SO4 किसका नाम है?", options:["सल्फ्यूरिक अम्ल","नाइट्रिक अम्ल","हाइड्रोक्लोरिक अम्ल","एसिटिक अम्ल"], answer:0 },
+{ question:"आवर्त में दाएं जाने पर धात्विक गुण?", options:["बढ़ता है","घटता है","स्थिर रहता है","शून्य"], answer:1 },
+{ question:"धातु किस प्रकार की होती हैं?", options:["भंगुर","तन्य और आघातवर्धनीय","गैसीय","द्रव"], answer:1 },
+{ question:"कैल्शियम का प्रतीक क्या है?", options:["Ca","Cl","Cm","Cn"], answer:0 },
+
+{ question:"पानी का अपघटन क्या कहलाता है?", options:["इलेक्ट्रोलिसिस","ऑक्सीकरण","संघनन","वाष्पीकरण"], answer:0 },
+{ question:"ऑक्सीजन की खोज किसने की?", options:["प्रिस्टले","न्यूटन","डाल्टन","मेंडेलीव"], answer:0 },
+{ question:"अमोनिया का सूत्र क्या है?", options:["NH3","NH4","NO3","N2H4"], answer:0 },
+{ question:"धातु किससे चमकती है?", options:["लस्टर","गंध","रंग","आकार"], answer:0 },
+{ question:"CO2 का उपयोग किसमें होता है?", options:["अग्निशामक","ईंधन","धातु निर्माण","प्लास्टिक"], answer:0 },
+
+{ question:"कौन सा अधातु है?", options:["लोहा","तांबा","सल्फर","एल्युमिनियम"], answer:2 },
+{ question:"ऑक्सीजन का उपयोग किसमें नहीं है?", options:["श्वसन","दहन","जंग","ईंधन"], answer:3 },
+{ question:"सोडियम पानी से प्रतिक्रिया करता है?", options:["धीरे","तेजी से","नहीं","कभी नहीं"], answer:1 },
+{ question:"हाइड्रोजन गैस ज्वलनशील है?", options:["हाँ","नहीं","कभी नहीं","स्थिर"], answer:0 },
+{ question:"लवण का स्वाद कैसा होता है?", options:["मीठा","खट्टा","नमकीन","कड़वा"], answer:2 },
+
+{ question:"आवर्त सारणी में पीरियड कितने हैं?", options:["5","6","7","8"], answer:2 },
+{ question:"हीलियम का उपयोग क्या है?", options:["गुब्बारे","ईंधन","जंग","खाद"], answer:0 },
+{ question:"कार्बन का परमाणु क्रमांक?", options:["4","5","6","7"], answer:2 },
+{ question:"NaCl का जलीय घोल कैसा होता है?", options:["अम्लीय","क्षारीय","न्यूट्रल","गैसीय"], answer:2 },
+{ question:"कौन सा अम्ल पेट में पाया जाता है?", options:["HCl","H2SO4","HNO3","CH3COOH"], answer:0 },
+
+{ question:"लौह अयस्क का मुख्य घटक?", options:["Fe2O3","NaCl","CaCO3","SiO2"], answer:0 },
+{ question:"रासायनिक परिवर्तन में क्या बनता है?", options:["नया पदार्थ","पुराना पदार्थ","केवल गैस","केवल ठोस"], answer:0 },
+{ question:"भौतिक परिवर्तन में क्या बदलता है?", options:["रंग","आकार","गुणधर्म","नया पदार्थ"], answer:1 },
+{ question:"ऑक्सीकरण का अर्थ?", options:["ऑक्सीजन जोड़ना","हाइड्रोजन जोड़ना","घुलना","जमना"], answer:0 },
+{ question:"अपचयन का अर्थ?", options:["ऑक्सीजन हटाना","जोड़ना","गर्म करना","ठंडा करना"], answer:0 },
+
+{ question:"जल का रासायनिक नाम?", options:["H2O","HO2","H2O2","H3O"], answer:0 },
+{ question:"हाइड्रोजन पेरॉक्साइड का सूत्र?", options:["H2O2","H2O","HO","H3O2"], answer:0 },
+{ question:"सल्फर का प्रतीक?", options:["S","Su","Sl","Sf"], answer:0 },
+{ question:"सबसे अधिक विद्युत ऋणात्मक तत्व?", options:["F","O","Cl","N"], answer:0 },
+{ question:"फ्लोरीन किस प्रकार का तत्व है?", options:["धातु","अधातु","उपधातु","गैस"], answer:1 },
+
+{ question:"आवर्त सारणी में आवर्त क्या दर्शाता है?", options:["ऊर्ध्वाधर","क्षैतिज","तिरछा","वृत्ताकार"], answer:1 },
+{ question:"गैसों का आकार कैसा होता है?", options:["निश्चित","अनिश्चित","स्थिर","ठोस"], answer:1 },
+{ question:"द्रव का आयतन कैसा होता है?", options:["निश्चित","अनिश्चित","शून्य","गैसीय"], answer:0 },
+{ question:"ठोस का आकार कैसा होता है?", options:["निश्चित","अनिश्चित","गैसीय","द्रव"], answer:0 },
+{ question:"नाइट्रोजन का प्रतिशत हवा में?", options:["21%","78%","1%","50%"], answer:1 },
+
+{ question:"ऑक्सीजन का प्रतिशत हवा में?", options:["21%","78%","1%","50%"], answer:0 },
+{ question:"कार्बन डाइऑक्साइड का प्रतिशत हवा में?", options:["0.03%","1%","2%","5%"], answer:0 },
+{ question:"अम्ल नीले लिटमस को क्या करता है?", options:["लाल","नीला","हरा","पीला"], answer:0 },
+{ question:"क्षार लाल लिटमस को क्या करता है?", options:["नीला","लाल","हरा","सफेद"], answer:0 },
+{ question:"आवर्त सारणी में धातु कहाँ होते हैं?", options:["दाएं","बाएं","मध्य","नीचे"], answer:1 },
+
+{ question:"अधातु कहाँ होते हैं?", options:["बाएं","दाएं","मध्य","ऊपर"], answer:1 },
+{ question:"NaCl का निर्माण किससे होता है?", options:["Na और Cl","H और O","C और O","Fe और S"], answer:0 },
+{ question:"सबसे अधिक प्रतिक्रियाशील धातु?", options:["Na","Fe","Cu","Ag"], answer:0 },
+{ question:"सबसे कम प्रतिक्रियाशील धातु?", options:["Ag","Na","K","Ca"], answer:0 },
+{ question:"जल का शुद्ध रूप कैसा होता है?", options:["अम्लीय","क्षारीय","न्यूट्रल","गैसीय"], answer:2 },
+
+{ question:"वाष्पीकरण क्या है?", options:["द्रव से गैस","गैस से द्रव","ठोस से गैस","ठोस से द्रव"], answer:0 },
+{ question:"संघनन क्या है?", options:["गैस से द्रव","द्रव से गैस","ठोस से गैस","द्रव से ठोस"], answer:0 },
+{ question:"पानी का उबलने का तापमान?", options:["50°C","100°C","150°C","200°C"], answer:1 },
+{ question:"बर्फ का गलनांक?", options:["0°C","10°C","100°C","-10°C"], answer:0 },
+{ question:"सबसे हल्का तत्व?", options:["हाइड्रोजन","हीलियम","लिथियम","ऑक्सीजन"], answer:0 },
+
+{ question:"कौन सा तत्व निष्क्रिय गैस है?", options:["Ne","Na","Cl","Mg"], answer:0 },
+{ question:"आवर्त में बाएं से दाएं जाने पर परमाणु आकार?", options:["बढ़ता है","घटता है","स्थिर","शून्य"], answer:1 },
+{ question:"धातु ऑक्सीजन से क्या बनाती हैं?", options:["ऑक्साइड","अम्ल","लवण","क्षार"], answer:0 },
+{ question:"अधातु ऑक्सीजन से क्या बनाती हैं?", options:["अम्लीय ऑक्साइड","धातु ऑक्साइड","लवण","क्षार"], answer:0 },
+{ question:"जल का घनत्व अधिकतम कब होता है?", options:["0°C","4°C","10°C","100°C"], answer:1 },
+{ question:"आवर्त सारणी का आधुनिक रूप किसने दिया?", options:["मेंडेलीव","मोस्ले","डाल्टन","रदरफोर्ड"], answer:1 },
+{ question:"परमाणु के केंद्र को क्या कहते हैं?", options:["इलेक्ट्रॉन","न्यूक्लियस","प्रोटॉन","न्यूट्रॉन"], answer:1 },
+{ question:"प्रोटॉन पर कौन सा आवेश होता है?", options:["धनात्मक","ऋणात्मक","न्यूट्रल","कोई नहीं"], answer:0 },
+{ question:"इलेक्ट्रॉन पर कौन सा आवेश होता है?", options:["धनात्मक","ऋणात्मक","न्यूट्रल","कोई नहीं"], answer:1 },
+{ question:"न्यूट्रॉन का आवेश क्या होता है?", options:["धनात्मक","ऋणात्मक","न्यूट्रल","द्विगुण"], answer:2 },
+
+{ question:"परमाणु संख्या किसे कहते हैं?", options:["प्रोटॉन की संख्या","न्यूट्रॉन की संख्या","इलेक्ट्रॉन की संख्या","कुल कण"], answer:0 },
+{ question:"द्रव्यमान संख्या क्या होती है?", options:["प्रोटॉन+न्यूट्रॉन","केवल प्रोटॉन","केवल इलेक्ट्रॉन","न्यूट्रॉन-इलेक्ट्रॉन"], answer:0 },
+{ question:"आइसोटोप क्या होते हैं?", options:["समान प्रोटॉन, अलग न्यूट्रॉन","समान न्यूट्रॉन","समान इलेक्ट्रॉन","समान द्रव्यमान"], answer:0 },
+{ question:"आइसोबार क्या होते हैं?", options:["समान द्रव्यमान संख्या","समान परमाणु संख्या","समान इलेक्ट्रॉन","समान न्यूट्रॉन"], answer:0 },
+{ question:"रासायनिक बंध कितने प्रकार के होते हैं?", options:["1","2","3","4"], answer:2 },
+
+{ question:"आयनिक बंध किसके बीच बनता है?", options:["धातु-अधातु","अधातु-अधातु","धातु-धातु","गैस-गैस"], answer:0 },
+{ question:"सहसंयोजक बंध किसके बीच होता है?", options:["धातु-अधातु","अधातु-अधातु","धातु-धातु","लवण"], answer:1 },
+{ question:"जल किस प्रकार का यौगिक है?", options:["आयनिक","सहसंयोजक","धात्विक","गैसीय"], answer:1 },
+{ question:"धातु विद्युत की कैसी चालक होती हैं?", options:["अचालक","अच्छी चालक","धीमी चालक","निष्क्रिय"], answer:1 },
+{ question:"ग्रेफाइट किसका रूप है?", options:["कार्बन","ऑक्सीजन","सल्फर","नाइट्रोजन"], answer:0 },
+
+{ question:"हीरा किसका अपरूप है?", options:["कार्बन","सिलिकॉन","ऑक्सीजन","हाइड्रोजन"], answer:0 },
+{ question:"सबसे कठोर प्राकृतिक पदार्थ?", options:["ग्रेफाइट","हीरा","लोहा","तांबा"], answer:1 },
+{ question:"अम्ल वर्षा का कारण?", options:["SO2 और NO2","CO2","O2","N2"], answer:0 },
+{ question:"ग्रीनहाउस गैस कौन सी है?", options:["CO2","O2","H2","N2"], answer:0 },
+{ question:"ओजोन परत किस गैस से बनी है?", options:["O3","O2","CO2","N2"], answer:0 }
+
+];
+
+
+let index = 0;
+let score = 0;
+let timer;
+let timeLeft = 10;
+
+function startQuiz() {
+  document.getElementById("startScreen").classList.add("hide");
+  document.getElementById("quizScreen").classList.remove("hide");
+  loadQuestion();
+}
+
+function loadQuestion() {
+  resetTimer();
+  let q = quizData[index];
+  document.getElementById("question").innerText = q.question;
+  document.getElementById("qNo").innerText = index + 1;
+
+  let optionsHTML = "";
+  q.options.forEach((opt, i) => {
+    optionsHTML += `<div class="option" onclick="selectOption(${i})">${opt}</div>`;
+  });
+
+  document.getElementById("options").innerHTML = optionsHTML;
+}
+
+function selectOption(selected) {
+  let correct = quizData[index].answer;
+  let options = document.querySelectorAll(".option");
+
+  options.forEach((opt, i) => {
+    if (i === correct) opt.classList.add("correct");
+    else if (i === selected) opt.classList.add("wrong");
+
+    opt.style.pointerEvents = "none";
+  });
+
+  if (selected === correct) score++;
+}
+
+function nextQuestion() {
+  index++;
+  if (index < quizData.length) {
+    loadQuestion();
+  } else {
+    showResult();
+  }
+}
+
+  function showResult() {
+  document.getElementById("quizScreen").classList.add("hide");
+  document.getElementById("resultScreen").classList.remove("hide");
+  document.getElementById("score").innerText = score + " / " + quizData.length;
+}
+
+function resetTimer() {
+  clearInterval(timer);
+  timeLeft = 10;
+  document.getElementById("timer").innerText = timeLeft;
+
+  timer = setInterval(() => {
+    timeLeft--;
+    document.getElementById("timer").innerText = timeLeft;
+
+    if (timeLeft === 0) {
+      nextQuestion();
+    }
+  }, 1000);
+}
+
+</script>
+
+</body>
+</html>

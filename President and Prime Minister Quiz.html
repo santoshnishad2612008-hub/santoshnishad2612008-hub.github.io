@@ -1,0 +1,348 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-KN4DRRWZ17"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-KN4DRRWZ17');
+</script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title> President and Prime Minister Quiz </title>
+
+<style>
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: Arial;
+}
+
+body {
+  background: #f5f5f5;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+}
+
+/* Container */
+.app {
+  width: 95%;
+  max-width: 500px;
+  background: white;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+}
+
+/* Header */
+header {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 20px;
+}
+
+.timer {
+  background: #2196F3;
+  color: white;
+  padding: 5px 10px;
+  border-radius: 5px;
+}
+
+/* Question */
+.question {
+  font-size: 20px;
+  margin-bottom: 15px;
+}
+
+/* Options */
+.option {
+  background: #eee;
+  padding: 10px;
+  margin: 8px 0;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.option:hover {
+  background: #ddd;
+}
+
+.correct {
+  background: #4CAF50 !important;
+  color: white;
+}
+
+.wrong {
+  background: #f44336 !important;
+  color: white;
+}
+
+/* Button */
+button {
+  margin-top: 15px;
+  padding: 10px;
+  width: 100%;
+  border: none;
+ background:linear-gradient(135deg,#0a2dbcf3,#779af583);
+  color: white;
+  font-size: 16px;
+  cursor: pointer;
+  border-radius: 5px;
+}
+
+/* Hidden */
+.hide {
+  display: none;
+}
+
+/* Result */
+.result {
+  text-align: center;
+}
+
+/* Responsive */
+@media (max-width: 600px) {
+  .question {
+    font-size: 18px;
+  }
+}
+</style>
+
+</head>
+<body>
+
+<div class="app">
+
+  <!-- Start Screen -->
+  <div id="startScreen">
+    <h2>Quiz App</h2>
+    <button onclick="startQuiz()">Start Quiz</button>
+  </div>
+
+  <!-- Quiz Screen -->
+  <div id="quizScreen" class="hide">
+    <header>
+      <div>Question <span id="qNo">1</span>/100</div>
+      <div class="timer" id="timer">10</div>
+    </header>
+
+    <div class="question" id="question"></div>
+    <div id="options"></div>
+
+    <button onclick="nextQuestion()">Next</button>
+  </div>
+
+  <!-- Result Screen -->
+  <div id="resultScreen" class="hide result">
+    <h2>Your Score</h2>
+    <h1 id="score"></h1>
+    <button onclick="location.reload()">Play Again</button>
+  </div>
+
+</div>
+
+<script>
+const quizData = [
+{ question:"भारत के प्रथम राष्ट्रपति कौन थे?", options:["डॉ. राजेंद्र प्रसाद","डॉ. सर्वपल्ली राधाकृष्णन","जवाहरलाल नेहरू","ए.पी.जे. अब्दुल कलाम"], answer:0 },
+{ question:"भारत के वर्तमान राष्ट्रपति कौन हैं (2026 तक)?", options:["द्रौपदी मुर्मू","रामनाथ कोविंद","प्रतिभा पाटिल","प्रणब मुखर्जी"], answer:0 },
+{ question:"भारत के प्रथम प्रधानमंत्री कौन थे?", options:["सरदार पटेल","जवाहरलाल नेहरू","लाल बहादुर शास्त्री","मोदी"], answer:1 },
+{ question:"प्रधानमंत्री का कार्यकाल कितने वर्ष का होता है?", options:["4 वर्ष","5 वर्ष","6 वर्ष","7 वर्ष"], answer:1 },
+{ question:"भारत में राष्ट्रपति का चुनाव कौन करता है?", options:["लोकसभा","राज्यसभा","निर्वाचक मंडल","जनता"], answer:2 },
+{ question:"भारत में प्रधानमंत्री की नियुक्ति कौन करता है?", options:["राष्ट्रपति","मुख्य न्यायाधीश","लोकसभा अध्यक्ष","राज्यपाल"], answer:0 },
+{ question:"भारत का वास्तविक कार्यकारी प्रमुख कौन होता है?", options:["राष्ट्रपति","प्रधानमंत्री","मुख्य न्यायाधीश","लोकसभा अध्यक्ष"], answer:1 },
+{ question:"भारत का संवैधानिक प्रमुख कौन है?", options:["प्रधानमंत्री","राष्ट्रपति","मुख्यमंत्री","राज्यपाल"], answer:1 },
+{ question:"राष्ट्रपति का कार्यकाल कितने वर्षों का होता है?", options:["4 वर्ष","5 वर्ष","6 वर्ष","7 वर्ष"], answer:1 },
+{ question:"भारत के दूसरे राष्ट्रपति कौन थे?", options:["एस. राधाकृष्णन","डॉ. राजेंद्र प्रसाद","जाकिर हुसैन","वी.वी. गिरि"], answer:0 },
+
+{ question:"भारत के प्रथम मुस्लिम राष्ट्रपति कौन थे?", options:["जाकिर हुसैन","ए.पी.जे. अब्दुल कलाम","फखरुद्दीन अली अहमद","के.आर. नारायणन"], answer:0 },
+{ question:"भारत के 11वें राष्ट्रपति कौन थे?", options:["ए.पी.जे. अब्दुल कलाम","प्रणब मुखर्जी","प्रतिभा पाटिल","रामनाथ कोविंद"], answer:0 },
+{ question:"प्रधानमंत्री बनने के लिए न्यूनतम आयु कितनी है?", options:["25 वर्ष","30 वर्ष","35 वर्ष","21 वर्ष"], answer:0 },
+{ question:"राष्ट्रपति को शपथ कौन दिलाता है?", options:["प्रधानमंत्री","मुख्य न्यायाधीश","लोकसभा अध्यक्ष","राज्यसभा अध्यक्ष"], answer:1 },
+{ question:"भारत के प्रथम महिला राष्ट्रपति कौन थीं?", options:["प्रतिभा पाटिल","द्रौपदी मुर्मू","सरोजिनी नायडू","इंदिरा गांधी"], answer:0 },
+
+{ question:"भारत में प्रधानमंत्री किसके प्रति उत्तरदायी होता है?", options:["राष्ट्रपति","लोकसभा","राज्यसभा","न्यायपालिका"], answer:1 },
+{ question:"भारत का उपराष्ट्रपति कौन चुनता है?", options:["लोकसभा","राज्यसभा","निर्वाचक मंडल","जनता"], answer:2 },
+{ question:"उपराष्ट्रपति राज्यसभा का कौन होता है?", options:["सभापति","प्रधानमंत्री","मुख्य मंत्री","गवर्नर"], answer:0 },
+{ question:"राष्ट्रपति किस सदन का सदस्य नहीं होता?", options:["लोकसभा","राज्यसभा","दोनों","किसी का नहीं"], answer:3 },
+{ question:"भारत के कितने प्रधानमंत्री अब तक रहे हैं (2026 तक)?", options:["14","15","16","17"], answer:2 },
+
+{ question:"लाल बहादुर शास्त्री प्रधानमंत्री कब बने?", options:["1962","1964","1966","1959"], answer:1 },
+{ question:"इंदिरा गांधी पहली बार प्रधानमंत्री कब बनीं?", options:["1964","1966","1971","1980"], answer:1 },
+{ question:"भारत की पहली महिला प्रधानमंत्री कौन थीं?", options:["इंदिरा गांधी","प्रतिभा पाटिल","सोनिया गांधी","मीरा कुमार"], answer:0 },
+{ question:"राष्ट्रपति संसद के कितने सदनों का हिस्सा होता है?", options:["1","2","3","0"], answer:1 },
+{ question:"प्रधानमंत्री की अध्यक्षता किस संस्था में होती है?", options:["नीति आयोग","कैबिनेट","संसद","सुप्रीम कोर्ट"], answer:1 },
+
+{ question:"राष्ट्रपति किसकी सलाह से कार्य करता है?", options:["प्रधानमंत्री","संसद","न्यायपालिका","राज्यपाल"], answer:0 },
+{ question:"प्रधानमंत्री किसका प्रमुख होता है?", options:["राज्यसभा","लोकसभा","मंत्रिपरिषद","सुप्रीम कोर्ट"], answer:2 },
+{ question:"भारत के वर्तमान प्रधानमंत्री कौन हैं (2026 तक)?", options:["नरेंद्र मोदी","राहुल गांधी","मनमोहन सिंह","अमित शाह"], answer:0 },
+{ question:"प्रधानमंत्री को कौन हटाता है?", options:["राष्ट्रपति","लोकसभा","राज्यसभा","न्यायालय"], answer:1 },
+{ question:"राष्ट्रपति की क्षमादान शक्ति किस अनुच्छेद में है?", options:["72","74","75","61"], answer:0 },
+
+{ question:"भारत के राष्ट्रपति को हटाने की प्रक्रिया क्या कहलाती है?", options:["इस्तीफा","महाभियोग","चुनाव","मतदान"], answer:1 },
+{ question:"महाभियोग किसके खिलाफ चलता है?", options:["प्रधानमंत्री","राष्ट्रपति","मुख्यमंत्री","न्यायाधीश"], answer:1 },
+{ question:"प्रधानमंत्री किसका नेता होता है?", options:["लोकसभा में बहुमत दल","राज्यसभा","विपक्ष","सुप्रीम कोर्ट"], answer:0 },
+{ question:"राष्ट्रपति का अध्यादेश कौन जारी करता है?", options:["संसद","राष्ट्रपति","प्रधानमंत्री","मुख्य न्यायाधीश"], answer:1 },
+{ question:"प्रधानमंत्री किसकी सिफारिश पर नियुक्त होता है?", options:["लोकसभा अध्यक्ष","मुख्य न्यायाधीश","बहुमत दल","राज्यसभा"], answer:2 },
+
+{ question:"भारत के राष्ट्रपति का चुनाव किस प्रणाली से होता है?", options:["प्रत्यक्ष","अप्रत्यक्ष","मिश्रित","नामांकन"], answer:1 },
+{ question:"भारत के प्रधानमंत्री का चुनाव किससे होता है?", options:["लोकसभा","राज्यसभा","जनता","निर्वाचक मंडल"], answer:0 },
+{ question:"राष्ट्रपति का पद किसके समान होता है?", options:["राजा","संवैधानिक प्रमुख","प्रधानमंत्री","मुख्यमंत्री"], answer:1 },
+{ question:"प्रधानमंत्री का पद किसके समान होता है?", options:["कार्यपालिका प्रमुख","न्यायपालिका प्रमुख","राज्यपाल","राष्ट्रपति"], answer:0 },
+{ question:"भारत के राष्ट्रपति का आधिकारिक आवास क्या है?", options:["संसद भवन","राष्ट्रपति भवन","लोक भवन","सुप्रीम कोर्ट"], answer:1 },
+
+{ question:"प्रधानमंत्री का कार्यालय कहाँ स्थित है?", options:["राष्ट्रपति भवन","संसद भवन","साउथ ब्लॉक","नॉर्थ ब्लॉक"], answer:2 },
+{ question:"भारत में राष्ट्रपति कितने समय के लिए आपातकाल लगा सकता है?", options:["1 माह","2 माह","3 माह","6 माह"], answer:2 },
+{ question:"प्रधानमंत्री किसकी बैठक की अध्यक्षता करता है?", options:["कैबिनेट","सुप्रीम कोर्ट","चुनाव आयोग","राज्यसभा"], answer:0 },
+{ question:"राष्ट्रपति किसके द्वारा चुना जाता है?", options:["जनता","निर्वाचक मंडल","लोकसभा","राज्यसभा"], answer:1 },
+{ question:"भारत के राष्ट्रपति को किस अनुच्छेद में वर्णित किया गया है?", options:["52","53","54","55"], answer:0 },
+
+{ question:"भारत के प्रधानमंत्री का उल्लेख किस अनुच्छेद में है?", options:["74","75","77","78"], answer:0 },
+{ question:"भारत का राष्ट्रपति किस देश के राष्ट्रपति की तरह है?", options:["यूएसए","यूके","फ्रांस","रूस"], answer:1 },
+{ question:"प्रधानमंत्री किसका प्रमुख सलाहकार होता है?", options:["राष्ट्रपति","न्यायपालिका","संसद","चुनाव आयोग"], answer:0 },
+{ question:"भारत के राष्ट्रपति के पास कौन सी शक्ति नहीं है?", options:["सैन्य शक्ति","कार्यपालिका शक्ति","न्यायिक शक्ति","विधायी शक्ति"], answer:2 },
+{ question:"प्रधानमंत्री का सबसे महत्वपूर्ण कार्य क्या है?", options:["नीति बनाना","न्याय करना","चुनाव कराना","भाषण देना"], answer:0 },
+
+{ question:"भारत में राष्ट्रपति का चुनाव कितने वर्षों में होता है?", options:["4","5","6","7"], answer:1 },
+{ question:"प्रधानमंत्री संसद का कौन सा सदस्य होता है?", options:["केवल लोकसभा","केवल राज्यसभा","दोनों","कोई नहीं"], answer:0 },
+{ question:"भारत में पहली कैबिनेट किसने बनाई?", options:["नेहरू","पटेल","गांधी","मौलाना आजाद"], answer:0 },
+{ question:"राष्ट्रपति के पास किस प्रकार की शक्ति होती है?", options:["नाममात्र","वास्तविक","पूर्ण","न्यायिक"], answer:0 },
+{ question:"प्रधानमंत्री किसे रिपोर्ट करता है?", options:["राष्ट्रपति","संसद","न्यायालय","जनता"], answer:1 },
+
+{ question:"राष्ट्रपति संसद को क्या भेज सकता है?", options:["बिल","आदेश","संदेश","सभी"], answer:3 },
+{ question:"प्रधानमंत्री कितने मंत्रियों की सलाह से काम करता है?", options:["केवल 1","केवल 2","कैबिनेट","कोई नहीं"], answer:2 },
+{ question:"भारत के राष्ट्रपति का कार्य किसके अनुसार होता है?", options:["संविधान","संसद","प्रधानमंत्री","राज्यपाल"], answer:0 },
+{ question:"प्रधानमंत्री किसका सदस्य होता है?", options:["विधायिका","कार्यपालिका","न्यायपालिका","सभी"], answer:3 },
+{ question:"राष्ट्रपति के आदेश कौन तैयार करता है?", options:["प्रधानमंत्री","संसद","न्यायालय","राज्यपाल"], answer:0 },
+
+{ question:"प्रधानमंत्री किसका नेतृत्व करता है?", options:["मंत्रिपरिषद","संसद","न्यायालय","राज्यसभा"], answer:0 },
+{ question:"राष्ट्रपति का चुनाव लड़ने के लिए न्यूनतम आयु?", options:["25","30","35","40"], answer:2 },
+{ question:"प्रधानमंत्री का चुनाव लड़ने के लिए न्यूनतम आयु?", options:["18","21","25","30"], answer:2 },
+{ question:"भारत के राष्ट्रपति किसका प्रतिनिधित्व करते हैं?", options:["देश का","राज्य का","पार्टी का","लोकसभा का"], answer:0 },
+{ question:"प्रधानमंत्री किसका प्रतिनिधित्व करता है?", options:["मंत्रिपरिषद का","संसद का","देश का","राज्यसभा का"], answer:0 },
+
+{ question:"राष्ट्रपति का कार्यकाल समाप्त होने के बाद क्या होता है?", options:["पुनः चुनाव","सेवानिवृत्ति","न्यायाधीश बनता है","प्रधानमंत्री बनता है"], answer:1 },
+{ question:"प्रधानमंत्री का पद किस प्रकार का है?", options:["संवैधानिक","गैर संवैधानिक","न्यायिक","स्थायी"], answer:0 },
+{ question:"भारत में कार्यपालिका का प्रमुख कौन है?", options:["राष्ट्रपति","प्रधानमंत्री","मुख्य न्यायाधीश","लोकसभा अध्यक्ष"], answer:0 },
+{ question:"नीति आयोग का अध्यक्ष कौन होता है?", options:["प्रधानमंत्री","राष्ट्रपति","राज्यपाल","मुख्य न्यायाधीश"], answer:0 },
+{ question:"भारत का सर्वोच्च नागरिक पुरस्कार किसके द्वारा दिया जाता है?", options:["राष्ट्रपति","प्रधानमंत्री","संसद","न्यायालय"], answer:0 },
+
+{ question:"राष्ट्रपति आपातकाल किसकी सलाह पर लगाता है?", options:["प्रधानमंत्री","कैबिनेट","संसद","राज्यपाल"], answer:1 },
+{ question:"प्रधानमंत्री की नियुक्ति में मुख्य भूमिका किसकी होती है?", options:["राष्ट्रपति","संसद","जनता","न्यायालय"], answer:0 },
+{ question:"भारत में राष्ट्रपति का पद किस प्रकार का है?", options:["औपचारिक","वास्तविक","न्यायिक","सैन्य"], answer:0 },
+{ question:"प्रधानमंत्री किसका सदस्य होता है?", options:["लोकसभा","राज्यसभा","दोनों","कोई नहीं"], answer:2 },
+{ question:"भारत के राष्ट्रपति की शपथ कौन तैयार करता है?", options:["मुख्य न्यायाधीश","प्रधानमंत्री","संसद","राज्यसभा"], answer:0 },
+
+{ question:"प्रधानमंत्री को कौन सलाह देता है?", options:["कैबिनेट","राष्ट्रपति","सुप्रीम कोर्ट","चुनाव आयोग"], answer:0 },
+{ question:"भारत में राष्ट्रपति का चुनाव किस आधार पर होता है?", options:["एक व्यक्ति एक वोट","आनुपातिक प्रतिनिधित्व","सीधा मतदान","नामांकन"], answer:1 },
+{ question:"प्रधानमंत्री का चुनाव किस आधार पर होता है?", options:["बहुमत","आनुपातिक","नामांकन","लॉटरी"], answer:0 },
+{ question:"राष्ट्रपति की शक्ति किस प्रकार की होती है?", options:["नाममात्र","वास्तविक","न्यायिक","आर्थिक"], answer:0 },
+{ question:"प्रधानमंत्री किसका प्रमुख होता है?", options:["सरकार का","राज्य का","न्यायपालिका का","चुनाव आयोग का"], answer:0 },
+
+{ question:"भारत में राष्ट्रपति और प्रधानमंत्री का संबंध कैसा है?", options:["संवैधानिक","राजनीतिक","आर्थिक","सामाजिक"], answer:0 },
+{ question:"प्रधानमंत्री किसका नेतृत्व करता है?", options:["सरकार का","राज्य का","संसद का","न्यायालय का"], answer:0 },
+{ question:"राष्ट्रपति किसे भंग कर सकता है?", options:["लोकसभा","राज्यसभा","कैबिनेट","न्यायालय"], answer:0 },
+{ question:"प्रधानमंत्री किस सदन का नेता होता है?", options:["लोकसभा","राज्यसभा","दोनों","कोई नहीं"], answer:0 },
+{ question:"भारत के राष्ट्रपति का पद किससे जुड़ा है?", options:["संविधान","राजनीति","न्यायालय","संसद"], answer:0 },
+
+{ question:"प्रधानमंत्री किसके प्रति उत्तरदायी होता है?", options:["लोकसभा","राष्ट्रपति","राज्यसभा","न्यायालय"], answer:0 },
+{ question:"राष्ट्रपति को हटाने की प्रक्रिया कितने सदनों से गुजरती है?", options:["1","2","3","4"], answer:1 },
+{ question:"प्रधानमंत्री का पद किस प्रकार का है?", options:["राजनीतिक","न्यायिक","स्थायी","गैर संवैधानिक"], answer:0 },
+{ question:"भारत में राष्ट्रपति की भूमिका क्या है?", options:["औपचारिक प्रमुख","वास्तविक प्रमुख","न्यायिक प्रमुख","सैन्य प्रमुख"], answer:0 },
+{ question:"प्रधानमंत्री की भूमिका क्या है?", options:["वास्तविक प्रमुख","औपचारिक प्रमुख","न्यायिक प्रमुख","राज्य प्रमुख"], answer:0 },
+
+{ question:"भारत के राष्ट्रपति का चुनाव कितने वोटों से होता है?", options:["प्रत्यक्ष वोट","इलेक्टोरल कॉलेज","जनमत","लॉटरी"], answer:1 },
+{ question:"प्रधानमंत्री का चयन कौन करता है?", options:["लोकसभा","राज्यसभा","राष्ट्रपति","जनता"], answer:2 },
+{ question:"राष्ट्रपति का पद किस संविधान से लिया गया है?", options:["भारत","यूके","यूएसए","फ्रांस"], answer:1 },
+{ question:"प्रधानमंत्री का पद किस प्रणाली का हिस्सा है?", options:["संसदीय","राष्ट्रपति","न्यायिक","सैन्य"], answer:0 },
+{ question:"भारत के राष्ट्रपति किसका प्रतीक है?", options:["एकता","राजनीति","न्याय","अर्थव्यवस्था"], answer:0 },
+
+{ question:"प्रधानमंत्री किसका प्रतीक है?", options:["सरकार की शक्ति","न्यायपालिका","राज्यपाल","राष्ट्रपति"], answer:0 },
+{ question:"भारत के राष्ट्रपति को कौन हटाता है?", options:["संसद","न्यायालय","लोकसभा","राज्यसभा"], answer:0 },
+{ question:"प्रधानमंत्री किसका हिस्सा होता है?", options:["कार्यपालिका","न्यायपालिका","चुनाव आयोग","राज्यपाल"], answer:0 },
+{ question:"राष्ट्रपति किसके प्रमुख होते हैं?", options:["भारत के राज्य प्रमुख","सरकार प्रमुख","संसद प्रमुख","न्यायालय प्रमुख"], answer:0 },
+{ question:"प्रधानमंत्री किसके प्रमुख होते हैं?", options:["सरकार प्रमुख","राज्य प्रमुख","न्यायिक प्रमुख","संसद प्रमुख"], answer:0 }
+
+
+];
+
+
+let index = 0;
+let score = 0;
+let timer;
+let timeLeft = 10;
+
+function startQuiz() {
+  document.getElementById("startScreen").classList.add("hide");
+  document.getElementById("quizScreen").classList.remove("hide");
+  loadQuestion();
+}
+
+function loadQuestion() {
+  resetTimer();
+  let q = quizData[index];
+  document.getElementById("question").innerText = q.question;
+  document.getElementById("qNo").innerText = index + 1;
+
+  let optionsHTML = "";
+  q.options.forEach((opt, i) => {
+    optionsHTML += `<div class="option" onclick="selectOption(${i})">${opt}</div>`;
+  });
+
+  document.getElementById("options").innerHTML = optionsHTML;
+}
+
+function selectOption(selected) {
+  let correct = quizData[index].answer;
+  let options = document.querySelectorAll(".option");
+
+  options.forEach((opt, i) => {
+    if (i === correct) opt.classList.add("correct");
+    else if (i === selected) opt.classList.add("wrong");
+
+    opt.style.pointerEvents = "none";
+  });
+
+  if (selected === correct) score++;
+}
+
+function nextQuestion() {
+  index++;
+  if (index < quizData.length) {
+    loadQuestion();
+  } else {
+    showResult();
+  }
+}
+
+  function showResult() {
+  document.getElementById("quizScreen").classList.add("hide");
+  document.getElementById("resultScreen").classList.remove("hide");
+  document.getElementById("score").innerText = score + " / " + quizData.length;
+}
+
+function resetTimer() {
+  clearInterval(timer);
+  timeLeft = 10;
+  document.getElementById("timer").innerText = timeLeft;
+
+  timer = setInterval(() => {
+    timeLeft--;
+    document.getElementById("timer").innerText = timeLeft;
+
+    if (timeLeft === 0) {
+      nextQuestion();
+    }
+  }, 1000);
+}
+
+</script>
+
+</body>
+</html>

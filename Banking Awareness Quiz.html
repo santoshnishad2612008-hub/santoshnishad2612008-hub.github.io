@@ -1,0 +1,347 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-KN4DRRWZ17"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-KN4DRRWZ17');
+</script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Banking Awarness Quiz</title>
+
+<style>
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: Arial;
+}
+
+body {
+  background: #f5f5f5;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+}
+
+/* Container */
+.app {
+  width: 95%;
+  max-width: 500px;
+  background: white;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+}
+
+/* Header */
+header {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 20px;
+}
+
+.timer {
+  background: #2196F3;
+  color: white;
+  padding: 5px 10px;
+  border-radius: 5px;
+}
+
+/* Question */
+.question {
+  font-size: 20px;
+  margin-bottom: 15px;
+}
+
+/* Options */
+.option {
+  background: #eee;
+  padding: 10px;
+  margin: 8px 0;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.option:hover {
+  background: #ddd;
+}
+
+.correct {
+  background: #4CAF50 !important;
+  color: white;
+}
+
+.wrong {
+  background: #f44336 !important;
+  color: white;
+}
+
+/* Button */
+button {
+  margin-top: 15px;
+  padding: 10px;
+  width: 100%;
+  border: none;
+ background:linear-gradient(135deg,#0a2dbcf3,#779af583);
+  color: white;
+  font-size: 16px;
+  cursor: pointer;
+  border-radius: 5px;
+}
+
+/* Hidden */
+.hide {
+  display: none;
+}
+
+/* Result */
+.result {
+  text-align: center;
+}
+
+/* Responsive */
+@media (max-width: 600px) {
+  .question {
+    font-size: 18px;
+  }
+}
+</style>
+
+</head>
+<body>
+
+<div class="app">
+
+  <!-- Start Screen -->
+  <div id="startScreen">
+    <h2>Quiz App</h2>
+    <button onclick="startQuiz()">Start Quiz</button>
+  </div>
+
+  <!-- Quiz Screen -->
+  <div id="quizScreen" class="hide">
+    <header>
+      <div>Question <span id="qNo">1</span>/98</div>
+      <div class="timer" id="timer">10</div>
+    </header>
+
+    <div class="question" id="question"></div>
+    <div id="options"></div>
+
+    <button onclick="nextQuestion()">Next</button>
+  </div>
+
+  <!-- Result Screen -->
+  <div id="resultScreen" class="hide result">
+    <h2>Your Score</h2>
+    <h1 id="score"></h1>
+    <button onclick="location.reload()">Play Again</button>
+  </div>
+
+</div>
+
+<script>
+const quizData = [
+
+{ question:"भारत में बैंकिंग प्रणाली का नियामक कौन है?", options:["SEBI","RBI","IRDAI","NABARD"], answer:1 },
+{ question:"भारतीय रिज़र्व बैंक की स्थापना कब हुई थी?", options:["1935","1947","1950","1969"], answer:0 },
+{ question:"RBI का मुख्यालय कहाँ है?", options:["मुंबई","दिल्ली","कोलकाता","चेन्नई"], answer:0 },
+{ question:"भारत का सबसे बड़ा सार्वजनिक बैंक कौन सा है?", options:["SBI","PNB","BOB","Canara Bank"], answer:0 },
+{ question:"CRR का पूरा नाम क्या है?", options:["Cash Reserve Ratio","Credit Reserve Ratio","Capital Risk Ratio","Central Reserve Rate"], answer:0 },
+
+{ question:"Repo Rate कौन तय करता है?", options:["SEBI","RBI","Finance Ministry","NITI Aayog"], answer:1 },
+{ question:"Reverse Repo Rate का उपयोग किस लिए होता है?", options:["महंगाई बढ़ाने","लिक्विडिटी कम करने","टैक्स बढ़ाने","शेयर बढ़ाने"], answer:1 },
+{ question:"भारत में बैंकिंग लोकपाल योजना कब शुरू हुई?", options:["2000","1995","1985","2010"], answer:0 },
+{ question:"NEFT का पूरा नाम क्या है?", options:["National Electronic Fund Transfer","New Electronic Fund Transfer","National Easy Fund Transfer","None"], answer:0 },
+{ question:"RTGS का फुल फॉर्म क्या है?", options:["Real Time Gross Settlement","Real Transfer Gross System","Rapid Transfer Gross Settlement","None"], answer:0 },
+
+{ question:"UPI का विकास किसने किया?", options:["NPCI","RBI","SEBI","IBA"], answer:0 },
+{ question:"IMPS का उपयोग किसके लिए होता है?", options:["तुरंत पैसे भेजने","ATM निकालने","Loan देने","FD खोलने"], answer:0 },
+{ question:"ATM का पूरा नाम क्या है?", options:["Automated Teller Machine","Automatic Transfer Machine","Advanced Teller Machine","None"], answer:0 },
+{ question:"KYC का मतलब क्या है?", options:["Know Your Customer","Keep Your Cash","Know Your Credit","Key Your Code"], answer:0 },
+{ question:"बैंक दर (Bank Rate) क्या है?", options:["RBI द्वारा दिया गया ब्याज दर","ATM शुल्क","Tax rate","Loan scheme"], answer:0 },
+
+{ question:"मुद्रास्फीति (Inflation) क्या दर्शाती है?", options:["कीमतों में वृद्धि","कीमतों में कमी","बैंक बैलेंस","लोन"], answer:0 },
+{ question:"मौद्रिक नीति कौन बनाता है?", options:["RBI","SEBI","Govt","NABARD"], answer:0 },
+{ question:"NABARD का पूरा नाम क्या है?", options:["National Bank for Agriculture and Rural Development","New Bank for Agriculture","National Banking Authority","None"], answer:0 },
+{ question:"SBI का पूरा नाम क्या है?", options:["State Bank of India","State Banking Institute","Standard Bank of India","None"], answer:0 },
+{ question:"मिनीमम बैलेंस किसके लिए जरूरी होता है?", options:["Savings Account","Loan","FD","Bond"], answer:0 },
+
+{ question:"Cheque किसके द्वारा जारी किया जाता है?", options:["Account Holder","Bank Manager","RBI","Government"], answer:0 },
+{ question:"Cheque bounce का मतलब क्या है?", options:["पैसे न होना","पैसे बढ़ना","ATM error","Loan approval"], answer:0 },
+{ question:"Debit Card किससे जुड़ा होता है?", options:["Bank Account","Credit score","Insurance","Loan"], answer:0 },
+{ question:"Credit Card में पैसा कहाँ से आता है?", options:["Bank credit limit","Salary","FD","Cash"], answer:0 },
+{ question:"FD का मतलब क्या है?", options:["Fixed Deposit","Flexible Deposit","Free Deposit","Financial Deposit"], answer:0 },
+
+{ question:"Recurring Deposit क्या है?", options:["हर महीने जमा योजना","एक बार जमा","Loan","Insurance"], answer:0 },
+{ question:"Savings Account पर ब्याज कौन देता है?", options:["Bank","RBI","Govt","SEBI"], answer:0 },
+{ question:"Current Account किसके लिए होता है?", options:["Business","Students","Farmers","Retired"], answer:0 },
+{ question:"Core Banking System का मतलब क्या है?", options:["कहीं से भी बैंकिंग","ATM only","Loan system","Cash system"], answer:0 },
+{ question:"MICR का उपयोग कहाँ होता है?", options:["Cheque processing","ATM","Loan","UPI"], answer:0 },
+
+{ question:"IFSC code किसके लिए होता है?", options:["Bank branch identification","Customer ID","Loan ID","ATM ID"], answer:0 },
+{ question:"Bank merger का उद्देश्य क्या है?", options:["मजबूती बढ़ाना","कम करना","बंद करना","टैक्स बढ़ाना"], answer:0 },
+{ question:"Digital Banking क्या है?", options:["Online banking","Offline banking","Cash banking","Manual banking"], answer:0 },
+{ question:"Mobile Banking क्या है?", options:["फोन से बैंकिंग","ATM banking","Branch banking","Cheque banking"], answer:0 },
+{ question:"Internet Banking क्या है?", options:["वेब से बैंकिंग","ATM से","Branch से","Cash से"], answer:0 },
+
+{ question:"Loan क्या होता है?", options:["उधार लिया गया पैसा","बचत","ब्याज","टैक्स"], answer:0 },
+{ question:"Interest क्या है?", options:["पैसे का किराया","टैक्स","छूट","बोनस"], answer:0 },
+{ question:"Collateral क्या होता है?", options:["Loan security","Interest","Bank fee","Tax"], answer:0 },
+{ question:"Non-performing Asset (NPA) क्या है?", options:["जो loan वापस नहीं आता","FD","Deposit","Cash"], answer:0 },
+{ question:"Bank liquidity क्या दर्शाती है?", options:["Cash availability","Loan","Tax","Insurance"], answer:0 },
+
+{ question:"Inflation control किसका काम है?", options:["RBI","SEBI","Govt","Court"], answer:0 },
+{ question:"Monetary Policy Committee कितने सदस्य की होती है?", options:["6","5","7","10"], answer:0 },
+{ question:"Repo rate बढ़ाने से क्या होता है?", options:["Loan महंगा","Loan सस्ता","Inflation बढ़ता","Cash बढ़ता"], answer:0 },
+{ question:"CRR बढ़ाने से क्या होता है?", options:["Bank के पास पैसा कम होता है","बढ़ता है","Loan सस्ता होता है","Tax कम होता है"], answer:0 },
+{ question:"SLR का मतलब क्या है?", options:["Statutory Liquidity Ratio","State Loan Rate","Standard Liquidity Rule","None"], answer:0 },
+
+{ question:"Banking Ombudsman क्या है?", options:["Complaint redressal system","Loan system","ATM system","Tax system"], answer:0 },
+{ question:"Digital Wallet क्या है?", options:["Virtual money storage","Bank branch","Cheque book","Loan account"], answer:0 },
+{ question:"UPI ID किससे जुड़ी होती है?", options:["Bank account","PAN only","Aadhar only","Cash"], answer:0 },
+{ question:"Cheque book किसे मिलती है?", options:["Bank account holder","RBI","Govt","SEBI"], answer:0 },
+{ question:"Banking में KYC क्यों जरूरी है?", options:["Identity verification","Loan approval","ATM usage","FD"], answer:0 },
+
+{ question:"RTGS में minimum amount कितना होता है?", options:["2 lakh","1 lakh","50000","10000"], answer:0 },
+{ question:"NEFT किस प्रकार का system है?", options:["Batch transfer","Instant only","Cash only","Cheque only"], answer:0 },
+{ question:"IMPS कब उपलब्ध होता है?", options:["24x7","Bank hours","Weekends only","Night only"], answer:0 },
+{ question:"Cheque clearing में कितना समय लगता है?", options:["1-2 days","Instant","1 month","1 year"], answer:0 },
+{ question:"Bank deposit insurance कौन देता है?", options:["DICGC","SEBI","RBI","NABARD"], answer:0 },
+
+{ question:"DICGC का फुल फॉर्म क्या है?", options:["Deposit Insurance and Credit Guarantee Corporation","Deposit India Credit Group Corporation","None","Direct Insurance Credit Guarantee"], answer:0 },
+{ question:"Bank account कितने प्रकार के होते हैं?", options:["मुख्यतः 4","2","10","1"], answer:0 },
+{ question:"Savings account का उद्देश्य क्या है?", options:["बचत करना","ट्रेडिंग","Loan देना","Tax"], answer:0 },
+{ question:"Bank शाखा क्या होती है?", options:["Bank का कार्यालय","ATM","Loan office","Insurance office"], answer:0 },
+{ question:"Cheque number कहाँ होता है?", options:["Cheque पर","ATM card पर","Passbook पर","Loan form पर"], answer:0 },
+
+{ question:"Basel Norms किससे संबंधित हैं?", options:["बैंकिंग पूंजी पर्याप्तता","टैक्स सिस्टम","कृषि नीति","शेयर बाजार"], answer:0 },
+{ question:"Money Market किसके लिए होता है?", options:["अल्पकालिक वित्तीय साधन","दीर्घकालिक निवेश","कृषि लोन","बीमा"], answer:0 },
+{ question:"Capital Market किससे संबंधित है?", options:["दीर्घकालिक प्रतिभूतियाँ","कैश ट्रांजैक्शन","ATM","बचत"], answer:0 },
+{ question:"Treasury Bills किसके द्वारा जारी किए जाते हैं?", options:["भारत सरकार","RBI","SEBI","NABARD"], answer:0 },
+{ question:"भारत में मुद्रास्फीति लक्ष्य कितना है?", options:["4% ±2%","2%","10%","6%"], answer:0 },
+
+{ question:"CRAR का पूरा नाम क्या है?", options:["Capital to Risk Weighted Assets Ratio","Cash Reserve Asset Ratio","Credit Risk Adjustment Rate","None"], answer:0 },
+{ question:"Public Sector Bank का मतलब क्या है?", options:["सरकारी बैंक","निजी बैंक","विदेशी बैंक","सहकारी बैंक"], answer:0 },
+{ question:"Priority Sector Lending में क्या शामिल है?", options:["कृषि","लक्ज़री कार","सोना","विदेशी यात्रा"], answer:0 },
+{ question:"Debit Card PIN को सुरक्षित रखना क्यों जरूरी है?", options:["धोखाधड़ी रोकने के लिए","लोन लेने के लिए","ब्याज बढ़ाने के लिए","ATM बंद करने के लिए"], answer:0 },
+{ question:"SWIFT का उपयोग किस लिए होता है?", options:["अंतरराष्ट्रीय धन हस्तांतरण","ATM","लोन","बचत"], answer:0 },
+
+{ question:"Cheque की वैधता कितने महीने होती है?", options:["3 महीने","6 महीने","1 साल","1 महीना"], answer:0 },
+{ question:"बैंक खाता खोलने के लिए क्या जरूरी है?", options:["KYC दस्तावेज","ATM कार्ड","Cheque book","FD"], answer:0 },
+{ question:"Bank Draft क्या है?", options:["सुरक्षित भुगतान साधन","लोन प्रकार","टैक्स","बीमा"], answer:0 },
+{ question:"Overdraft सुविधा क्या है?", options:["खाते से अधिक पैसा निकालना","FD","बचत","टैक्स"], answer:0 },
+{ question:"Passbook का उपयोग क्या है?", options:["लेन-देन रिकॉर्ड","ATM निकालना","लोन देना","शेयर खरीदना"], answer:0 },
+
+{ question:"IFSC code कितने अंकों का होता है?", options:["11","9","8","10"], answer:0 },
+{ question:"MICR code कितने अंकों का होता है?", options:["9","11","6","8"], answer:0 },
+{ question:"NEFT किस प्रकार का सिस्टम है?", options:["बैच प्रोसेसिंग","तुरंत ट्रांसफर","केवल नकद","केवल चेक"], answer:0 },
+{ question:"ATM withdrawal limit कौन तय करता है?", options:["बैंक","RBI","SEBI","सरकार"], answer:0 },
+{ question:"Bearer cheque क्या होता है?", options:["जिसे कोई भी कैश कर सकता है","केवल मालिक","डिजिटल","क्रॉस्ड"], answer:0 },
+
+{ question:"Crossed cheque क्यों सुरक्षित है?", options:["केवल बैंक में जमा होता है","कैश में मिलता है","ATM में चलता है","लोन देता है"], answer:0 },
+{ question:"PAN का पूरा नाम क्या है?", options:["Permanent Account Number","Public Account Number","Personal Asset Number","None"], answer:0 },
+{ question:"Aadhaar किसने जारी किया?", options:["UIDAI","RBI","SEBI","NABARD"], answer:0 },
+{ question:"UIDAI का फुल फॉर्म क्या है?", options:["Unique Identification Authority of India","Unified India Agency","Unique ID Authority Institute","None"], answer:0 },
+{ question:"Bank Reconciliation Statement क्या है?", options:["बैंक और पासबुक मिलान","लोन सिस्टम","ATM रिपोर्ट","टैक्स"], answer:0 },
+
+{ question:"Compound Interest क्या होता है?", options:["ब्याज पर ब्याज","सिर्फ मूलधन पर ब्याज","टैक्स","छूट"], answer:0 },
+{ question:"Simple Interest क्या होता है?", options:["सिर्फ मूलधन पर ब्याज","ब्याज पर ब्याज","लोन","FD"], answer:0 },
+{ question:"Current Account में ब्याज मिलता है?", options:["नहीं","हाँ","कभी-कभी","RBI देता है"], answer:0 },
+{ question:"NPA कितने दिनों बाद माना जाता है?", options:["90 दिन","30 दिन","180 दिन","365 दिन"], answer:0 },
+{ question:"Provisioning का मतलब क्या है?", options:["संभावित नुकसान के लिए पैसा अलग रखना","लोन देना","ATM निकालना","FD खोलना"], answer:0 },
+
+{ question:"CRR कहाँ रखा जाता है?", options:["RBI","Bank","SEBI","NABARD"], answer:0 },
+{ question:"SLR में बैंक क्या रखते हैं?", options:["सरकारी प्रतिभूतियाँ","नकद","शेयर","FD"], answer:0 },
+{ question:"Reverse Repo Rate में कौन किससे पैसा लेता है?", options:["RBI बैंक से","बैंक RBI से","सरकार जनता से","SEBI बैंक से"], answer:0 },
+{ question:"Digital Signature का उपयोग क्या है?", options:["सुरक्षा और पहचान","लोन","ATM","FD"], answer:0 },
+{ question:"OTP का उपयोग क्यों होता है?", options:["सुरक्षित लेन-देन","लोन","FD","शेयर"], answer:0 },
+
+{ question:"Phishing क्या है?", options:["ऑनलाइन धोखाधड़ी","बैंक योजना","लोन प्रकार","ATM सुविधा"], answer:0 },
+{ question:"Cyber Fraud से बचने का तरीका क्या है?", options:["OTP साझा न करना","PIN देना","Password लिखना","सब शेयर करना"], answer:0 },
+{ question:"Financial Inclusion का उदाहरण क्या है?", options:["जन धन योजना","शेयर बाजार","क्रिप्टो","FD"], answer:0 }
+
+];
+
+
+let index = 0;
+let score = 0;
+let timer;
+let timeLeft = 10;
+
+function startQuiz() {
+  document.getElementById("startScreen").classList.add("hide");
+  document.getElementById("quizScreen").classList.remove("hide");
+  loadQuestion();
+}
+
+function loadQuestion() {
+  resetTimer();
+  let q = quizData[index];
+  document.getElementById("question").innerText = q.question;
+  document.getElementById("qNo").innerText = index + 1;
+
+  let optionsHTML = "";
+  q.options.forEach((opt, i) => {
+    optionsHTML += `<div class="option" onclick="selectOption(${i})">${opt}</div>`;
+  });
+
+  document.getElementById("options").innerHTML = optionsHTML;
+}
+
+function selectOption(selected) {
+  let correct = quizData[index].answer;
+  let options = document.querySelectorAll(".option");
+
+  options.forEach((opt, i) => {
+    if (i === correct) opt.classList.add("correct");
+    else if (i === selected) opt.classList.add("wrong");
+
+    opt.style.pointerEvents = "none";
+  });
+
+  if (selected === correct) score++;
+}
+
+function nextQuestion() {
+  index++;
+  if (index < quizData.length) {
+    loadQuestion();
+  } else {
+    showResult();
+  }
+}
+
+  function showResult() {
+  document.getElementById("quizScreen").classList.add("hide");
+  document.getElementById("resultScreen").classList.remove("hide");
+  document.getElementById("score").innerText = score + " / " + quizData.length;
+}
+
+function resetTimer() {
+  clearInterval(timer);
+  timeLeft = 10;
+  document.getElementById("timer").innerText = timeLeft;
+
+  timer = setInterval(() => {
+    timeLeft--;
+    document.getElementById("timer").innerText = timeLeft;
+
+    if (timeLeft === 0) {
+      nextQuestion();
+    }
+  }, 1000);
+}
+
+</script>
+
+</body>
+</html>

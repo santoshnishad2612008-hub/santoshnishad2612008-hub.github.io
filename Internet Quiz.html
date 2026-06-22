@@ -1,0 +1,348 @@
+<!DOCTYPE html>
+<html>
+<head>
+     <!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-KN4DRRWZ17"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-KN4DRRWZ17');
+</script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Internet Quiz</title>
+
+<style>
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: Arial;
+}
+
+body {
+  background: #f5f5f5;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+}
+
+/* Container */
+.app {
+  width: 95%;
+  max-width: 500px;
+  background: white;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+}
+
+/* Header */
+header {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 20px;
+}
+
+.timer {
+  background: #2196F3;
+  color: white;
+  padding: 5px 10px;
+  border-radius: 5px;
+}
+
+/* Question */
+.question {
+  font-size: 20px;
+  margin-bottom: 15px;
+}
+
+/* Options */
+.option {
+  background: #eee;
+  padding: 10px;
+  margin: 8px 0;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.option:hover {
+  background: #ddd;
+}
+
+.correct {
+  background: #4CAF50 !important;
+  color: white;
+}
+
+.wrong {
+  background: #f44336 !important;
+  color: white;
+}
+
+/* Button */
+button {
+  margin-top: 15px;
+  padding: 10px;
+  width: 100%;
+  border: none;
+ background:linear-gradient(135deg,#0a2dbcf3,#779af583);
+  color: white;
+  font-size: 16px;
+  cursor: pointer;
+  border-radius: 5px;
+}
+
+/* Hidden */
+.hide {
+  display: none;
+}
+
+/* Result */
+.result {
+  text-align: center;
+}
+
+/* Responsive */
+@media (max-width: 600px) {
+  .question {
+    font-size: 18px;
+  }
+}
+</style>
+
+</head>
+<body>
+
+<div class="app">
+
+  <!-- Start Screen -->
+  <div id="startScreen">
+    <h2>Quiz App</h2>
+    <button onclick="startQuiz()">Start Quiz</button>
+  </div>
+
+  <!-- Quiz Screen -->
+  <div id="quizScreen" class="hide">
+    <header>
+      <div>Question <span id="qNo">1</span>/100</div>
+      <div class="timer" id="timer">10</div>
+    </header>
+
+    <div class="question" id="question"></div>
+    <div id="options"></div>
+
+    <button onclick="nextQuestion()">Next</button>
+  </div>
+
+  <!-- Result Screen -->
+  <div id="resultScreen" class="hide result">
+    <h2>Your Score</h2>
+    <h1 id="score"></h1>
+    <button onclick="location.reload()">Play Again</button>
+  </div>
+
+</div>
+
+<script>
+const quizData = [
+
+{ question:"इंटरनेट का पूरा नाम क्या है?", options:["International Network","Internal Network","Internet Networking","Inter National Net"], answer:0 },
+{ question:"WWW का पूरा नाम क्या है?", options:["World Wide Web","World Web Wide","Web World Wide","Wide World Web"], answer:0 },
+{ question:"वेब ब्राउज़र का उदाहरण कौन सा है?", options:["Chrome","MS Word","Excel","Paint"], answer:0 },
+{ question:"ईमेल का उपयोग किस लिए होता है?", options:["संदेश भेजने के लिए","गेम खेलने के लिए","ड्राइंग के लिए","कैलकुलेशन के लिए"], answer:0 },
+{ question:"IP का पूरा नाम क्या है?", options:["Internet Protocol","Internal Protocol","Internet Process","Input Protocol"], answer:0 },
+{ question:"HTML का पूरा नाम क्या है?", options:["Hyper Text Markup Language","High Text Machine Language","Hyper Tool Mark Language","None"], answer:0 },
+{ question:"वेबसाइट खोलने के लिए क्या उपयोग होता है?", options:["Browser","Compiler","Editor","Player"], answer:0 },
+{ question:"सबसे लोकप्रिय सर्च इंजन कौन सा है?", options:["Google","Yahoo","Bing","Ask"], answer:0 },
+{ question:"Wi-Fi का उपयोग क्या है?", options:["Wireless Internet","Wired Internet","Data Storage","Printing"], answer:0 },
+{ question:"URL का पूरा नाम क्या है?", options:["Uniform Resource Locator","Uniform Random Link","Universal Resource List","None"], answer:0 },
+
+{ question:"CPU का पूरा नाम क्या है?", options:["Central Processing Unit","Control Processing Unit","Central Program Unit","Core Processing Unit"], answer:0 },
+{ question:"कंप्यूटर का दिमाग किसे कहा जाता है?", options:["CPU","RAM","Hard Disk","Monitor"], answer:0 },
+{ question:"RAM क्या है?", options:["Temporary Memory","Permanent Memory","Input Device","Software"], answer:0 },
+{ question:"ROM का पूरा नाम क्या है?", options:["Read Only Memory","Run Only Memory","Random Only Memory","Right Only Memory"], answer:0 },
+{ question:"कीबोर्ड किस प्रकार का डिवाइस है?", options:["Input Device","Output Device","Storage Device","Processing Device"], answer:0 },
+
+{ question:"माउस का उपयोग क्या है?", options:["Cursor चलाने के लिए","प्रिंट करने के लिए","स्कैन करने के लिए","साउंड के लिए"], answer:0 },
+{ question:"Monitor किस प्रकार का डिवाइस है?", options:["Output Device","Input Device","Storage Device","Processing Device"], answer:0 },
+{ question:"Printer का उपयोग क्या है?", options:["हार्ड कॉपी निकालना","सॉफ्ट कॉपी बनाना","गेम खेलना","इंटरनेट चलाना"], answer:0 },
+{ question:"सबसे पहले कंप्यूटर वायरस कब आया?", options:["1970s","1980s","1990s","2000s"], answer:1 },
+{ question:"Antivirus का उपयोग क्या है?", options:["Virus हटाने के लिए","गेम खेलने के लिए","कोडिंग के लिए","ब्राउज़िंग के लिए"], answer:0 },
+
+{ question:"Facebook क्या है?", options:["Social Media","Search Engine","Browser","OS"], answer:0 },
+{ question:"Instagram किस प्रकार का प्लेटफॉर्म है?", options:["Photo Sharing","Banking","Coding","Shopping"], answer:0 },
+{ question:"YouTube किस लिए उपयोग होता है?", options:["Video Sharing","Email","Coding","Printing"], answer:0 },
+{ question:"Gmail किस कंपनी का है?", options:["Google","Microsoft","Yahoo","Amazon"], answer:0 },
+{ question:"WhatsApp क्या है?", options:["Messaging App","Browser","OS","Game"], answer:0 },
+
+{ question:"Android किस प्रकार का सिस्टम है?", options:["Operating System","Browser","Software","Hardware"], answer:0 },
+{ question:"Windows किसका उदाहरण है?", options:["Operating System","Application","Browser","Game"], answer:0 },
+{ question:"Linux क्या है?", options:["Operating System","Game","App","Device"], answer:0 },
+{ question:"Software क्या है?", options:["Programs","Hardware Parts","Cable","Screen"], answer:0 },
+{ question:"Hardware क्या है?", options:["Physical Parts","Programs","Apps","Data"], answer:0 },
+
+{ question:"Google Chrome क्या है?", options:["Browser","OS","Game","Editor"], answer:0 },
+{ question:"Firefox क्या है?", options:["Browser","App","Game","System"], answer:0 },
+{ question:"Safari क्या है?", options:["Browser","OS","Hardware","Game"], answer:0 },
+{ question:"Edge किसका ब्राउज़र है?", options:["Microsoft","Google","Apple","Amazon"], answer:0 },
+{ question:"Internet कब शुरू हुआ था?", options:["1960s","1970s","1980s","1990s"], answer:0 },
+
+{ question:"Bluetooth का उपयोग क्या है?", options:["Data Transfer","Printing","Scanning","Coding"], answer:0 },
+{ question:"LAN का पूरा नाम क्या है?", options:["Local Area Network","Large Area Network","Light Area Network","Long Area Network"], answer:0 },
+{ question:"WAN का पूरा नाम क्या है?", options:["Wide Area Network","Wireless Area Network","Web Area Network","Work Area Network"], answer:0 },
+{ question:"Modem का उपयोग क्या है?", options:["Internet Connect","Print","Scan","Draw"], answer:0 },
+{ question:"Router क्या करता है?", options:["Internet distribute","Print","Store data","Scan"], answer:0 },
+
+{ question:"E-mail में @ का क्या उपयोग है?", options:["User और domain अलग करने के लिए","Decoration","Security","Delete"], answer:0 },
+{ question:"Cyber Security क्या है?", options:["Online सुरक्षा","Game","App","Hardware"], answer:0 },
+{ question:"Firewall क्या है?", options:["Security System","Game","Browser","App"], answer:0 },
+{ question:"Cloud Storage क्या है?", options:["Online Storage","Offline Storage","Device Storage","Memory Card"], answer:0 },
+{ question:"Google Drive क्या है?", options:["Cloud Storage","Game","Browser","OS"], answer:0 },
+
+{ question:"PDF का पूरा नाम क्या है?", options:["Portable Document Format","Public Data File","Print Document File","None"], answer:0 },
+{ question:"MS Word क्या है?", options:["Word Processor","Browser","Game","OS"], answer:0 },
+{ question:"Excel का उपयोग क्या है?", options:["Spreadsheet","Game","Browser","Video"], answer:0 },
+{ question:"PowerPoint क्या है?", options:["Presentation Software","Browser","OS","Game"], answer:0 },
+{ question:"Database क्या होता है?", options:["Data Collection","Game","App","Hardware"], answer:0 },
+
+{ question:"Virus क्या है?", options:["Harmful Program","Hardware","Browser","App"], answer:0 },
+{ question:"Hacker कौन होता है?", options:["Unauthorized Access करने वाला","Programmer","Designer","User"], answer:0 },
+{ question:"Cyber Crime क्या है?", options:["Online अपराध","Game","App","Device"], answer:0 },
+{ question:"Captcha का उपयोग क्या है?", options:["Human verify","Game","Speed increase","Storage"], answer:0 },
+{ question:"Search Engine क्या करता है?", options:["Information खोजता है","Print करता है","Store करता है","Delete करता है"], answer:0 },
+
+{ question:"Bit का मतलब क्या है?", options:["Binary Digit","Basic Information","Byte Input Tool","Binary Input Type"], answer:0 },
+{ question:"1 Byte में कितने Bits होते हैं?", options:["8","4","2","16"], answer:0 },
+{ question:"URL किसके लिए होता है?", options:["Website address","File storage","Game","App"], answer:0 },
+{ question:"Internet पर डेटा किस रूप में चलता है?", options:["Packets","Blocks","Pages","Files"], answer:0 },
+{ question:"ISP का पूरा नाम क्या है?", options:["Internet Service Provider","Internal Service Provider","Internet Speed Provider","None"], answer:0 },
+
+{ question:"Wi-Fi किस तकनीक पर आधारित है?", options:["Radio Waves","Light","Heat","Sound"], answer:0 },
+{ question:"QR Code क्या है?", options:["Quick Response Code","Quick Result Code","Query Read Code","None"], answer:0 },
+{ question:"Mobile डेटा क्या है?", options:["Internet service","Game","App","Hardware"], answer:0 },
+{ question:"App का पूरा नाम क्या है?", options:["Application","Applet","Applied Program","None"], answer:0 },
+{ question:"Play Store किसका है?", options:["Google","Apple","Microsoft","Amazon"], answer:0 },
+
+{ question:"App Store किसका है?", options:["Apple","Google","Microsoft","Amazon"], answer:0 },
+{ question:"iOS क्या है?", options:["Apple OS","Google OS","Microsoft OS","Linux OS"], answer:0 },
+{ question:"Cloud Computing क्या है?", options:["Online computing","Offline computing","Hardware","Game"], answer:0 },
+{ question:"Internet speed किसमें मापी जाती है?", options:["Mbps","Kg","Meter","Volt"], answer:0 },
+{ question:"Download का मतलब क्या है?", options:["Internet से data लेना","Send करना","Delete करना","Copy करना"], answer:0 },
+
+{ question:"HTTP का पूरा नाम क्या है?", options:["HyperText Transfer Protocol","High Transfer Text Protocol","Hyper Text Transmission Program","None"], answer:0 },
+{ question:"HTTPS में S का मतलब क्या है?", options:["Secure","System","Server","Service"], answer:0 },
+{ question:"Google किस प्रकार की कंपनी है?", options:["Technology","Bank","Car","Food"], answer:0 },
+{ question:"Keyboard में कितनी function keys होती हैं?", options:["12","10","8","14"], answer:0 },
+{ question:"Computer को कौन सा language समझ आता है?", options:["Binary","Hindi","English","French"], answer:0 },
+
+{ question:"First generation computer में क्या उपयोग होता था?", options:["Vacuum Tube","Microprocessor","Transistor","IC"], answer:0 },
+{ question:"Second generation computer में क्या उपयोग होता था?", options:["Transistor","Vacuum Tube","Microchip","AI Chip"], answer:0 },
+{ question:"Third generation computer में क्या उपयोग होता था?", options:["IC (Integrated Circuit)","Vacuum Tube","Transistor","Quantum Chip"], answer:0 },
+{ question:"Fourth generation computer में क्या उपयोग होता है?", options:["Microprocessor","Vacuum Tube","Relay","None"], answer:0 },
+{ question:"Supercomputer का उपयोग क्या है?", options:["Complex calculations","Gaming","Browsing","Typing"], answer:0 },
+
+{ question:"Artificial Intelligence का मतलब क्या है?", options:["Machine Intelligence","Human Memory","Data Storage","Internet Speed"], answer:0 },
+{ question:"AI का उदाहरण कौन सा है?", options:["ChatGPT","MS Paint","Notepad","Excel"], answer:0 },
+{ question:"Machine Learning क्या है?", options:["AI का भाग","Hardware","Browser","Network"], answer:0 },
+{ question:"Data क्या होता है?", options:["Raw Information","Software","Hardware","App"], answer:0 },
+{ question:"Information क्या होती है?", options:["Processed Data","Virus","Hardware","Code"], answer:0 },
+
+{ question:"Keyboard में Caps Lock क्या करता है?", options:["Capital letters ON/OFF","Delete file","Open browser","Print page"], answer:0 },
+{ question:"Ctrl + C का उपयोग क्या है?", options:["Copy","Paste","Cut","Save"], answer:0 },
+{ question:"Ctrl + V का उपयोग क्या है?", options:["Paste","Copy","Cut","Undo"], answer:0 },
+{ question:"Ctrl + X का उपयोग क्या है?", options:["Cut","Copy","Paste","Save"], answer:0 },
+{ question:"Ctrl + Z का उपयोग क्या है?", options:["Undo","Redo","Delete","Save"], answer:0 },
+
+{ question:"File extension .jpg किसके लिए होता है?", options:["Image","Video","Audio","Document"], answer:0 },
+{ question:"File extension .mp3 किसके लिए होता है?", options:["Audio","Image","Video","App"], answer:0 },
+{ question:"File extension .mp4 किसके लिए होता है?", options:["Video","Audio","Image","Text"], answer:0 },
+{ question:"File extension .pdf किसके लिए होता है?", options:["Document","Video","Audio","Game"], answer:0 },
+{ question:"Recycle Bin का उपयोग क्या है?", options:["Deleted files store","Virus remove","Internet","Backup"], answer:0 },
+
+{ question:"Desktop क्या होता है?", options:["Main screen","Software","Hardware","Folder"], answer:0 },
+{ question:"Folder का उपयोग क्या है?", options:["Files store करना","Internet चलाना","Print करना","Scan करना"], answer:0 },
+{ question:"File क्या होती है?", options:["Stored data","Hardware part","Network","Browser"], answer:0 },
+{ question:"Operating System का मुख्य काम क्या है?", options:["Hardware और software को manage करना","Internet चलाना","Game खेलना","Print करना"], answer:0 },
+{ question:"Booting क्या होती है?", options:["Computer start process","Shutdown process","Virus scan","File copy"], answer:0 }
+
+];
+
+
+let index = 0;
+let score = 0;
+let timer;
+let timeLeft = 10;
+
+function startQuiz() {
+  document.getElementById("startScreen").classList.add("hide");
+  document.getElementById("quizScreen").classList.remove("hide");
+  loadQuestion();
+}
+
+function loadQuestion() {
+  resetTimer();
+  let q = quizData[index];
+  document.getElementById("question").innerText = q.question;
+  document.getElementById("qNo").innerText = index + 1;
+
+  let optionsHTML = "";
+  q.options.forEach((opt, i) => {
+    optionsHTML += `<div class="option" onclick="selectOption(${i})">${opt}</div>`;
+  });
+
+  document.getElementById("options").innerHTML = optionsHTML;
+}
+
+function selectOption(selected) {
+  let correct = quizData[index].answer;
+  let options = document.querySelectorAll(".option");
+
+  options.forEach((opt, i) => {
+    if (i === correct) opt.classList.add("correct");
+    else if (i === selected) opt.classList.add("wrong");
+
+    opt.style.pointerEvents = "none";
+  });
+
+  if (selected === correct) score++;
+}
+
+function nextQuestion() {
+  index++;
+  if (index < quizData.length) {
+    loadQuestion();
+  } else {
+    showResult();
+  }
+}
+
+  function showResult() {
+  document.getElementById("quizScreen").classList.add("hide");
+  document.getElementById("resultScreen").classList.remove("hide");
+  document.getElementById("score").innerText = score + " / " + quizData.length;
+}
+
+function resetTimer() {
+  clearInterval(timer);
+  timeLeft = 10;
+  document.getElementById("timer").innerText = timeLeft;
+
+  timer = setInterval(() => {
+    timeLeft--;
+    document.getElementById("timer").innerText = timeLeft;
+
+    if (timeLeft === 0) {
+      nextQuestion();
+    }
+  }, 1000);
+}
+
+</script>
+
+</body>
+</html>

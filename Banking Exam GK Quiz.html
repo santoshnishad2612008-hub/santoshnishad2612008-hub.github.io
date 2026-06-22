@@ -1,0 +1,350 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-KN4DRRWZ17"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-KN4DRRWZ17');
+</script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Banking Exam GK Quiz </title>
+
+<style>
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: Arial;
+}
+
+body {
+  background: #f5f5f5;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+}
+
+/* Container */
+.app {
+  width: 95%;
+  max-width: 500px;
+  background: white;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+}
+
+/* Header */
+header {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 20px;
+}
+
+.timer {
+  background: #2196F3;
+  color: white;
+  padding: 5px 10px;
+  border-radius: 5px;
+}
+
+/* Question */
+.question {
+  font-size: 20px;
+  margin-bottom: 15px;
+}
+
+/* Options */
+.option {
+  background: #eee;
+  padding: 10px;
+  margin: 8px 0;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.option:hover {
+  background: #ddd;
+}
+
+.correct {
+  background: #4CAF50 !important;
+  color: white;
+}
+
+.wrong {
+  background: #f44336 !important;
+  color: white;
+}
+
+/* Button */
+button {
+  margin-top: 15px;
+  padding: 10px;
+  width: 100%;
+  border: none;
+ background:linear-gradient(135deg,#0a2dbcf3,#779af583);
+  color: white;
+  font-size: 16px;
+  cursor: pointer;
+  border-radius: 5px;
+}
+
+/* Hidden */
+.hide {
+  display: none;
+}
+
+/* Result */
+.result {
+  text-align: center;
+}
+
+/* Responsive */
+@media (max-width: 600px) {
+  .question {
+    font-size: 18px;
+  }
+}
+</style>
+
+</head>
+<body>
+
+<div class="app">
+
+  <!-- Start Screen -->
+  <div id="startScreen">
+    <h2>Quiz App</h2>
+    <button onclick="startQuiz()">Start Quiz</button>
+  </div>
+
+  <!-- Quiz Screen -->
+  <div id="quizScreen" class="hide">
+    <header>
+      <div>Question <span id="qNo">1</span>/101</div>
+      <div class="timer" id="timer">10</div>
+    </header>
+
+    <div class="question" id="question"></div>
+    <div id="options"></div>
+
+    <button onclick="nextQuestion()">Next</button>
+  </div>
+
+  <!-- Result Screen -->
+  <div id="resultScreen" class="hide result">
+    <h2>Your Score</h2>
+    <h1 id="score"></h1>
+    <button onclick="location.reload()">Play Again</button>
+  </div>
+
+</div>
+
+<script>
+const quizData = [
+
+{ question:"भारत का केंद्रीय बैंक कौन है?", options:["SBI","RBI","PNB","BOB"], answer:1 },
+{ question:"भारतीय रिज़र्व बैंक की स्थापना कब हुई थी?", options:["1935","1947","1950","1969"], answer:0 },
+{ question:"भारत की करेंसी क्या है?", options:["डॉलर","रुपया","यूरो","येन"], answer:1 },
+{ question:"SBI का पूरा नाम क्या है?", options:["State Bank of India","Standard Bank of India","South Bank of India","State Banking Institute"], answer:0 },
+{ question:"ATM का पूरा नाम क्या है?", options:["Automatic Teller Machine","Any Time Money","Automated Transfer Money","Advanced Teller Machine"], answer:0 },
+{ question:"UPI का फुल फॉर्म क्या है?", options:["Unified Payments Interface","Universal Payment India","United Payment Interface","Unique Payment India"], answer:0 },
+{ question:"भारत में बैंकिंग सुधार समिति कब बनी?", options:["1991","1980","2000","1975"], answer:0 },
+{ question:"भारत का सबसे बड़ा सरकारी बैंक कौन है?", options:["SBI","PNB","BOB","Canara Bank"], answer:0 },
+{ question:"CRR का फुल फॉर्म क्या है?", options:["Cash Reserve Ratio","Credit Reserve Rate","Central Reserve Ratio","Cash Risk Ratio"], answer:0 },
+{ question:"Repo Rate किसके द्वारा तय की जाती है?", options:["RBI","SBI","SEBI","NABARD"], answer:0 },
+
+{ question:"भारत का पहला बैंक कौन सा है?", options:["Bank of Hindustan","SBI","PNB","BOI"], answer:0 },
+{ question:"SEBI का मुख्यालय कहाँ है?", options:["Mumbai","Delhi","Kolkata","Chennai"], answer:0 },
+{ question:"नाबार्ड की स्थापना कब हुई?", options:["1982","1991","1975","2000"], answer:0 },
+{ question:"भारत में मुद्रा छापने की जिम्मेदारी किसकी है?", options:["RBI","SBI","Government","SEBI"], answer:0 },
+{ question:"IFSC कोड में कितने अंक होते हैं?", options:["11","10","12","8"], answer:0 },
+{ question:"Cheque किस प्रकार का भुगतान है?", options:["Paper Instrument","Digital","Cash","Crypto"], answer:0 },
+{ question:"RTGS का फुल फॉर्म क्या है?", options:["Real Time Gross Settlement","Real Transfer Gross System","Rapid Transfer Global System","Real Time Government System"], answer:0 },
+{ question:"NEFT का फुल फॉर्म क्या है?", options:["National Electronic Funds Transfer","New Electronic Fund Transfer","National Exchange Fund Transfer","Net Electronic Fund Transfer"], answer:0 },
+{ question:"भारत में सबसे पुराना बैंक कौन सा है?", options:["Bank of India","SBI","PNB","Canara Bank"], answer:1 },
+{ question:"डिजिटल इंडिया कब शुरू हुआ?", options:["2015","2014","2016","2017"], answer:0 },
+
+{ question:"KYC का फुल फॉर्म क्या है?", options:["Know Your Customer","Know Your Cash","Keep Your Credit","Know Your Currency"], answer:0 },
+{ question:"मुद्रा योजना किससे संबंधित है?", options:["Micro Finance","Agriculture","Industry","Export"], answer:0 },
+{ question:"प्रधानमंत्री जन धन योजना कब शुरू हुई?", options:["2014","2015","2016","2013"], answer:0 },
+{ question:"डेबिट कार्ड क्या है?", options:["Bank Account Money Card","Loan Card","Credit Card","Cash Card"], answer:0 },
+{ question:"क्रेडिट कार्ड किस पर आधारित होता है?", options:["Loan","Salary","Savings","Interest"], answer:0 },
+
+{ question:"बैंकिंग लोकपाल किससे संबंधित है?", options:["Customer Complaint","Loan","Tax","Investment"], answer:0 },
+{ question:"भारत का केंद्रीय बजट कौन प्रस्तुत करता है?", options:["Finance Minister","PM","RBI Governor","President"], answer:0 },
+{ question:"मुद्रा स्फीति क्या है?", options:["Inflation","Deflation","GDP","Interest"], answer:0 },
+{ question:"GDP का फुल फॉर्म क्या है?", options:["Gross Domestic Product","Global Domestic Price","Gross Development Product","General Domestic Product"], answer:0 },
+{ question:"CPI का फुल फॉर्म क्या है?", options:["Consumer Price Index","Credit Price Index","Central Price Index","Currency Price Index"], answer:0 },
+
+{ question:"भारत में नोट छपाई कहाँ होती है?", options:["Security Printing Press","RBI","SEBI","NABARD"], answer:0 },
+{ question:"मुंबई में स्टॉक एक्सचेंज का नाम क्या है?", options:["BSE","NSE","MCX","NCDEX"], answer:0 },
+{ question:"NSE का फुल फॉर्म क्या है?", options:["National Stock Exchange","New Stock Exchange","National Security Exchange","Net Stock Exchange"], answer:0 },
+{ question:"BSE का फुल फॉर्म क्या है?", options:["Bombay Stock Exchange","Bank Stock Exchange","Business Stock Exchange","British Stock Exchange"], answer:0 },
+{ question:"सेविंग अकाउंट पर क्या मिलता है?", options:["Interest","Loan","Loss","Tax"], answer:0 },
+
+{ question:"फिक्स्ड डिपॉजिट को क्या कहते हैं?", options:["FD","RD","CD","OD"], answer:0 },
+{ question:"Recurring Deposit का मतलब क्या है?", options:["RD","FD","OD","CD"], answer:0 },
+{ question:"Overdraft सुविधा किसमें मिलती है?", options:["Current Account","Savings","FD","RD"], answer:0 },
+{ question:"माइक्रो ATM का उपयोग क्या है?", options:["Mini Transactions","Loan","Investment","Tax"], answer:0 },
+{ question:"भारत में डिजिटल पेमेंट सिस्टम का उदाहरण क्या है?", options:["UPI","Cheque","Cash","Draft"], answer:0 },
+
+{ question:"IMPS का फुल फॉर्म क्या है?", options:["Immediate Payment Service","Indian Money Payment System","Instant Money Payment Service","Internal Money Payment System"], answer:0 },
+{ question:"ATM से पैसे निकालने की सीमा क्या कहलाती है?", options:["Withdrawal Limit","Deposit Limit","Loan Limit","Credit Limit"], answer:0 },
+{ question:"बैंकिंग सेक्टर को नियंत्रित कौन करता है?", options:["RBI","SEBI","NITI Aayog","Finance Ministry"], answer:0 },
+{ question:"भारत में सबसे बड़ा निजी बैंक कौन है?", options:["HDFC Bank","SBI","PNB","BOB"], answer:0 },
+{ question:"ICICI बैंक किस प्रकार का बैंक है?", options:["Private Bank","Government Bank","Cooperative Bank","Rural Bank"], answer:0 },
+
+{ question:"Cooperative Bank का उदाहरण क्या है?", options:["Urban Cooperative Bank","SBI","RBI","SEBI"], answer:0 },
+{ question:"मुद्रा ऋण योजना का उद्देश्य क्या है?", options:["Small Business Loan","Education","Agriculture","Export"], answer:0 },
+{ question:"बैंक दर (Bank Rate) कौन तय करता है?", options:["RBI","SEBI","Government","NABARD"], answer:0 },
+{ question:"रेपो रेट बढ़ने पर क्या होता है?", options:["Loan महंगा","Loan सस्ता","No Change","Inflation Zero"], answer:0 },
+{ question:"रिवर्स रेपो रेट क्या है?", options:["RBI borrows money","RBI lends money","Bank loans customers","Government tax"], answer:0 },
+
+{ question:"मुद्रा नीति किससे संबंधित है?", options:["Money Supply","Tax","Export","Import"], answer:0 },
+{ question:"भारत का वित्तीय वर्ष कब शुरू होता है?", options:["1 April","1 January","1 March","1 July"], answer:0 },
+{ question:"IFSC कोड कहाँ उपयोग होता है?", options:["Bank Transfer","Voting","Passport","Driving License"], answer:0 },
+{ question:"MICR कोड किसमें होता है?", options:["Cheque","ATM","UPI","Card"], answer:0 },
+{ question:"डिमांड ड्राफ्ट क्या है?", options:["Bank Payment Order","Loan","Cash","Card"], answer:0 },
+
+{ question:"क्रेडिट स्कोर क्या दर्शाता है?", options:["Loan Worthiness","Salary","Tax","Savings"], answer:0 },
+{ question:"CIBIL स्कोर कितना अच्छा माना जाता है?", options:["750+","500","300","600"], answer:0 },
+{ question:"बैंक खाता खोलने के लिए क्या जरूरी है?", options:["KYC","PAN Only","Cash","Loan"], answer:0 },
+{ question:"PAN का फुल फॉर्म क्या है?", options:["Permanent Account Number","Personal Account Number","Public Account Number","Primary Account Number"], answer:0 },
+{ question:"आधार कार्ड किससे जुड़ा है?", options:["Identity","Loan","Bank Profit","Export"], answer:0 },
+
+{ question:"NPCI का फुल फॉर्म क्या है?", options:["National Payments Corporation of India","National Private Corporation of India","New Payment Corporation","Net Payment Corporation"], answer:0 },
+{ question:"RuPay कार्ड किसने लॉन्च किया?", options:["NPCI","RBI","SBI","SEBI"], answer:0 },
+{ question:"भारत में बीमा क्षेत्र को कौन नियंत्रित करता है?", options:["IRDAI","RBI","SEBI","NABARD"], answer:0 },
+{ question:"IRDAI का फुल फॉर्म क्या है?", options:["Insurance Regulatory and Development Authority of India","Indian Rural Development Authority","Insurance Rate Department","Internal Revenue Department"], answer:0 },
+{ question:"बैंक का मुख्य कार्य क्या है?", options:["Money Transaction","Agriculture","Defense","Education"], answer:0 },
+
+{ question:"Demand Deposit क्या है?", options:["Withdraw anytime","Fixed","Loan","Tax"], answer:0 },
+{ question:"Time Deposit क्या है?", options:["Fixed Duration Deposit","Daily Deposit","Weekly Deposit","Instant Deposit"], answer:0 },
+{ question:"बैंक का लाभ क्या है?", options:["Interest","Loss","Tax","Penalty"], answer:0 },
+{ question:"Digital Banking का उदाहरण क्या है?", options:["Net Banking","Cheque","Cash","Draft"], answer:0 },
+{ question:"Net Banking क्या है?", options:["Online Banking","Offline Banking","Manual Banking","Cash Banking"], answer:0 },
+
+{ question:"भारत में ग्रामीण बैंक किसे कहते हैं?", options:["Regional Rural Bank","SBI","ICICI","HDFC"], answer:0 },
+{ question:"RRB का फुल फॉर्म क्या है?", options:["Regional Rural Bank","Rural Reserve Bank","Regional Reserve Bank","Rural Revenue Bank"], answer:0 },
+{ question:"बैंकिंग में EMI का मतलब क्या है?", options:["Equated Monthly Installment","Easy Monthly Interest","Equal Money Installment","Extra Monthly Interest"], answer:0 },
+{ question:"EMI किसमें उपयोग होता है?", options:["Loan Repayment","Salary","Tax","Savings"], answer:0 },
+{ question:"मनी मार्केट क्या है?", options:["Short Term Lending","Long Term Lending","Agriculture","Export"], answer:0 },
+
+{ question:"Capital Market क्या है?", options:["Long Term Investment","Short Term Loan","Tax System","Banking System"], answer:0 },
+{ question:"डिजिटल वॉलेट का उदाहरण क्या है?", options:["Paytm","Cheque","Cash","Draft"], answer:0 },
+{ question:"Paytm क्या है?", options:["Digital Wallet","Bank","Insurance","Stock Exchange"], answer:0 },
+{ question:"भारत में पहला ATM कब लगा?", options:["1987","1991","2000","1980"], answer:0 },
+{ question:"ATM किससे जुड़ा होता है?", options:["Bank Network","School","Hospital","Post Office"], answer:0 },
+
+{ question:"बैंकिंग प्रणाली का मुख्य उद्देश्य क्या है?", options:["Financial Services","Defense","Education","Transport"], answer:0 },
+
+{ question:"भारत में सबसे पुराना सार्वजनिक बैंक कौन सा है?", options:["SBI","PNB","BOB","Canara Bank"], answer:1 },
+{ question:"डिजिटल पेमेंट को बढ़ावा देने वाला ऐप कौन सा है?", options:["BHIM","IRCTC","Aadhaar","UMANG"], answer:0 },
+{ question:"BHIM ऐप किसने लॉन्च किया?", options:["NPCI","RBI","SBI","SEBI"], answer:0 },
+{ question:"बैंक में चेक कितने प्रकार के होते हैं?", options:["2","3","4","5"], answer:2 },
+{ question:"सेविंग अकाउंट में सामान्यतः कितना ब्याज मिलता है?", options:["1-4%","10-15%","20%","0%"], answer:0 },
+
+{ question:"बैंकिंग में NPA का मतलब क्या है?", options:["Non Performing Asset","New Payment Account","Net Profit Asset","National Payment Account"], answer:0 },
+{ question:"CRR बढ़ने पर क्या प्रभाव पड़ता है?", options:["लोन कम होता है","लोन बढ़ता है","कोई असर नहीं","मुद्रा छपती है"], answer:0 },
+{ question:"SBI का मुख्यालय कहाँ है?", options:["Mumbai","Delhi","Kolkata","Chennai"], answer:0 },
+{ question:"भारत में बैंकिंग ओम्बड्समैन योजना कब शुरू हुई?", options:["2006","1991","1980","2010"], answer:0 },
+{ question:"RTGS में न्यूनतम राशि कितनी होती है?", options:["2 लाख","1 रुपया","10 हजार","50 हजार"], answer:0 },
+
+{ question:"NEFT किस प्रकार का सिस्टम है?", options:["Batch Transfer","Instant Transfer","Cash Transfer","Loan Transfer"], answer:0 },
+{ question:"IMPS कब उपलब्ध रहता है?", options:["24x7","केवल दिन में","केवल रात में","सप्ताह में 5 दिन"], answer:0 },
+{ question:"ATM कार्ड किससे लिंक होता है?", options:["Bank Account","PAN","Aadhaar","Mobile"], answer:0 },
+{ question:"Debit Card से क्या होता है?", options:["सीधे पैसे कटते हैं","लोन मिलता है","ब्याज मिलता है","टैक्स भरता है"], answer:0 },
+{ question:"Credit Card से क्या सुविधा मिलती है?", options:["उधार में खर्च","फ्री पैसा","ब्याज रहित सेविंग","कैश गारंटी"], answer:0 },
+
+{ question:"भारत का पहला बैंक कौन सा है?", options:["Bank of Hindustan","SBI","PNB","BOB"], answer:0 },
+{ question:"बैंकिंग सेक्टर को किस वर्ष राष्ट्रीयकरण किया गया था?", options:["1969","1947","1991","2000"], answer:0 },
+{ question:"ATM की शुरुआत भारत में कब हुई?", options:["1987","1995","2000","1975"], answer:0 },
+{ question:"Cheque किस प्रकार का दस्तावेज है?", options:["Negotiable Instrument","Loan Paper","Tax Paper","Insurance Paper"], answer:0 },
+{ question:"बैंक का मुख्य कार्य क्या है?", options:["पैसे का लेन-देन","खेती","पढ़ाई","युद्ध"], answer:0 }
+
+
+];
+
+
+let index = 0;
+let score = 0;
+let timer;
+let timeLeft = 10;
+
+function startQuiz() {
+  document.getElementById("startScreen").classList.add("hide");
+  document.getElementById("quizScreen").classList.remove("hide");
+  loadQuestion();
+}
+
+function loadQuestion() {
+  resetTimer();
+  let q = quizData[index];
+  document.getElementById("question").innerText = q.question;
+  document.getElementById("qNo").innerText = index + 1;
+
+  let optionsHTML = "";
+  q.options.forEach((opt, i) => {
+    optionsHTML += `<div class="option" onclick="selectOption(${i})">${opt}</div>`;
+  });
+
+  document.getElementById("options").innerHTML = optionsHTML;
+}
+
+function selectOption(selected) {
+  let correct = quizData[index].answer;
+  let options = document.querySelectorAll(".option");
+
+  options.forEach((opt, i) => {
+    if (i === correct) opt.classList.add("correct");
+    else if (i === selected) opt.classList.add("wrong");
+
+    opt.style.pointerEvents = "none";
+  });
+
+  if (selected === correct) score++;
+}
+
+function nextQuestion() {
+  index++;
+  if (index < quizData.length) {
+    loadQuestion();
+  } else {
+    showResult();
+  }
+}
+
+  function showResult() {
+  document.getElementById("quizScreen").classList.add("hide");
+  document.getElementById("resultScreen").classList.remove("hide");
+  document.getElementById("score").innerText = score + " / " + quizData.length;
+}
+
+function resetTimer() {
+  clearInterval(timer);
+  timeLeft = 10;
+  document.getElementById("timer").innerText = timeLeft;
+
+  timer = setInterval(() => {
+    timeLeft--;
+    document.getElementById("timer").innerText = timeLeft;
+
+    if (timeLeft === 0) {
+      nextQuestion();
+    }
+  }, 1000);
+}
+
+</script>
+
+</body>
+</html>

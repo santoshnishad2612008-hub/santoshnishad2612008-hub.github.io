@@ -1,0 +1,478 @@
+<!DOCTYPE html>
+<html>
+<head>
+      <!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-KN4DRRWZ17"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-KN4DRRWZ17');
+</script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mix polity</title>
+
+<style>
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: Arial;
+}
+
+body {
+  background: #f5f5f5;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+}
+
+/* Container */
+.app {
+  width: 95%;
+  max-width: 500px;
+  background: white;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+}
+
+/* Header */
+header {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 20px;
+}
+
+.timer {
+  background: #2196F3;
+  color: white;
+  padding: 5px 10px;
+  border-radius: 5px;
+}
+
+/* Question */
+.question {
+  font-size: 20px;
+  margin-bottom: 15px;
+}
+
+/* Options */
+.option {
+  background: #eee;
+  padding: 10px;
+  margin: 8px 0;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.option:hover {
+  background: #ddd;
+}
+
+.correct {
+  background: #4CAF50 !important;
+  color: white;
+}
+
+.wrong {
+  background: #f44336 !important;
+  color: white;
+}
+
+/* Button */
+button {
+  margin-top: 15px;
+  padding: 10px;
+  width: 100%;
+  border: none;
+  background:linear-gradient(135deg,#0a2dbcf3,#779af583);
+  color: white;
+  font-size: 16px;
+  cursor: pointer;
+  border-radius: 5px;
+}
+
+/* Hidden */
+.hide {
+  display: none;
+}
+
+/* Result */
+.result {
+  text-align: center;
+}
+
+/* Responsive */
+@media (max-width: 600px) {
+  .question {
+    font-size: 18px;
+  }
+}
+</style>
+
+</head>
+<body>
+
+<div class="app">
+
+  <!-- Start Screen -->
+  <div id="startScreen">
+    <h2>Quiz App</h2>
+    <button onclick="startQuiz()">Start Quiz</button>
+  </div>
+
+  <!-- Quiz Screen -->
+  <div id="quizScreen" class="hide">
+    <header>
+      <div>Question <span id="qNo">1</span>/50</div>
+      <div class="timer" id="timer">10</div>
+    </header>
+
+    <div class="question" id="question"></div>
+    <div id="options"></div>
+
+    <button onclick="nextQuestion()">Next</button>
+  </div>
+
+  <!-- Result Screen -->
+  <div id="resultScreen" class="hide result">
+    <h2>Your Score</h2>
+    <h1 id="score"></h1>
+    <button onclick="location.reload()">Play Again</button>
+  </div>
+
+</div>
+
+<script>
+const quizData = [
+{
+question:"भारत का संविधान कब लागू हुआ?",
+options:["26 जनवरी 1950","15 अगस्त 1947","26 नवंबर 1949","2 अक्टूबर 1950"],
+answer:0
+},
+{
+question:"भारतीय संविधान के निर्माता कौन माने जाते हैं?",
+options:["महात्मा गांधी","डॉ. बी. आर. अम्बेडकर","जवाहरलाल नेहरू","सरदार पटेल"],
+answer:1
+},
+{
+question:"भारत का सर्वोच्च कानून क्या है?",
+options:["लोकसभा","संविधान","संसद","न्यायालय"],
+answer:1
+},
+{
+question:"भारत एक कैसा देश है?",
+options:["राजतंत्र","तानाशाही","लोकतांत्रिक गणराज्य","साम्राज्य"],
+answer:2
+},
+{
+question:"भारत के राष्ट्रपति का कार्यकाल कितना होता है?",
+options:["4 वर्ष","5 वर्ष","6 वर्ष","7 वर्ष"],
+answer:1
+},
+{
+question:"भारत के वर्तमान शासन का स्वरूप क्या है?",
+options:["संसदीय","राष्ट्रपति","राजतंत्र","तानाशाही"],
+answer:0
+},
+{
+question:"भारत का राष्ट्र प्रमुख कौन होता है?",
+options:["प्रधानमंत्री","राष्ट्रपति","मुख्यमंत्री","राज्यपाल"],
+answer:1
+},
+{
+question:"भारत का सरकार प्रमुख कौन होता है?",
+options:["राष्ट्रपति","प्रधानमंत्री","राज्यपाल","मुख्यमंत्री"],
+answer:1
+},
+{
+question:"लोकसभा का कार्यकाल कितना होता है?",
+options:["4 वर्ष","5 वर्ष","6 वर्ष","7 वर्ष"],
+answer:1
+},
+{
+question:"राज्यसभा एक क्या है?",
+options:["स्थायी सदन","अस्थायी सदन","न्यायालय","आयोग"],
+answer:0
+},
+{
+question:"भारतीय संसद के कितने सदन हैं?",
+options:["1","2","3","4"],
+answer:1
+},
+{
+question:"लोकसभा को क्या कहा जाता है?",
+options:["उच्च सदन","निम्न सदन","स्थायी सदन","विशेष सदन"],
+answer:1
+},
+{
+question:"राज्यसभा को क्या कहा जाता है?",
+options:["निम्न सदन","उच्च सदन","जनसभा","विशेष सभा"],
+answer:1
+},
+{
+question:"लोकसभा के सदस्यों का चुनाव कौन करता है?",
+options:["राष्ट्रपति","जनता","राज्यपाल","संसद"],
+answer:1
+},
+{
+question:"भारत में मतदान की न्यूनतम आयु क्या है?",
+options:["16 वर्ष","18 वर्ष","21 वर्ष","25 वर्ष"],
+answer:1
+},
+{
+question:"भारत का चुनाव आयोग किससे संबंधित है?",
+options:["न्याय","चुनाव","शिक्षा","वित्त"],
+answer:1
+},
+{
+question:"भारत के प्रथम राष्ट्रपति कौन थे?",
+options:["डॉ. राजेंद्र प्रसाद","नेहरू","पटेल","अम्बेडकर"],
+answer:0
+},
+{
+question:"भारत के प्रथम प्रधानमंत्री कौन थे?",
+options:["नेहरू","गांधी","पटेल","राजेंद्र प्रसाद"],
+answer:0
+},
+{
+question:"संविधान सभा के अध्यक्ष कौन थे?",
+options:["डॉ. राजेंद्र प्रसाद","नेहरू","पटेल","अम्बेडकर"],
+answer:0
+},
+{
+question:"भारतीय संविधान कब अपनाया गया था?",
+options:["26 नवंबर 1949","26 जनवरी 1950","15 अगस्त 1947","2 अक्टूबर 1948"],
+answer:0
+},
+{
+question:"मौलिक अधिकार कितने हैं?",
+options:["5","6","7","8"],
+answer:1
+},
+{
+question:"भारतीय संविधान का भाग III किससे संबंधित है?",
+options:["राज्य नीति","मौलिक अधिकार","नागरिकता","चुनाव"],
+answer:1
+},
+{
+question:"मौलिक कर्तव्य कितने हैं?",
+options:["10","11","12","13"],
+answer:1
+},
+{
+question:"राज्य के नीति निर्देशक तत्व किस भाग में हैं?",
+options:["भाग III","भाग IV","भाग V","भाग VI"],
+answer:1
+},
+{
+question:"भारत में न्यायपालिका का सर्वोच्च न्यायालय कौन सा है?",
+options:["उच्च न्यायालय","सर्वोच्च न्यायालय","जिला न्यायालय","सत्र न्यायालय"],
+answer:1
+},
+{
+question:"सर्वोच्च न्यायालय कहाँ स्थित है?",
+options:["मुंबई","नई दिल्ली","कोलकाता","चेन्नई"],
+answer:1
+},
+{
+question:"राज्य का संवैधानिक प्रमुख कौन होता है?",
+options:["मुख्यमंत्री","राज्यपाल","राष्ट्रपति","मुख्य सचिव"],
+answer:1
+},
+{
+question:"राज्य सरकार का प्रमुख कौन होता है?",
+options:["राज्यपाल","मुख्यमंत्री","राष्ट्रपति","सांसद"],
+answer:1
+},
+{
+question:"पंचायती राज व्यवस्था कितने स्तरों की होती है?",
+options:["2","3","4","5"],
+answer:1
+},
+{
+question:"भारत में कितने केंद्र शासित प्रदेश हैं?",
+options:["6","7","8","9"],
+answer:2
+},
+{
+question:"लोकसभा में धन विधेयक कौन प्रस्तुत करता है?",
+options:["राज्यसभा","राष्ट्रपति","लोकसभा","न्यायालय"],
+answer:2
+},
+{
+question:"धन विधेयक की अनुमति कौन देता है?",
+options:["प्रधानमंत्री","स्पीकर","राष्ट्रपति","राज्यपाल"],
+answer:1
+},
+{
+question:"लोकसभा का अध्यक्ष कौन होता है?",
+options:["स्पीकर","प्रधानमंत्री","राष्ट्रपति","राज्यपाल"],
+answer:0
+},
+{
+question:"भारत के राष्ट्रपति का चुनाव कौन करता है?",
+options:["जनता","निर्वाचक मंडल","संसद","राज्यपाल"],
+answer:1
+},
+{
+question:"उपराष्ट्रपति राज्यसभा का क्या होता है?",
+options:["सदस्य","अध्यक्ष","मंत्री","सचिव"],
+answer:1
+},
+{
+question:"भारत के उपराष्ट्रपति का कार्यकाल कितना होता है?",
+options:["4 वर्ष","5 वर्ष","6 वर्ष","7 वर्ष"],
+answer:1
+},
+{
+question:"भारतीय संविधान में कितनी अनुसूचियाँ हैं?",
+options:["10","11","12","13"],
+answer:2
+},
+{
+question:"भारतीय संविधान में वर्तमान में कितने अनुच्छेद हैं?",
+options:["395","448","470","500"],
+answer:1
+},
+{
+question:"भारत का राष्ट्रीय आपातकाल किस अनुच्छेद में है?",
+options:["352","356","360","370"],
+answer:0
+},
+{
+question:"राष्ट्रपति शासन किस अनुच्छेद के अंतर्गत लगाया जाता है?",
+options:["352","356","360","370"],
+answer:1
+},
+{
+question:"वित्तीय आपातकाल किस अनुच्छेद में है?",
+options:["352","356","360","365"],
+answer:2
+},
+{
+question:"भारत में न्यायिक पुनरावलोकन की शक्ति किसके पास है?",
+options:["संसद","सर्वोच्च न्यायालय","राष्ट्रपति","राज्यपाल"],
+answer:1
+},
+{
+question:"संविधान दिवस कब मनाया जाता है?",
+options:["26 जनवरी","15 अगस्त","26 नवंबर","2 अक्टूबर"],
+answer:2
+},
+{
+question:"भारत का संविधान किस देश के संविधान से सबसे अधिक प्रभावित है?",
+options:["अमेरिका","ब्रिटेन","कनाडा","ऑस्ट्रेलिया"],
+answer:1
+},
+{
+question:"लोकसभा के सदस्य बनने की न्यूनतम आयु कितनी है?",
+options:["21 वर्ष","25 वर्ष","30 वर्ष","35 वर्ष"],
+answer:1
+},
+{
+question:"राज्यसभा के सदस्य बनने की न्यूनतम आयु कितनी है?",
+options:["25 वर्ष","30 वर्ष","35 वर्ष","40 वर्ष"],
+answer:1
+},
+{
+question:"राष्ट्रपति बनने की न्यूनतम आयु कितनी है?",
+options:["25 वर्ष","30 वर्ष","35 वर्ष","40 वर्ष"],
+answer:2
+},
+{
+question:"प्रधानमंत्री की नियुक्ति कौन करता है?",
+options:["राष्ट्रपति","लोकसभा","राज्यसभा","सर्वोच्च न्यायालय"],
+answer:0
+},
+{
+question:"भारतीय लोकतंत्र का आधार क्या है?",
+options:["राजतंत्र","सार्वभौमिक वयस्क मताधिकार","तानाशाही","सैन्य शासन"],
+answer:1
+},
+{
+question:"भारतीय संविधान को क्या कहा जाता है?",
+options:["देश का सर्वोच्च कानून","राष्ट्रीय गीत","राष्ट्रीय ध्वज","राष्ट्रीय प्रतीक"],
+answer:0
+}
+];
+
+
+let index = 0;
+let score = 0;
+let timer;
+let timeLeft = 10;
+
+function startQuiz() {
+  document.getElementById("startScreen").classList.add("hide");
+  document.getElementById("quizScreen").classList.remove("hide");
+  loadQuestion();
+}
+
+function loadQuestion() {
+  resetTimer();
+  let q = quizData[index];
+  document.getElementById("question").innerText = q.question;
+  document.getElementById("qNo").innerText = index + 1;
+
+  let optionsHTML = "";
+  q.options.forEach((opt, i) => {
+    optionsHTML += `<div class="option" onclick="selectOption(${i})">${opt}</div>`;
+  });
+
+  document.getElementById("options").innerHTML = optionsHTML;
+}
+
+function selectOption(selected) {
+  let correct = quizData[index].answer;
+  let options = document.querySelectorAll(".option");
+
+  options.forEach((opt, i) => {
+    if (i === correct) opt.classList.add("correct");
+    else if (i === selected) opt.classList.add("wrong");
+
+    opt.style.pointerEvents = "none";
+  });
+
+  if (selected === correct) score++;
+}
+
+function nextQuestion() {
+  index++;
+  if (index < quizData.length) {
+    loadQuestion();
+  } else {
+    showResult();
+  }
+}
+
+function showResult() {
+  document.getElementById("quizScreen").classList.add("hide");
+  document.getElementById("resultScreen").classList.remove("hide");
+  document.getElementById("score").innerText = score + " / " + quizData.length;
+}
+
+function resetTimer() {
+  clearInterval(timer);
+  timeLeft = 10;
+  document.getElementById("timer").innerText = timeLeft;
+
+  timer = setInterval(() => {
+    timeLeft--;
+    document.getElementById("timer").innerText = timeLeft;
+
+    if (timeLeft === 0) {
+      nextQuestion();
+    }
+  }, 1000);
+}
+
+</script>
+
+</body>
+</html>

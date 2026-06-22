@@ -1,0 +1,340 @@
+<!DOCTYPE html>
+<html>
+<head>
+   <!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-KN4DRRWZ17"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-KN4DRRWZ17');
+</script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title> #conom8c Terms Quiz</title>
+
+<style>
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: Arial;
+}
+
+body {
+  background: #f5f5f5;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+}
+
+/* Container */
+.app {
+  width: 95%;
+  max-width: 500px;
+  background: white;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+}
+
+/* Header */
+header {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 20px;
+}
+
+.timer {
+  background: #2196F3;
+  color: white;
+  padding: 5px 10px;
+  border-radius: 5px;
+}
+
+/* Question */
+.question {
+  font-size: 20px;
+  margin-bottom: 15px;
+}
+
+/* Options */
+.option {
+  background: #eee;
+  padding: 10px;
+  margin: 8px 0;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.option:hover {
+  background: #ddd;
+}
+
+.correct {
+  background: #4CAF50 !important;
+  color: white;
+}
+
+.wrong {
+  background: #f44336 !important;
+  color: white;
+}
+
+/* Button */
+button {
+  margin-top: 15px;
+  padding: 10px;
+  width: 100%;
+  border: none;
+ background:linear-gradient(135deg,#0a2dbcf3,#779af583);
+  color: white;
+  font-size: 16px;
+  cursor: pointer;
+  border-radius: 5px;
+}
+
+/* Hidden */
+.hide {
+  display: none;
+}
+
+/* Result */
+.result {
+  text-align: center;
+}
+
+/* Responsive */
+@media (max-width: 600px) {
+  .question {
+    font-size: 18px;
+  }
+}
+</style>
+
+</head>
+<body>
+
+<div class="app">
+
+  <!-- Start Screen -->
+  <div id="startScreen">
+    <h2>Quiz App</h2>
+    <button onclick="startQuiz()">Start Quiz</button>
+  </div>
+
+  <!-- Quiz Screen -->
+  <div id="quizScreen" class="hide">
+    <header>
+      <div>Question <span id="qNo">1</span>/99</div>
+      <div class="timer" id="timer">10</div>
+    </header>
+
+    <div class="question" id="question"></div>
+    <div id="options"></div>
+
+    <button onclick="nextQuestion()">Next</button>
+  </div>
+
+  <!-- Result Screen -->
+  <div id="resultScreen" class="hide result">
+    <h2>Your Score</h2>
+    <h1 id="score"></h1>
+    <button onclick="location.reload()">Play Again</button>
+  </div>
+
+</div>
+
+<script>
+const quizData = [
+
+{ question:"मुद्रास्फीति (Inflation) का अर्थ क्या है?", options:["मूल्य स्तर में वृद्धि","मूल्य स्तर में गिरावट","कर में कमी","उत्पादन में वृद्धि"], answer:0 },
+{ question:"GDP का पूरा नाम क्या है?", options:["Gross Domestic Product","General Domestic Price","Gross Development Plan","Global Domestic Product"], answer:0 },
+{ question:"राजकोषीय घाटा (Fiscal Deficit) क्या दर्शाता है?", options:["आय और व्यय का अंतर","निर्यात-आयात का अंतर","मुद्रा आपूर्ति","ब्याज दर"], answer:0 },
+{ question:"रेपो रेट क्या है?", options:["बैंक द्वारा RBI से उधार की दर","ग्राहक ब्याज दर","कर दर","मुद्रा विनिमय दर"], answer:0 },
+{ question:"रिवर्स रेपो रेट का अर्थ क्या है?", options:["RBI द्वारा बैंकों से उधार की दर","बैंकों द्वारा ग्राहकों से दर","सरकारी कर","निर्यात शुल्क"], answer:0 },
+{ question:"मौद्रिक नीति (Monetary Policy) कौन बनाता है?", options:["RBI","संसद","वित्त मंत्रालय","नीति आयोग"], answer:0 },
+{ question:"राजकोषीय नीति (Fiscal Policy) किससे संबंधित है?", options:["सरकारी आय-व्यय","ब्याज दर","मुद्रा आपूर्ति","निर्यात नीति"], answer:0 },
+{ question:"CPI का पूरा नाम क्या है?", options:["Consumer Price Index","Central Price Index","Cost Production Index","Consumer Profit Index"], answer:0 },
+{ question:"WPI का पूरा नाम क्या है?", options:["Wholesale Price Index","World Price Index","Weekly Price Index","Wholesale Production Index"], answer:0 },
+{ question:"GDP में क्या शामिल होता है?", options:["देश में उत्पादित सभी वस्तुएं व सेवाएं","केवल निर्यात","केवल आयात","केवल सरकारी खर्च"], answer:0 },
+{ question:"GNP क्या है?", options:["Gross National Product","General National Price","Gross Net Product","Global National Profit"], answer:0 },
+{ question:"मुद्रा स्फीति नियंत्रण का मुख्य उद्देश्य क्या है?", options:["मूल्य स्थिरता","मूल्य वृद्धि","कर वृद्धि","निर्यात रोकना"], answer:0 },
+{ question:"बजट कौन प्रस्तुत करता है?", options:["वित्त मंत्री","प्रधानमंत्री","RBI गवर्नर","राष्ट्रपति"], answer:0 },
+{ question:"प्रत्यक्ष कर (Direct Tax) कौन सा है?", options:["आयकर","GST","उत्पाद शुल्क","सीमा शुल्क"], answer:0 },
+{ question:"GST का पूरा नाम क्या है?", options:["Goods and Services Tax","General Sales Tax","Government Service Tax","Gross Supply Tax"], answer:0 },
+{ question:"बेरोजगारी का अर्थ क्या है?", options:["काम की कमी","मजदूरी वृद्धि","उत्पादन वृद्धि","निर्यात वृद्धि"], answer:0 },
+{ question:"गरीबी रेखा (Poverty Line) क्या दर्शाती है?", options:["न्यूनतम आय स्तर","अधिकतम आय स्तर","औसत आय","राष्ट्रीय आय"], answer:0 },
+{ question:"मुद्रा का मुख्य कार्य क्या है?", options:["विनिमय का माध्यम","केवल बचत","केवल निवेश","केवल कर भुगतान"], answer:0 },
+{ question:"नकद आरक्षित अनुपात (CRR) क्या है?", options:["बैंकों की जमा राशि जो RBI में रखी जाती है","ब्याज दर","कर दर","निर्यात शुल्क"], answer:0 },
+{ question:"SLR का पूरा नाम क्या है?", options:["Statutory Liquidity Ratio","State Liquidity Rate","Standard Loan Ratio","Statutory Loan Rate"], answer:0 },
+{ question:"मुद्रा आपूर्ति (Money Supply) किसे कहते हैं?", options:["परिसंचरण में कुल धन","केवल बैंक जमा","केवल नकद","केवल ऋण"], answer:0 },
+{ question:"डिमांड-पुल मुद्रास्फीति क्या है?", options:["मांग बढ़ने से कीमत बढ़ना","उत्पादन बढ़ने से कीमत घटाना","कर वृद्धि","निर्यात वृद्धि"], answer:0 },
+{ question:"कॉस्ट-पुश मुद्रास्फीति क्या है?", options:["उत्पादन लागत बढ़ने से कीमत बढ़ना","मांग घटने से कीमत घटाना","कर घटाना","आय बढ़ना"], answer:0 },
+{ question:"विदेशी व्यापार का अर्थ क्या है?", options:["देशों के बीच वस्तु व सेवाओं का आदान-प्रदान","केवल घरेलू व्यापार","केवल सरकारी व्यापार","केवल बैंकिंग"], answer:0 },
+{ question:"निर्यात (Export) क्या है?", options:["विदेशों को वस्तु बेचना","विदेशों से वस्तु खरीदना","देश के अंदर बिक्री","कर वसूली"], answer:0 },
+{ question:"आयात (Import) क्या है?", options:["विदेशों से वस्तु खरीदना","विदेशों को बेचना","घरेलू उत्पादन","निर्यात शुल्क"], answer:0 },
+{ question:"बैलेंस ऑफ पेमेंट्स क्या है?", options:["देश के सभी लेन-देन का रिकॉर्ड","केवल निर्यात","केवल आयात","केवल कर"], answer:0 },
+{ question:"मुद्रा अवमूल्यन क्या है?", options:["विदेशी मुद्रा के मुकाबले घरेलू मुद्रा का मूल्य गिरना","मूल्य बढ़ना","कर बढ़ना","निर्यात बढ़ना"], answer:0 },
+{ question:"मुद्रा का मूल्य स्थिर रखने का दायित्व किसका है?", options:["RBI","संसद","प्रधानमंत्री","न्यायपालिका"], answer:0 },
+{ question:"बचत (Saving) क्या है?", options:["आय का वह हिस्सा जो खर्च नहीं किया जाता","पूरा खर्च","केवल निवेश","केवल कर"], answer:0 },
+{ question:"निवेश (Investment) क्या है?", options:["उत्पादन बढ़ाने के लिए धन लगाना","पैसा बचाना","कर देना","उधार लेना"], answer:0 },
+{ question:"मुद्रा स्फीति के समय क्या होता है?", options:["कीमतें बढ़ती हैं","कीमतें घटती हैं","बेरोजगारी खत्म होती है","निर्यात रुकता है"], answer:0 },
+{ question:"बैंक दर (Bank Rate) क्या है?", options:["RBI द्वारा दीर्घकालिक ऋण की दर","ग्राहक ब्याज दर","कर दर","निर्यात दर"], answer:0 },
+{ question:"ओपन मार्केट ऑपरेशन क्या है?", options:["RBI द्वारा सरकारी प्रतिभूतियों की खरीद-बिक्री","कर संग्रह","निर्यात नियंत्रण","मजदूरी निर्धारण"], answer:0 },
+{ question:"राजकोषीय घाटा बढ़ने से क्या होता है?", options:["सरकारी उधारी बढ़ती है","मुद्रा खत्म होती है","निर्यात घटता है","कर समाप्त होता है"], answer:0 },
+{ question:"डिसइन्वेस्टमेंट क्या है?", options:["सरकारी संपत्ति का निजीकरण","नया निवेश","कर वृद्धि","मुद्रा जारी करना"], answer:0 },
+
+{ question:"मांग (Demand) क्या है?", options:["किसी वस्तु की इच्छा और क्रय क्षमता","केवल इच्छा","केवल उत्पादन","केवल आपूर्ति"], answer:0 },
+{ question:"आपूर्ति (Supply) क्या है?", options:["बाजार में उपलब्ध वस्तु मात्रा","मांग","मूल्य","कर"], answer:0 },
+{ question:"मूल्य निर्धारण किससे होता है?", options:["मांग और आपूर्ति","केवल मांग","केवल सरकार","केवल उत्पादन"], answer:0 },
+{ question:"अर्थव्यवस्था का मुख्य लक्ष्य क्या है?", options:["आर्थिक विकास","केवल कर वसूली","केवल व्यापार","केवल बैंकिंग"], answer:0 },
+{ question:"राष्ट्रीय आय क्या है?", options:["एक वर्ष में देश की कुल आय","केवल व्यक्तिगत आय","केवल सरकारी आय","केवल बैंक आय"], answer:0 },
+
+{ question:"मुद्रा का सबसे तरल रूप क्या है?", options:["नकद","शेयर","जमीन","सोना"], answer:0 },
+{ question:"मुद्रा स्फीति का प्रभाव क्या है?", options:["क्रय शक्ति कम होना","क्रय शक्ति बढ़ना","निर्यात बढ़ना","कर घटाना"], answer:0 },
+{ question:"अर्थशास्त्र का जनक किसे कहा जाता है?", options:["एडम स्मिथ","कीन्स","मार्शल","रिकार्डो"], answer:0 },
+
+{ question:"ब्याज दर क्या है?", options:["ऋण पर ली जाने वाली लागत","कर","मूल्य","मुद्रा"], answer:0 },
+{ question:"स्टॉक मार्केट क्या है?", options:["शेयरों का बाजार","सब्जी बाजार","कर कार्यालय","बैंक"], answer:0 },
+{ question:"SEBI का पूरा नाम क्या है?", options:["Securities and Exchange Board of India","State Economic Board","Stock Exchange Bureau of India","Service Exchange Board"], answer:0 },
+{ question:"मौद्रिक नीति का मुख्य उपकरण क्या है?", options:["रेपो रेट","टैक्स","निर्यात","सब्सिडी"], answer:0 },
+{ question:"अर्थव्यवस्था में ‘मुद्रा’ का कौन सा कार्य है?", options:["मूल्य मापन","उत्पादन","आयात","निर्यात"], answer:0 },
+{ question:"फेडरल बजट किससे संबंधित है?", options:["सरकारी आय-व्यय योजना","निजी निवेश","बैंकिंग","शेयर बाजार"], answer:0 },
+{ question:"राजकोषीय नीति का उद्देश्य क्या है?", options:["आर्थिक स्थिरता","मुद्रा छपाई","केवल निर्यात","केवल बैंकिंग"], answer:0 },
+{ question:"महंगाई दर (Inflation Rate) क्या दर्शाती है?", options:["कीमतों में वृद्धि की दर","बेरोजगारी","उत्पादन","निर्यात"], answer:0 },
+{ question:"किसी देश की आर्थिक वृद्धि मापी जाती है?", options:["GDP से","CRR से","SLR से","Repo Rate से"], answer:0 },
+{ question:"बचत और निवेश के बीच अंतर क्या है?", options:["बचत आय का हिस्सा, निवेश उत्पादन में उपयोग","दोनों समान","दोनों कर","दोनों ऋण"], answer:0 },
+{ question:"मुद्रा स्फीति को नियंत्रित करने का उपाय क्या है?", options:["ब्याज दर बढ़ाना","कर समाप्त करना","निर्यात रोकना","मुद्रा छापना"], answer:0 },
+{ question:"डिफ्लेशन (Deflation) क्या है?", options:["कीमतों में गिरावट","कीमतों में वृद्धि","कर वृद्धि","निर्यात वृद्धि"], answer:0 },
+{ question:"अर्थव्यवस्था कितने प्रकार की होती है?", options:["3 प्रकार","1 प्रकार","5 प्रकार","7 प्रकार"], answer:0 },
+
+{ question:"मिश्रित अर्थव्यवस्था क्या है?", options:["सरकारी और निजी क्षेत्र दोनों","केवल सरकारी","केवल निजी","केवल विदेशी"], answer:0 },
+{ question:"नियंत्रित अर्थव्यवस्था किसे कहते हैं?", options:["जहां सरकार नियंत्रण रखती है","जहां बाजार स्वतंत्र है","जहां केवल निजी क्षेत्र है","जहां कोई नियम नहीं"], answer:0 },
+{ question:"मुक्त अर्थव्यवस्था क्या है?", options:["बाजार आधारित प्रणाली","सरकारी नियंत्रण","कर आधारित","बैंक आधारित"], answer:0 },
+{ question:"मुद्रा का अवमूल्यन क्यों किया जाता है?", options:["निर्यात बढ़ाने के लिए","निर्यात घटाने के लिए","कर बढ़ाने के लिए","मुद्रा समाप्त करने के लिए"], answer:0 },
+{ question:"राजकोषीय घाटे को पूरा करने के लिए सरकार क्या करती है?", options:["उधार लेती है","कर घटाती है","निर्यात रोकती है","मुद्रा बंद करती है"], answer:0 },
+
+{ question:"मुद्रा स्फीति का सबसे बड़ा कारण क्या है?", options:["मांग में वृद्धि","उत्पादन वृद्धि","निर्यात वृद्धि","कर कमी"], answer:0 },
+{ question:"बैंकिंग प्रणाली का मुख्य कार्य क्या है?", options:["धन का लेन-देन","उत्पादन","कृषि","निर्यात"], answer:0 },
+{ question:"केंद्रीय बैंक का मुख्य कार्य क्या है?", options:["मुद्रा नीति नियंत्रण","कृषि उत्पादन","व्यापार","उद्योग"], answer:0 },
+{ question:"RBI की स्थापना कब हुई?", options:["1935","1947","1950","1965"], answer:0 },
+{ question:"भारतीय अर्थव्यवस्था का मुख्य क्षेत्र कौन सा है?", options:["कृषि","आईटी","बैंकिंग","पर्यटन"], answer:0 },
+
+{ question:"प्रति व्यक्ति आय क्या है?", options:["कुल आय/जनसंख्या","कुल कर","कुल निर्यात","कुल उत्पादन"], answer:0 },
+{ question:"मानव विकास सूचकांक (HDI) क्या मापता है?", options:["जीवन स्तर","मुद्रा आपूर्ति","निर्यात","कर"], answer:0 },
+{ question:"गरीबी उन्मूलन का मुख्य उद्देश्य क्या है?", options:["जीवन स्तर सुधार","कर बढ़ाना","निर्यात रोकना","मुद्रा घटाना"], answer:0 },
+{ question:"सब्सिडी क्या है?", options:["सरकारी आर्थिक सहायता","कर","ऋण","निर्यात शुल्क"], answer:0 },
+{ question:"राजस्व घाटा क्या है?", options:["आय और व्यय का अंतर","निर्यात-आयात","ब्याज दर","मुद्रा"], answer:0 },
+
+{ question:"मुद्रा का सबसे महत्वपूर्ण गुण क्या है?", options:["स्वीकार्यता","कठोरता","सीमितता","अस्थिरता"], answer:0 },
+{ question:"अर्थशास्त्र में ‘उपभोक्ता’ कौन है?", options:["वस्तु खरीदने वाला","वस्तु बेचने वाला","उत्पादक","सरकार"], answer:0 },
+{ question:"उत्पादक (Producer) कौन होता है?", options:["वस्तु बनाने वाला","खरीदने वाला","सरकार","बैंक"], answer:0 },
+{ question:"मांग का नियम क्या कहता है?", options:["कीमत बढ़े तो मांग घटती है","कीमत बढ़े तो मांग बढ़ती है","दोनों समान","कोई संबंध नहीं"], answer:0 },
+
+{ question:"आपूर्ति का नियम क्या कहता है?", options:["कीमत बढ़े तो आपूर्ति बढ़ती है","कीमत बढ़े तो घटती है","कोई बदलाव नहीं","उत्पादन बंद होता है"], answer:0 },
+{ question:"मुद्रा स्फीति का असर किस पर पड़ता है?", options:["क्रय शक्ति पर","उत्पादन पर","निर्यात पर","कृषि पर"], answer:0 },
+{ question:"GDP वृद्धि दर क्या दर्शाती है?", options:["आर्थिक विकास की गति","बेरोजगारी","कर","मुद्रा"], answer:0 },
+{ question:"निवेश बढ़ने से क्या होता है?", options:["उत्पादन और रोजगार बढ़ता है","बेरोजगारी बढ़ती है","निर्यात घटता है","मुद्रा घटती है"], answer:0 },
+
+{ question:"मुद्रा का प्राथमिक कार्य क्या है?", options:["विनिमय माध्यम","उत्पादन","कर","निर्यात"], answer:0 },
+{ question:"अर्थव्यवस्था का आधार क्या है?", options:["उत्पादन","कर","बैंक","मुद्रा"], answer:0 },
+{ question:"बाजार क्या है?", options:["खरीद-फरोख्त का स्थान","सरकारी कार्यालय","बैंक","स्कूल"], answer:0 },
+{ question:"प्रतिस्पर्धा (Competition) क्या है?", options:["बाजार में कई विक्रेता","एक विक्रेता","सरकारी नियंत्रण","कोई बाजार नहीं"], answer:0 },
+
+{ question:"मुद्रा नीति का उद्देश्य क्या है?", options:["आर्थिक स्थिरता","निर्यात रोकना","कर हटाना","उत्पादन बंद करना"], answer:0 },
+{ question:"कृषि क्षेत्र किससे संबंधित है?", options:["खाद्य उत्पादन","बैंकिंग","आईटी","परिवहन"], answer:0 },
+{ question:"सेवा क्षेत्र (Service Sector) क्या है?", options:["सेवाओं का उत्पादन","कृषि","उद्योग","खनन"], answer:0 },
+{ question:"औद्योगिक क्षेत्र क्या है?", options:["वस्तु उत्पादन उद्योग","सेवा","कृषि","बैंक"], answer:0 },
+
+{ question:"राष्ट्रीय अर्थव्यवस्था का मुख्य लक्ष्य क्या है?", options:["विकास और स्थिरता","केवल कर","केवल बैंक","केवल निर्यात"], answer:0 },
+{ question:"मौद्रिक नीति में ‘खुला बाजार परिचालन’ क्या है?", options:["सरकारी प्रतिभूतियों की खरीद-बिक्री","कर संग्रह","निर्यात नीति","सब्सिडी वितरण"], answer:0 },
+{ question:"मुद्रा स्फीति का लाभ किसे होता है?", options:["कर्जदार","ऋणदाता","बचतकर्ता","सरकार हमेशा"], answer:0 },
+{ question:"क्रेडिट क्रिएशन (Credit Creation) कौन करता है?", options:["बैंक","सरकार","कृषि","उद्योग"], answer:0 },
+{ question:"डिमांड ड्राफ्ट क्या है?", options:["भुगतान का सुरक्षित माध्यम","कर","ऋण","निर्यात दस्तावेज"], answer:0 },
+{ question:"बैंक का प्राथमिक कार्य क्या है?", options:["जमा और ऋण देना","उत्पादन","कृषि","निर्यात"], answer:0 },
+{ question:"मुद्रा स्फीति के समय बचत पर क्या असर पड़ता है?", options:["क्रय शक्ति घटती है","क्रय शक्ति बढ़ती है","कोई असर नहीं","निर्यात बढ़ता है"], answer:0 },
+{ question:"अर्थव्यवस्था में ‘आय’ क्या है?", options:["कमाई","खर्च","उधार","कर"], answer:0 },
+{ question:"डिमांड शिफ्ट (Demand Shift) क्या दर्शाता है?", options:["मांग में बदलाव","मूल्य स्थिरता","कर परिवर्तन","निर्यात परिवर्तन"], answer:0 },
+{ question:"आपूर्ति शिफ्ट क्या दर्शाता है?", options:["आपूर्ति में बदलाव","मांग स्थिरता","कर वृद्धि","ब्याज दर"], answer:0 },
+{ question:"मुद्रा का वैधानिक मूल्य (Legal Tender) क्या है?", options:["कानूनी रूप से स्वीकार्य मुद्रा","सोना","शेयर","जमीन"], answer:0 }
+
+];
+
+
+let index = 0;
+let score = 0;
+let timer;
+let timeLeft = 10;
+
+function startQuiz() {
+  document.getElementById("startScreen").classList.add("hide");
+  document.getElementById("quizScreen").classList.remove("hide");
+  loadQuestion();
+}
+
+function loadQuestion() {
+  resetTimer();
+  let q = quizData[index];
+  document.getElementById("question").innerText = q.question;
+  document.getElementById("qNo").innerText = index + 1;
+
+  let optionsHTML = "";
+  q.options.forEach((opt, i) => {
+    optionsHTML += `<div class="option" onclick="selectOption(${i})">${opt}</div>`;
+  });
+
+  document.getElementById("options").innerHTML = optionsHTML;
+}
+
+function selectOption(selected) {
+  let correct = quizData[index].answer;
+  let options = document.querySelectorAll(".option");
+
+  options.forEach((opt, i) => {
+    if (i === correct) opt.classList.add("correct");
+    else if (i === selected) opt.classList.add("wrong");
+
+    opt.style.pointerEvents = "none";
+  });
+
+  if (selected === correct) score++;
+}
+
+function nextQuestion() {
+  index++;
+  if (index < quizData.length) {
+    loadQuestion();
+  } else {
+    showResult();
+  }
+}
+
+  function showResult() {
+  document.getElementById("quizScreen").classList.add("hide");
+  document.getElementById("resultScreen").classList.remove("hide");
+  document.getElementById("score").innerText = score + " / " + quizData.length;
+}
+
+function resetTimer() {
+  clearInterval(timer);
+  timeLeft = 10;
+  document.getElementById("timer").innerText = timeLeft;
+
+  timer = setInterval(() => {
+    timeLeft--;
+    document.getElementById("timer").innerText = timeLeft;
+
+    if (timeLeft === 0) {
+      nextQuestion();
+    }
+  }, 1000);
+}
+
+</script>
+
+</body>
+</html>

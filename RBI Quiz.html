@@ -1,0 +1,343 @@
+<!DOCTYPE html>
+<html>
+<head>
+     <!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-KN4DRRWZ17"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-KN4DRRWZ17');
+</script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title> RBI Quiz </title>
+
+<style>
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: Arial;
+}
+
+body {
+  background: #f5f5f5;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+}
+
+/* Container */
+.app {
+  width: 95%;
+  max-width: 500px;
+  background: white;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+}
+
+/* Header */
+header {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 20px;
+}
+
+.timer {
+  background: #2196F3;
+  color: white;
+  padding: 5px 10px;
+  border-radius: 5px;
+}
+
+/* Question */
+.question {
+  font-size: 20px;
+  margin-bottom: 15px;
+}
+
+/* Options */
+.option {
+  background: #eee;
+  padding: 10px;
+  margin: 8px 0;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.option:hover {
+  background: #ddd;
+}
+
+.correct {
+  background: #4CAF50 !important;
+  color: white;
+}
+
+.wrong {
+  background: #f44336 !important;
+  color: white;
+}
+
+/* Button */
+button {
+  margin-top: 15px;
+  padding: 10px;
+  width: 100%;
+  border: none;
+ background:linear-gradient(135deg,#0a2dbcf3,#779af583);
+  color: white;
+  font-size: 16px;
+  cursor: pointer;
+  border-radius: 5px;
+}
+
+/* Hidden */
+.hide {
+  display: none;
+}
+
+/* Result */
+.result {
+  text-align: center;
+}
+
+/* Responsive */
+@media (max-width: 600px) {
+  .question {
+    font-size: 18px;
+  }
+}
+</style>
+
+</head>
+<body>
+
+<div class="app">
+
+  <!-- Start Screen -->
+  <div id="startScreen">
+    <h2>Quiz App</h2>
+    <button onclick="startQuiz()">Start Quiz</button>
+  </div>
+
+  <!-- Quiz Screen -->
+  <div id="quizScreen" class="hide">
+    <header>
+      <div>Question <span id="qNo">1</span>/95</div>
+      <div class="timer" id="timer">10</div>
+    </header>
+
+    <div class="question" id="question"></div>
+    <div id="options"></div>
+
+    <button onclick="nextQuestion()">Next</button>
+  </div>
+
+  <!-- Result Screen -->
+  <div id="resultScreen" class="hide result">
+    <h2>Your Score</h2>
+    <h1 id="score"></h1>
+    <button onclick="location.reload()">Play Again</button>
+  </div>
+
+</div>
+
+<script>
+const quizData = [
+
+{ "question":"भारतीय रिज़र्व बैंक (RBI) की स्थापना कब हुई?", "options":["1935","1947","1950","1920"], "answer":0 },
+{ "question":"RBI का मुख्यालय कहाँ स्थित है?", "options":["मुंबई","दिल्ली","कोलकाता","चेन्नई"], "answer":0 },
+{ "question":"RBI के पहले गवर्नर कौन थे?", "options":["सर ओस्बोर्न स्मिथ","सी.डी. देशमुख","बेनगाल रामराव","आर.बी.आई. नायक"], "answer":0 },
+{ "question":"भारत की मौद्रिक नीति कौन नियंत्रित करता है?", "options":["RBI","SEBI","IRDAI","NABARD"], "answer":0 },
+{ "question":"CRR का पूरा नाम क्या है?", "options":["Cash Reserve Ratio","Credit Reserve Rate","Central Revenue Ratio","Cash Refund Rate"], "answer":0 },
+
+{ "question":"Repo Rate किसके द्वारा निर्धारित की जाती है?", "options":["RBI","सरकार","SEBI","LIC"], "answer":0 },
+{ "question":"Reverse Repo Rate का क्या अर्थ है?", "options":["RBI द्वारा बैंकों से उधार लेना","बैंकों को उधार देना","कर संग्रह","शेयर बाजार दर"], "answer":0 },
+{ "question":"SBI का पूरा नाम क्या है?", "options":["State Bank of India","Standard Bank of India","State Business Institute","South Bank of India"], "answer":0 },
+{ "question":"भारत में नोट जारी करने का अधिकार किसके पास है?", "options":["RBI","सरकार","SEBI","वित्त मंत्रालय"], "answer":0 },
+{ "question":"भारत में करेंसी नोटों पर किसके हस्ताक्षर होते हैं?", "options":["RBI गवर्नर","प्रधानमंत्री","राष्ट्रपति","वित्त मंत्री"], "answer":0 },
+
+{ "question":"मुद्रास्फीति का क्या अर्थ है?", "options":["कीमतों में वृद्धि","कीमतों में गिरावट","उत्पादन बढ़ना","बेरोजगारी घटना"], "answer":0 },
+{ "question":"डिफ्लेशन क्या है?", "options":["कीमतों में गिरावट","कीमतों में वृद्धि","कर बढ़ना","निर्यात बढ़ना"], "answer":0 },
+{ "question":"बैंक दर (Bank Rate) क्या है?", "options":["RBI की ऋण दर","शेयर कीमत","कर दर","बीमा दर"], "answer":0 },
+{ "question":"न्यूनतम आरक्षित प्रणाली (CRR) का उद्देश्य क्या है?", "options":["तरलता नियंत्रित करना","निर्यात बढ़ाना","कर बढ़ाना","मुद्रण बंद करना"], "answer":0 },
+{ "question":"SLR का पूरा नाम क्या है?", "options":["Statutory Liquidity Ratio","State Loan Rate","Standard Lending Ratio","Secure Loan Rate"], "answer":0 },
+
+{ "question":"भारत में बैंकिंग नियमन किस अधिनियम के तहत होता है?", "options":["Banking Regulation Act","Companies Act","RBI Act","Income Tax Act"], "answer":0 },
+{ "question":"RBI का राष्ट्रीयकरण कब हुआ?", "options":["1949","1935","1955","1969"], "answer":0 },
+{ "question":"भारत में सबसे बड़ा बैंक कौन सा है?", "options":["State Bank of India","PNB","BOB","Canara Bank"], "answer":0 },
+{ "question":"ATM का पूरा नाम क्या है?", "options":["Automated Teller Machine","Automatic Transfer Money","Advanced Teller Machine","Auto Transaction Mode"], "answer":0 },
+{ "question":"KYC का पूरा नाम क्या है?", "options":["Know Your Customer","Keep Your Cash","Know Your Credit","Key Your Code"], "answer":0 },
+
+{ "question":"UPI का विकास किसने किया?", "options":["NPCI","RBI","SEBI","IRDAI"], "answer":0 },
+{ "question":"NPCI का पूरा नाम क्या है?", "options":["National Payments Corporation of India","National Private Company of India","New Payment Corporation of India","National Public Credit India"], "answer":0 },
+{ "question":"RTGS का पूरा नाम क्या है?", "options":["Real Time Gross Settlement","Real Transfer General System","Rapid Transfer Growth System","Reserve Transaction System"], "answer":0 },
+{ "question":"NEFT का पूरा नाम क्या है?", "options":["National Electronic Funds Transfer","National Express Fund Transfer","New Electronic Finance Transfer","National Easy Fund Transfer"], "answer":0 },
+{ "question":"IMPS का उपयोग किसके लिए होता है?", "options":["तुरंत पैसे भेजने के लिए","कर भुगतान","शेयर खरीद","बीमा"], "answer":0 },
+
+{ "question":"मौद्रिक नीति समिति (MPC) में कितने सदस्य होते हैं?", "options":["6","5","7","4"], "answer":0 },
+{ "question":"RBI का मुख्य उद्देश्य क्या है?", "options":["मुद्रा स्थिरता","निर्यात बढ़ाना","शेयर बाजार","पर्यटन"], "answer":0 },
+{ "question":"रेपो रेट बढ़ने पर क्या होता है?", "options":["ऋण महंगा होता है","ऋण सस्ता होता है","मुद्रास्फीति घटती नहीं","कर बढ़ता है"], "answer":0 },
+{ "question":"बैंक जमा बीमा कितने रुपये तक सुरक्षित है (DICGC)?", "options":["5 लाख","1 लाख","10 लाख","50 हजार"], "answer":0 },
+{ "question":"DICGC किसके अधीन है?", "options":["RBI","SEBI","सरकार","IRDAI"], "answer":0 },
+
+{ "question":"फिस्कल पॉलिसी किससे संबंधित है?", "options":["सरकारी आय-व्यय","बैंक दर","शेयर बाजार","बीमा"], "answer":0 },
+{ "question":"मनी सप्लाई को कौन नियंत्रित करता है?", "options":["RBI","SEBI","सरकार","NITI Aayog"], "answer":0 },
+{ "question":"ओपन मार्केट ऑपरेशन किसके द्वारा किया जाता है?", "options":["RBI","SEBI","सरकार","NABARD"], "answer":0 },
+{ "question":"बचत खाता का उद्देश्य क्या है?", "options":["पैसा बचाना","निवेश करना","कर बचाना","शेयर खरीद"], "answer":0 },
+{ "question":"चालू खाता (Current Account) किसके लिए होता है?", "options":["व्यापारियों के लिए","छात्रों के लिए","किसानों के लिए","सरकार के लिए"], "answer":0 },
+
+{ "question":"मुद्रा की आपूर्ति को क्या कहते हैं?", "options":["Money Supply","Cash Flow","Bank Rate","Credit Rate"], "answer":0 },
+{ "question":"भारत में डिजिटल पेमेंट को बढ़ावा कौन देता है?", "options":["NPCI","SEBI","IRDAI","LIC"], "answer":0 },
+{ "question":"डेबिट कार्ड किससे जुड़ा होता है?", "options":["बैंक खाते से","क्रेडिट लाइन","बीमा","शेयर"], "answer":0 },
+{ "question":"क्रेडिट कार्ड क्या है?", "options":["उधार पर भुगतान कार्ड","डेबिट कार्ड","ATM कार्ड","पासबुक"], "answer":0 },
+{ "question":"मुद्रास्फीति को मापने का सूचक क्या है?", "options":["CPI","GDP","GNP","WPI index"], "answer":0 },
+
+{ "question":"WPI का पूरा नाम क्या है?", "options":["Wholesale Price Index","World Price Index","Weighted Price Index","Work Price Index"], "answer":0 },
+{ "question":"CPI का पूरा नाम क्या है?", "options":["Consumer Price Index","Central Price Index","Credit Price Index","Current Price Index"], "answer":0 },
+{ "question":"भारत का सबसे पुराना बैंक कौन सा है?", "options":["State Bank of India","Bank of Baroda","PNB","Canara Bank"], "answer":0 },
+{ "question":"NBFC का पूरा नाम क्या है?", "options":["Non Banking Financial Company","New Banking Finance Company","National Bank Finance Company","Non Business Finance Company"], "answer":0 },
+{ "question":"NBFC को कौन नियंत्रित करता है?", "options":["RBI","SEBI","सरकार","IRDAI"], "answer":0 },
+
+{ "question":"SEBI का कार्य क्या है?", "options":["शेयर बाजार नियंत्रित करना","बैंक चलाना","बीमा देना","कर वसूलना"], "answer":0 },
+{ "question":"IRDAI का संबंध किससे है?", "options":["बीमा","बैंक","शेयर","कर"], "answer":0 },
+{ "question":"GDP क्या दर्शाता है?", "options":["देश की कुल उत्पादन क्षमता","बैंक जमा","कर","मुद्रा"], "answer":0 },
+{ "question":"राजकोषीय घाटा क्या है?", "options":["व्यय - आय","आय - व्यय","लाभ","निवेश"], "answer":0 },
+{ "question":"राजस्व घाटा क्या होता है?", "options":["आय से अधिक व्यय","व्यय से अधिक आय","लाभ","निर्यात"], "answer":0 },
+
+{ "question":"भारतीय बैंकिंग प्रणाली का सर्वोच्च संस्थान कौन है?", "options":["RBI","SEBI","NABARD","LIC"], "answer":0 },
+{ "question":"NABARD का पूरा नाम क्या है?", "options":["National Bank for Agriculture and Rural Development","New Agriculture Bank of Rural Development","National Banking and Rural Department","None"], "answer":0 },
+{ "question":"भारत में कृषि ऋण कौन देता है?", "options":["NABARD","SEBI","IRDAI","NPCI"], "answer":0 },
+{ "question":"फिक्स्ड डिपॉजिट क्या है?", "options":["निश्चित समय जमा","चालू खाता","शेयर निवेश","बीमा"], "answer":0 },
+{ "question":"Recurring Deposit क्या है?", "options":["मासिक जमा योजना","एकमुश्त निवेश","शेयर बाजार","बीमा"], "answer":0 },
+
+{ "question":"बैंकिंग लोकपाल किससे संबंधित है?", "options":["ग्राहक शिकायत समाधान","शेयर बाजार","कर प्रणाली","बीमा"], "answer":0 },
+{ "question":"भारत में डिजिटल करेंसी किसने शुरू की?", "options":["RBI","SEBI","सरकार","NPCI"], "answer":0 },
+{ "question":"CBDC का पूरा नाम क्या है?", "options":["Central Bank Digital Currency","Central Banking Deposit Currency","Crypto Bank Digital Coin","Cash Bank Digital Currency"], "answer":0 },
+{ "question":"भारत में सबसे अधिक उपयोग होने वाली डिजिटल पेमेंट प्रणाली कौन सी है?", "options":["UPI","NEFT","RTGS","Cheque"], "answer":0 },
+{ "question":"Cheque किसके लिए उपयोग होता है?", "options":["भुगतान","बीमा","निवेश","कर"], "answer":0 },
+
+{ "question":"मुद्रा नीति का मुख्य उद्देश्य क्या है?", "options":["आर्थिक स्थिरता","कर बढ़ाना","निर्यात रोकना","शेयर गिराना"], "answer":0 },
+{ "question":"रेपो रेट कम होने पर क्या होता है?", "options":["ऋण सस्ता होता है","ऋण महंगा होता है","मुद्रास्फीति घटती है","कर बढ़ता है"], "answer":0 },
+{ "question":"RBI का गवर्नर कौन नियुक्त करता है?", "options":["भारत सरकार","SEBI","PMO","संसद"], "answer":0 },
+{ "question":"भारत में मुद्रा छपाई कहाँ होती है?", "options":["Currency Note Press","SEBI","LIC","NABARD"], "answer":0 },
+{ "question":"भारत में सबसे पुराना केंद्रीय बैंक मॉडल किस देश से लिया गया है?", "options":["इंग्लैंड","अमेरिका","जापान","फ्रांस"], "answer":0 },
+{ "question":"भारत में बैंकिंग प्रणाली का नियामक कौन है?", "options":["RBI","SEBI","IRDAI","NABARD"], "answer":0 },
+{ "question":"RBI का प्रमुख कार्य क्या है?", "options":["मुद्रा जारी करना","कर वसूलना","शेयर खरीदना","बीमा देना"], "answer":0 },
+{ "question":"मौद्रिक नीति किससे संबंधित है?", "options":["ब्याज दर और मुद्रा आपूर्ति","कृषि नीति","विदेश नीति","शिक्षा नीति"], "answer":0 },
+{ "question":"रेपो रेट किसके बीच लेन-देन से संबंधित है?", "options":["RBI और बैंक","सरकार और जनता","बैंक और ग्राहक","SEBI और कंपनी"], "answer":0 },
+{ "question":"Reverse Repo Rate बढ़ने पर क्या होता है?", "options":["बैंकों के पास पैसा रखना लाभदायक होता है","ऋण सस्ता होता है","मुद्रास्फीति बढ़ती है","निर्यात बढ़ता है"], "answer":0 },
+
+{ "question":"भारत में बैंकिंग लाइसेंस कौन देता है?", "options":["RBI","SEBI","IRDAI","NITI Aayog"], "answer":0 },
+{ "question":"भारत में करेंसी का प्रतीक कौन नियंत्रित करता है?", "options":["RBI","सरकार","SEBI","LIC"], "answer":0 },
+{ "question":"मुद्रा का मूल्य किससे प्रभावित होता है?", "options":["मांग और आपूर्ति","केवल सरकार","केवल बैंक","केवल निर्यात"], "answer":0 },
+{ "question":"बैंकों की तरलता कौन नियंत्रित करता है?", "options":["RBI","SEBI","IRDAI","NABARD"], "answer":0 },
+{ "question":"CRR बढ़ाने का क्या प्रभाव होता है?", "options":["बाजार में पैसा कम हो जाता है","पैसा बढ़ जाता है","कर कम होता है","निर्यात बढ़ता है"], "answer":0 },
+
+{ "question":"SLR का मुख्य उद्देश्य क्या है?", "options":["बैंकों की सुरक्षा और तरलता","शेयर बाजार बढ़ाना","बीमा देना","कर वसूलना"], "answer":0 },
+{ "question":"भारत में मौद्रिक नीति कौन बनाता है?", "options":["MPC","SEBI","IRDAI","NABARD"], "answer":0 },
+{ "question":"MPC का पूरा नाम क्या है?", "options":["Monetary Policy Committee","Market Policy Committee","Money Planning Committee","Main Policy Council"], "answer":0 },
+{ "question":"RBI का गठन किस अधिनियम के तहत हुआ?", "options":["RBI Act 1934","Banking Act 1949","Companies Act","Income Tax Act"], "answer":0 },
+{ "question":"RBI किस प्रकार का बैंक है?", "options":["केंद्रीय बैंक","व्यावसायिक बैंक","सहकारी बैंक","ग्रामीण बैंक"], "answer":0 },
+
+{ "question":"भारत में सबसे सुरक्षित निवेश विकल्प कौन सा माना जाता है?", "options":["बैंक FD","शेयर बाजार","क्रिप्टो","फॉरेक्स"], "answer":0 },
+{ "question":"डिजिटल बैंकिंग का उदाहरण क्या है?", "options":["UPI","केवल नकद","चेकबुक","डाकघर"], "answer":0 },
+{ "question":"बैंकिंग प्रणाली में 'लेंडर ऑफ लास्ट रिसॉर्ट' कौन है?", "options":["RBI","SEBI","सरकार","IRDAI"], "answer":0 },
+{ "question":"बैंकों को अल्पकालिक ऋण कौन देता है?", "options":["RBI","SEBI","LIC","NABARD"], "answer":0 },
+{ "question":"भारत में मुद्रा नीति का उद्देश्य क्या है?", "options":["आर्थिक स्थिरता","केवल लाभ","केवल कर","केवल निर्यात"], "answer":0 },
+
+{ "question":"भारत में डिजिटल भुगतान का नियामक कौन है?", "options":["RBI और NPCI","SEBI","IRDAI","NITI Aayog"], "answer":0 },
+{ "question":"UPI किस वर्ष लॉन्च हुआ था?", "options":["2016","2010","2012","2018"], "answer":0 },
+{ "question":"RTGS का उपयोग किस लिए होता है?", "options":["बड़े ट्रांजैक्शन के लिए","छोटे भुगतान के लिए","बीमा के लिए","कर के लिए"], "answer":0 },
+{ "question":"NEFT का निपटान किस आधार पर होता है?", "options":["बैच सिस्टम","रीयल टाइम","केवल नकद","चेक"], "answer":0 },
+{ "question":"IMPS की विशेषता क्या है?", "options":["24x7 तुरंत ट्रांसफर","केवल बैंक समय","केवल चेक","केवल ऑफलाइन"], "answer":0 },
+
+{ "question":"डिपॉजिट इंश्योरेंस किसके द्वारा दिया जाता है?", "options":["DICGC","SEBI","IRDAI","NABARD"], "answer":0 },
+{ "question":"DICGC की सीमा कितनी है?", "options":["5 लाख रुपये","10 लाख रुपये","1 लाख रुपये","50 हजार रुपये"], "answer":0 },
+{ "question":"बैंकिंग क्षेत्र का सबसे बड़ा सुधार क्या है?", "options":["डिजिटल बैंकिंग","नकद लेनदेन","चेक सिस्टम","बार्टर सिस्टम"], "answer":0 },
+{ "question":"भारत में नोटों की छपाई कौन करता है?", "options":["RBI और सरकार","SEBI","LIC","NABARD"], "answer":0 },
+{ "question":"मुद्रा आपूर्ति में कौन शामिल होता है?", "options":["नकद और बैंक जमा","केवल नकद","केवल सोना","केवल शेयर"], "answer":0 }
+
+
+];
+
+
+let index = 0;
+let score = 0;
+let timer;
+let timeLeft = 10;
+
+function startQuiz() {
+  document.getElementById("startScreen").classList.add("hide");
+  document.getElementById("quizScreen").classList.remove("hide");
+  loadQuestion();
+}
+
+function loadQuestion() {
+  resetTimer();
+  let q = quizData[index];
+  document.getElementById("question").innerText = q.question;
+  document.getElementById("qNo").innerText = index + 1;
+
+  let optionsHTML = "";
+  q.options.forEach((opt, i) => {
+    optionsHTML += `<div class="option" onclick="selectOption(${i})">${opt}</div>`;
+  });
+
+  document.getElementById("options").innerHTML = optionsHTML;
+}
+
+function selectOption(selected) {
+  let correct = quizData[index].answer;
+  let options = document.querySelectorAll(".option");
+
+  options.forEach((opt, i) => {
+    if (i === correct) opt.classList.add("correct");
+    else if (i === selected) opt.classList.add("wrong");
+
+    opt.style.pointerEvents = "none";
+  });
+
+  if (selected === correct) score++;
+}
+
+function nextQuestion() {
+  index++;
+  if (index < quizData.length) {
+    loadQuestion();
+  } else {
+    showResult();
+  }
+}
+
+  function showResult() {
+  document.getElementById("quizScreen").classList.add("hide");
+  document.getElementById("resultScreen").classList.remove("hide");
+  document.getElementById("score").innerText = score + " / " + quizData.length;
+}
+
+function resetTimer() {
+  clearInterval(timer);
+  timeLeft = 10;
+  document.getElementById("timer").innerText = timeLeft;
+
+  timer = setInterval(() => {
+    timeLeft--;
+    document.getElementById("timer").innerText = timeLeft;
+
+    if (timeLeft === 0) {
+      nextQuestion();
+    }
+  }, 1000);
+}
+
+</script>
+
+</body>
+</html>

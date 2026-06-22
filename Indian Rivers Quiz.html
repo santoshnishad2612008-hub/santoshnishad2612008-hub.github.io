@@ -1,0 +1,739 @@
+<!DOCTYPE html>
+<html>
+<head>
+     <!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-KN4DRRWZ17"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-KN4DRRWZ17');
+</script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Quiz App</title>
+
+<style>
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: Arial;
+}
+
+body {
+  background: #f5f5f5;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+}
+
+/* Container */
+.app {
+  width: 95%;
+  max-width: 500px;
+  background: white;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+}
+
+/* Header */
+header {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 20px;
+}
+
+.timer {
+  background: #2196F3;
+  color: white;
+  padding: 5px 10px;
+  border-radius: 5px;
+}
+
+/* Question */
+.question {
+  font-size: 20px;
+  margin-bottom: 15px;
+}
+
+/* Options */
+.option {
+  background: #eee;
+  padding: 10px;
+  margin: 8px 0;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.option:hover {
+  background: #ddd;
+}
+
+.correct {
+  background: #4CAF50 !important;
+  color: white;
+}
+
+.wrong {
+  background: #f44336 !important;
+  color: white;
+}
+
+/* Button */
+button {
+  margin-top: 15px;
+  padding: 10px;
+  width: 100%;
+  border: none;
+ background:linear-gradient(135deg,#0a2dbcf3,#779af583);
+  color: white;
+  font-size: 16px;
+  cursor: pointer;
+  border-radius: 5px;
+}
+
+/* Hidden */
+.hide {
+  display: none;
+}
+
+/* Result */
+.result {
+  text-align: center;
+}
+
+/* Responsive */
+@media (max-width: 600px) {
+  .question {
+    font-size: 18px;
+  }
+}
+</style>
+
+</head>
+<body>
+
+<div class="app">
+
+  <!-- Start Screen -->
+  <div id="startScreen">
+    <h2>Quiz App</h2>
+    <button onclick="startQuiz()">Start Quiz</button>
+  </div>
+
+  <!-- Quiz Screen -->
+  <div id="quizScreen" class="hide">
+    <header>
+      <div>Question <span id="qNo">1</span>/40</div>
+      <div class="timer" id="timer">10</div>
+    </header>
+
+    <div class="question" id="question"></div>
+    <div id="options"></div>
+
+    <button onclick="nextQuestion()">Next</button>
+  </div>
+
+  <!-- Result Screen -->
+  <div id="resultScreen" class="hide result">
+    <h2>Your Score</h2>
+    <h1 id="score"></h1>
+    <button onclick="location.reload()">Play Again</button>
+  </div>
+
+</div>
+
+<script>
+const quizData = [
+{
+question:"भारत की सबसे लंबी नदी कौन सी है?",
+options:["गंगा","यमुना","ब्रह्मपुत्र","गोदावरी"],
+answer:0
+},
+{
+question:"गंगा नदी का उद्गम स्थल कहाँ है?",
+options:["यमुनोत्री","गंगोत्री ग्लेशियर","मानसरोवर","केदारनाथ"],
+answer:1
+},
+{
+question:"ब्रह्मपुत्र नदी को तिब्बत में किस नाम से जाना जाता है?",
+options:["सतलज","यारलुंग त्सांगपो","इंडस","झेलम"],
+answer:1
+},
+{
+question:"भारत की सबसे लंबी सहायक नदी कौन सी है?",
+options:["यमुना","घाघरा","गंडक","कोसी"],
+answer:0
+},
+{
+question:"नर्मदा नदी किस दिशा में बहती है?",
+options:["पूर्व से पश्चिम","उत्तर से दक्षिण","पश्चिम से पूर्व","दक्षिण से उत्तर"],
+answer:0
+},
+{
+question:"ताप्ती नदी का उद्गम कहाँ है?",
+options:["सतपुड़ा","महाबलेश्वर","अमरकंटक","हिमालय"],
+answer:1
+},
+{
+question:"कावेरी नदी किस राज्य से निकलती है?",
+options:["केरल","तमिलनाडु","कर्नाटक","आंध्र प्रदेश"],
+answer:2
+},
+{
+question:"गोदावरी नदी को किस नाम से जाना जाता है?",
+options:["दक्षिण गंगा","पूर्व गंगा","पश्चिम गंगा","उत्तर गंगा"],
+answer:0
+},
+{
+question:"भारत की सबसे बड़ी नदी डेल्टा कौन सी है?",
+options:["सुंदरबन डेल्टा","कावेरी डेल्टा","महानदी डेल्टा","गोदावरी डेल्टा"],
+answer:0
+},
+{
+question:"सिंधु नदी का उद्गम कहाँ है?",
+options:["तिब्बत","भारत","नेपाल","भूटान"],
+answer:0
+},
+
+{
+question:"यमुना नदी का उद्गम कहाँ है?",
+options:["यमुनोत्री ग्लेशियर","गंगोत्री","केदारनाथ","मानसरोवर"],
+answer:0
+},
+{
+question:"चंबल नदी किसकी सहायक नदी है?",
+options:["गंगा","यमुना","गोदावरी","नर्मदा"],
+answer:1
+},
+{
+question:"बेतवा नदी किस नदी की सहायक है?",
+options:["गंगा","यमुना","नर्मदा","सतलज"],
+answer:1
+},
+{
+question:"सतलज नदी का उद्गम कहाँ है?",
+options:["तिब्बत","नेपाल","भारत","पाकिस्तान"],
+answer:0
+},
+{
+question:"रावी नदी किस नदी की सहायक है?",
+options:["सिंधु","गंगा","यमुना","ब्रह्मपुत्र"],
+answer:0
+},
+{
+question:"झेलम नदी किस राज्य से होकर बहती है?",
+options:["राजस्थान","जम्मू-कश्मीर","गुजरात","मध्य प्रदेश"],
+answer:1
+},
+{
+question:"गंगा और ब्रह्मपुत्र मिलकर कहाँ डेल्टा बनाते हैं?",
+options:["सुंदरबन","कच्छ","कावेरी","महानदी"],
+answer:0
+},
+{
+question:"महानदी किस राज्य से निकलती है?",
+options:["मध्य प्रदेश","छत्तीसगढ़","ओडिशा","झारखंड"],
+answer:1
+},
+{
+question:"हुगली नदी किस नदी की शाखा है?",
+options:["गंगा","ब्रह्मपुत्र","गोदावरी","यमुना"],
+answer:0
+},
+{
+question:"लूनी नदी कहाँ बहती है?",
+options:["राजस्थान","केरल","बिहार","असम"],
+answer:0
+},
+
+{
+question:"नर्मदा नदी का उद्गम स्थल कौन सा है?",
+options:["अमरकंटक","महाबलेश्वर","मानसरोवर","कांगड़ा"],
+answer:0
+},
+{
+question:"भारत की सबसे स्वच्छ नदी मानी जाती है?",
+options:["चंबल","गंगा","गोदावरी","कावेरी"],
+answer:0
+},
+{
+question:"पेरियार नदी किस राज्य में है?",
+options:["केरल","तमिलनाडु","कर्नाटक","आंध्र प्रदेश"],
+answer:0
+},
+{
+question:"साबरमती नदी कहाँ बहती है?",
+options:["गुजरात","राजस्थान","महाराष्ट्र","पंजाब"],
+answer:0
+},
+{
+question:"माही नदी किस दिशा में बहती है?",
+options:["पश्चिम की ओर","पूर्व की ओर","उत्तर की ओर","दक्षिण की ओर"],
+answer:0
+},
+{
+question:"भारत में सबसे ज्यादा जलोढ़ मैदान किस नदी ने बनाए हैं?",
+options:["गंगा","गोदावरी","कावेरी","नर्मदा"],
+answer:0
+},
+{
+question:"ब्रह्मपुत्र नदी किस प्रकार की नदी है?",
+options:["हिमालयी","प्रायद्वीपीय","मरुस्थलीय","तटीय"],
+answer:0
+},
+{
+question:"कावेरी नदी का डेल्टा किस राज्य में है?",
+options:["तमिलनाडु","केरल","कर्नाटक","आंध्र प्रदेश"],
+answer:0
+},
+{
+question:"गोदावरी नदी को किसने 'दक्षिण गंगा' कहा?",
+options:["भूगोलवेत्ता","कवि","ब्रिटिश अधिकारी","राजा"],
+answer:1
+},
+{
+question:"सिंधु नदी का प्रमुख भाग कहाँ बहता है?",
+options:["पाकिस्तान","भारत","चीन","नेपाल"],
+answer:0
+},
+
+{
+question:"गंगा नदी की सबसे बड़ी सहायक नदी कौन सी है?",
+options:["यमुना","घाघरा","गंडक","कोसी"],
+answer:0
+},
+{
+question:"कोसी नदी को किस नाम से जाना जाता है?",
+options:["बिहार का शोक","गंगा की बेटी","नेपाल की नदी","हिमालयी नदी"],
+answer:0
+},
+{
+question:"भारत में सबसे अधिक बाढ़ किस नदी से आती है?",
+options:["कोसी","गंगा","यमुना","नर्मदा"],
+answer:0
+},
+{
+question:"तवा नदी किसकी सहायक है?",
+options:["नर्मदा","गोदावरी","गंगा","यमुना"],
+answer:0
+},
+{
+question:"शरावती नदी कहाँ स्थित है?",
+options:["कर्नाटक","केरल","तमिलनाडु","गुजरात"],
+answer:0
+},
+{
+question:"भारत का सबसे ऊँचा जलप्रपात किस नदी पर है?",
+options:["शरावती","नर्मदा","कावेरी","गोदावरी"],
+answer:0
+},
+{
+question:"जेलम नदी का प्राचीन नाम क्या है?",
+options:["वितस्ता","सिंधु","झेलम","रावी"],
+answer:0
+},
+{
+question:"ब्रह्मपुत्र का भारत में प्रवेश कहाँ से होता है?",
+options:["अरुणाचल प्रदेश","सिक्किम","असम","नागालैंड"],
+answer:0
+},
+{
+question:"दामोदर नदी किस राज्य में है?",
+options:["झारखंड","बिहार","ओडिशा","पश्चिम बंगाल"],
+answer:3
+},
+{
+question:"भारत की सबसे चौड़ी नदी कौन सी है?",
+options:["ब्रह्मपुत्र","गंगा","गोदावरी","यमुना"],
+answer:0
+},
+
+{
+question:"नर्मदा नदी किस रिफ्ट घाटी से बहती है?",
+options:["नर्मदा-सोन रिफ्ट","हिमालय रिफ्ट","थार रिफ्ट","कच्छ रिफ्ट"],
+answer:0
+},
+{
+question:"भारत की कौन सी नदी अरब सागर में गिरती है?",
+options:["नर्मदा","गंगा","ब्रह्मपुत्र","कोसी"],
+answer:0
+},
+{
+question:"किस नदी को 'उल्टी दिशा में बहने वाली नदी' कहा जाता है?",
+options:["नर्मदा","गंगा","गोदावरी","यमुना"],
+answer:0
+},
+{
+question:"भारत की कौन सी नदी बंगाल की खाड़ी में नहीं गिरती?",
+options:["नर्मदा","गंगा","गोदावरी","महानदी"],
+answer:0
+},
+{
+question:"महानदी का उद्गम कहाँ है?",
+options:["छत्तीसगढ़","ओडिशा","मध्य प्रदेश","झारखंड"],
+answer:0
+},
+
+{
+question:"ब्रह्मपुत्र नदी का डेल्टा किस देश में है?",
+options:["बांग्लादेश","भारत","नेपाल","चीन"],
+answer:0
+},
+{
+question:"गंगा डेल्टा का अन्य नाम क्या है?",
+options:["सुंदरबन","कच्छ","कावेरी","महानदी"],
+answer:0
+},
+{
+question:"किस नदी को 'दक्षिण भारत की जीवन रेखा' कहा जाता है?",
+options:["गोदावरी","गंगा","यमुना","नर्मदा"],
+answer:0
+},
+{
+question:"भारत में सबसे अधिक सिंचाई किस नदी से होती है?",
+options:["गंगा","गोदावरी","कावेरी","नर्मदा"],
+answer:0
+},
+{
+question:"पेरियार नदी का प्रमुख उपयोग क्या है?",
+options:["जल विद्युत","खनन","परिवहन","मत्स्य पालन"],
+answer:0
+},
+
+{
+question:"भारत की कौन सी नदी पश्चिमी घाट से निकलती है?",
+options:["गोदावरी","गंगा","ब्रह्मपुत्र","सिंधु"],
+answer:0
+},
+{
+question:"किस नदी को 'दक्षिण गंगा' कहा जाता है?",
+options:["गोदावरी","कावेरी","नर्मदा","महानदी"],
+answer:0
+},
+{
+question:"भारत की सबसे पुरानी नदी प्रणाली कौन सी है?",
+options:["प्रायद्वीपीय नदियाँ","हिमालयी नदियाँ","मरुस्थलीय नदियाँ","तटीय नदियाँ"],
+answer:0
+},
+{
+question:"गंगा नदी की लंबाई लगभग कितनी है?",
+options:["2525 किमी","3000 किमी","2000 किमी","1500 किमी"],
+answer:0
+},
+{
+question:"ब्रह्मपुत्र नदी की विशेषता क्या है?",
+options:["अत्यधिक चौड़ी नदी","सूखी नदी","मरुस्थलीय नदी","छोटी नदी"],
+answer:0
+},
+
+{
+question:"भारत की कौन सी नदी ‘उल्टी दिशा’ में बहती है?",
+options:["नर्मदा","गंगा","गोदावरी","सतलज"],
+answer:0
+},
+{
+question:"कावेरी नदी का उद्गम किस पहाड़ी से होता है?",
+options:["ब्राह्मगिरी","नीलगिरी","अरावली","हिमालय"],
+answer:0
+},
+{
+question:"चिल्का झील किस नदी से जुड़ी है?",
+options:["महानदी","गोदावरी","कावेरी","नर्मदा"],
+answer:0
+},
+{
+question:"लोकटक झील किस राज्य में है?",
+options:["मणिपुर","असम","बिहार","ओडिशा"],
+answer:0
+},
+{
+question:"भारत की कौन सी नदी ‘पंजाब की जीवन रेखा’ है?",
+options:["सतलज","गंगा","यमुना","गोदावरी"],
+answer:0
+},
+{
+question:"सोन नदी किस नदी की सहायक है?",
+options:["गंगा","यमुना","गोदावरी","नर्मदा"],
+answer:0
+},
+{
+question:"रामगंगा नदी किस राज्य में बहती है?",
+options:["उत्तर प्रदेश","बिहार","मध्य प्रदेश","राजस्थान"],
+answer:0
+},
+{
+question:"पार्वती नदी किस नदी की सहायक है?",
+options:["चंबल","गंगा","नर्मदा","गोदावरी"],
+answer:0
+},
+{
+question:"चंबल नदी का उद्गम कहाँ है?",
+options:["विंध्य पर्वत","मध्य प्रदेश","हिमालय","अरावली"],
+answer:0
+},
+{
+question:"बेतवा नदी किस नदी की सहायक है?",
+options:["यमुना","गंगा","गोदावरी","नर्मदा"],
+answer:0
+},
+{
+question:"केन नदी किसकी सहायक है?",
+options:["यमुना","गंगा","नर्मदा","गोदावरी"],
+answer:0
+},
+{
+question:"घाघरा नदी का दूसरा नाम क्या है?",
+options:["सरयू","कोसी","गंडक","सोन"],
+answer:0
+},
+{
+question:"गंडक नदी किस देश से भारत में प्रवेश करती है?",
+options:["नेपाल","भूटान","चीन","बांग्लादेश"],
+answer:0
+},
+{
+question:"कोसी नदी किस राज्य में अधिक प्रभाव डालती है?",
+options:["बिहार","उत्तर प्रदेश","झारखंड","असम"],
+answer:0
+},
+{
+question:"तमसा नदी किस नदी की सहायक है?",
+options:["गंगा","यमुना","नर्मदा","गोदावरी"],
+answer:0
+},
+
+{
+question:"बनास नदी किस राज्य में बहती है?",
+options:["राजस्थान","गुजरात","मध्य प्रदेश","उत्तर प्रदेश"],
+answer:0
+},
+{
+question:"लूनी नदी किस दिशा में बहती है?",
+options:["पश्चिम की ओर","पूर्व की ओर","उत्तर की ओर","दक्षिण की ओर"],
+answer:0
+},
+{
+question:"लूनी नदी किस सागर में गिरती है?",
+options:["अरब सागर","बंगाल की खाड़ी","हिंद महासागर","भूमध्य सागर"],
+answer:0
+},
+{
+question:"माही नदी किस राज्य से निकलती है?",
+options:["मध्य प्रदेश","राजस्थान","गुजरात","महाराष्ट्र"],
+answer:0
+},
+{
+question:"साबरमती नदी का उद्गम कहाँ है?",
+options:["अरावली","विंध्य","हिमालय","सतपुड़ा"],
+answer:0
+},
+{
+question:"ताप्ती नदी किस सागर में गिरती है?",
+options:["अरब सागर","बंगाल की खाड़ी","हिंद महासागर","कैस्पियन सागर"],
+answer:0
+},
+{
+question:"नर्मदा और ताप्ती के बीच कौन सा पठार है?",
+options:["सतपुड़ा","छोटानागपुर","दक्कन","मालवा"],
+answer:0
+},
+{
+question:"पेनार नदी किस राज्य में बहती है?",
+options:["आंध्र प्रदेश","तमिलनाडु","कर्नाटक","केरल"],
+answer:0
+},
+{
+question:"पलार नदी किस राज्य में है?",
+options:["तमिलनाडु","केरल","कर्नाटक","आंध्र प्रदेश"],
+answer:0
+},
+{
+question:"कृष्णा नदी का उद्गम कहाँ है?",
+options:["महाबलेश्वर","अमरकंटक","नीलगिरी","अरावली"],
+answer:0
+},
+
+{
+question:"कृष्णा नदी की प्रमुख सहायक नदी कौन सी है?",
+options:["तुंगभद्रा","गोदावरी","कावेरी","नर्मदा"],
+answer:0
+},
+{
+question:"तुंगभद्रा नदी किन दो नदियों से मिलकर बनी है?",
+options:["तुंगा और भद्रा","कावेरी और गोदावरी","नर्मदा और ताप्ती","गंगा और यमुना"],
+answer:0
+},
+{
+question:"कावेरी नदी किस समुद्र में गिरती है?",
+options:["बंगाल की खाड़ी","अरब सागर","हिंद महासागर","लाल सागर"],
+answer:0
+},
+{
+question:"कावेरी जल विवाद किस राज्यों के बीच है?",
+options:["कर्नाटक-तमिलनाडु","केरल-तमिलनाडु","आंध्र-तेलंगाना","महाराष्ट्र-गुजरात"],
+answer:0
+},
+{
+question:"पश्चिमी घाट से निकलने वाली प्रमुख नदी कौन सी है?",
+options:["गोदावरी","गंगा","ब्रह्मपुत्र","सिंधु"],
+answer:0
+},
+{
+question:"भारत की कौन सी नदी 'एस्टुअरी' बनाती है?",
+options:["नर्मदा","गंगा","गोदावरी","कावेरी"],
+answer:0
+},
+{
+question:"ब्रह्मपुत्र नदी का भारत में प्रमुख राज्य कौन सा है?",
+options:["असम","बिहार","उत्तर प्रदेश","झारखंड"],
+answer:0
+},
+{
+question:"डिबांग नदी किसकी सहायक है?",
+options:["ब्रह्मपुत्र","गंगा","गोदावरी","यमुना"],
+answer:0
+},
+{
+question:"लोहित नदी किस नदी की सहायक है?",
+options:["ब्रह्मपुत्र","गंगा","यमुना","सिंधु"],
+answer:0
+},
+{
+question:"सुबनसिरी नदी किस राज्य में बहती है?",
+options:["अरुणाचल प्रदेश","असम","बिहार","झारखंड"],
+answer:0
+},
+
+{
+question:"भारत की कौन सी नदी ‘हिमालयी और प्रायद्वीपीय दोनों गुण रखती है’?",
+options:["नर्मदा","गंगा","गोदावरी","कावेरी"],
+answer:0
+},
+{
+question:"भारत की सबसे प्रदूषित नदी कौन सी मानी जाती है?",
+options:["यमुना","गंगा","गोदावरी","नर्मदा"],
+answer:0
+},
+{
+question:"गंगा नदी को प्रदूषण मुक्त करने की योजना कौन सी है?",
+options:["नमामि गंगे","स्वच्छ भारत","जल शक्ति","ग्रीन इंडिया"],
+answer:0
+},
+{
+question:"भारत में सबसे अधिक नदी डेल्टा किस राज्य में है?",
+options:["पश्चिम बंगाल","ओडिशा","तमिलनाडु","आंध्र प्रदेश"],
+answer:0
+},
+{
+question:"सुंदरबन डेल्टा किस नदी प्रणाली का हिस्सा है?",
+options:["गंगा-ब्रह्मपुत्र","गोदावरी","कावेरी","महानदी"],
+answer:0
+},
+{
+question:"घग्गर नदी को किस नाम से जाना जाता है?",
+options:["प्राचीन सरस्वती","सिंधु की शाखा","यमुना की सहायक","गंगा की शाखा"],
+answer:0
+},
+{
+question:"हिमालयी नदियाँ सामान्यतः कैसी होती हैं?",
+options:["स्थायी (Perennial)","अस्थायी","मरुस्थलीय","खारी"],
+answer:0
+},
+{
+question:"प्रायद्वीपीय नदियों की प्रमुख विशेषता क्या है?",
+options:["बारहमासी प्रवाह कम होता है","हिमनद से निकलती हैं","बहुत लंबी होती हैं","डेल्टा नहीं बनाती"],
+answer:0
+},
+{
+question:"भारत की कौन सी नदी 'रिफ्ट वैली नदी' है?",
+options:["नर्मदा","गंगा","गोदावरी","कृष्णा"],
+answer:0
+},
+{
+question:"भारत में सबसे अधिक जल प्रवाह वाली नदी कौन सी है?",
+options:["ब्रह्मपुत्र","गंगा","गोदावरी","कावेरी"],
+answer:0
+}
+
+];
+
+
+let index = 0;
+let score = 0;
+let timer;
+let timeLeft = 10;
+
+function startQuiz() {
+  document.getElementById("startScreen").classList.add("hide");
+  document.getElementById("quizScreen").classList.remove("hide");
+  loadQuestion();
+}
+
+function loadQuestion() {
+  resetTimer();
+  let q = quizData[index];
+  document.getElementById("question").innerText = q.question;
+  document.getElementById("qNo").innerText = index + 1;
+
+  let optionsHTML = "";
+  q.options.forEach((opt, i) => {
+    optionsHTML += `<div class="option" onclick="selectOption(${i})">${opt}</div>`;
+  });
+
+  document.getElementById("options").innerHTML = optionsHTML;
+}
+
+function selectOption(selected) {
+  let correct = quizData[index].answer;
+  let options = document.querySelectorAll(".option");
+
+  options.forEach((opt, i) => {
+    if (i === correct) opt.classList.add("correct");
+    else if (i === selected) opt.classList.add("wrong");
+
+    opt.style.pointerEvents = "none";
+  });
+
+  if (selected === correct) score++;
+}
+
+function nextQuestion() {
+  index++;
+  if (index < quizData.length) {
+    loadQuestion();
+  } else {
+    showResult();
+  }
+}
+
+  function showResult() {
+  document.getElementById("quizScreen").classList.add("hide");
+  document.getElementById("resultScreen").classList.remove("hide");
+  document.getElementById("score").innerText = score + " / " + quizData.length;
+}
+
+function resetTimer() {
+  clearInterval(timer);
+  timeLeft = 10;
+  document.getElementById("timer").innerText = timeLeft;
+
+  timer = setInterval(() => {
+    timeLeft--;
+    document.getElementById("timer").innerText = timeLeft;
+
+    if (timeLeft === 0) {
+      nextQuestion();
+    }
+  }, 1000);
+}
+
+</script>
+
+</body>
+</html>

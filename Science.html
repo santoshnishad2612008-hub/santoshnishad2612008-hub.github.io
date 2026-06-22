@@ -1,0 +1,478 @@
+<!DOCTYPE html>
+<html>
+<head>
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-KN4DRRWZ17"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-KN4DRRWZ17');
+</script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Quiz App</title>
+
+<style>
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: Arial;
+}
+
+body {
+  background: #f5f5f5;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+}
+
+/* Container */
+.app {
+  width: 95%;
+  max-width: 500px;
+  background: white;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+}
+
+/* Header */
+header {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 20px;
+}
+
+.timer {
+  background: #2196F3;
+  color: white;
+  padding: 5px 10px;
+  border-radius: 5px;
+}
+
+/* Question */
+.question {
+  font-size: 20px;
+  margin-bottom: 15px;
+}
+
+/* Options */
+.option {
+  background: #eee;
+  padding: 10px;
+  margin: 8px 0;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.option:hover {
+  background: #ddd;
+}
+
+.correct {
+  background: #4CAF50 !important;
+  color: white;
+}
+
+.wrong {
+  background: #f44336 !important;
+  color: white;
+}
+
+/* Button */
+button {
+  margin-top: 15px;
+  padding: 10px;
+  width: 100%;
+  border: none;
+  background:linear-gradient(135deg,#0a2dbcf3,#779af583);
+  color: white;
+  font-size: 16px;
+  cursor: pointer;
+  border-radius: 5px;
+}
+
+/* Hidden */
+.hide {
+  display: none;
+}
+
+/* Result */
+.result {
+  text-align: center;
+}
+
+/* Responsive */
+@media (max-width: 600px) {
+  .question {
+    font-size: 18px;
+  }
+}
+</style>
+
+</head>
+<body>
+
+<div class="app">
+
+  <!-- Start Screen -->
+  <div id="startScreen">
+    <h2>Quiz App</h2>
+    <button onclick="startQuiz()">Start Quiz</button>
+  </div>
+
+  <!-- Quiz Screen -->
+  <div id="quizScreen" class="hide">
+    <header>
+      <div>Question <span id="qNo">1</span>/50</div>
+      <div class="timer" id="timer">10</div>
+    </header>
+
+    <div class="question" id="question"></div>
+    <div id="options"></div>
+
+    <button onclick="nextQuestion()">Next</button>
+  </div>
+
+  <!-- Result Screen -->
+  <div id="resultScreen" class="hide result">
+    <h2>Your Score</h2>
+    <h1 id="score"></h1>
+    <button onclick="location.reload()">Play Again</button>
+  </div>
+
+</div>
+
+<script>
+
+const quizData = [
+{
+question:"किस रक्त समूह को सार्वभौमिक दाता कहा जाता है?",
+options:["A","B","AB","O"],
+answer:3
+},
+{
+question:"किस रक्त समूह को सार्वभौमिक ग्राही कहा जाता है?",
+options:["A","AB","B","O"],
+answer:1
+},
+{
+question:"मानव शरीर में सबसे बड़ी ग्रंथि कौन सी है?",
+options:["यकृत","थायरॉइड","अग्न्याशय","पिट्यूटरी"],
+answer:0
+},
+{
+question:"विटामिन B12 की कमी से कौन सा रोग होता है?",
+options:["स्कर्वी","रिकेट्स","एनीमिया","बेरी-बेरी"],
+answer:2
+},
+{
+question:"कौन सा विटामिन रक्त के थक्के जमाने में सहायता करता है?",
+options:["A","C","K","E"],
+answer:2
+},
+{
+question:"मानव शरीर में सबसे बड़ी मांसपेशी कौन सी है?",
+options:["ग्लूटियस मैक्सिमस","बाइसेप्स","ट्राइसेप्स","डेल्टॉइड"],
+answer:0
+},
+{
+question:"आँख का कौन सा भाग प्रकाश की मात्रा नियंत्रित करता है?",
+options:["रेटिना","आईरिस","कॉर्निया","लेंस"],
+answer:1
+},
+{
+question:"मानव शरीर में कितने जोड़े पसलियाँ होती हैं?",
+options:["10","11","12","13"],
+answer:2
+},
+{
+question:"शरीर का संतुलन कौन बनाए रखता है?",
+options:["सेरिब्रम","सेरिबेलम","मेडुला","रीढ़"],
+answer:1
+},
+{
+question:"कौन सा हार्मोन 'आपातकालीन हार्मोन' कहलाता है?",
+options:["इंसुलिन","थायरॉक्सिन","एड्रेनालिन","एस्ट्रोजन"],
+answer:2
+},
+{
+question:"सबसे हल्की धातु कौन सी है?",
+options:["लिथियम","एल्युमिनियम","सोडियम","मैग्नीशियम"],
+answer:0
+},
+{
+question:"कौन सी धातु कमरे के तापमान पर द्रव अवस्था में होती है?",
+options:["तांबा","लोहा","पारा","एल्यूमिनियम"],
+answer:2
+},
+{
+question:"LPG में मुख्यतः कौन सी गैस होती है?",
+options:["मीथेन","प्रोपेन और ब्यूटेन","हाइड्रोजन","ऑक्सीजन"],
+answer:1
+},
+{
+question:"CNG का पूरा नाम क्या है?",
+options:["Compressed Natural Gas","Common Natural Gas","Carbon Natural Gas","Clean Natural Gas"],
+answer:0
+},
+{
+question:"सबसे अधिक अभिक्रियाशील अधातु कौन है?",
+options:["ऑक्सीजन","फ्लोरीन","क्लोरीन","ब्रोमीन"],
+answer:1
+},
+{
+question:"सिरके में कौन सा अम्ल पाया जाता है?",
+options:["साइट्रिक अम्ल","एसीटिक अम्ल","लैक्टिक अम्ल","फॉर्मिक अम्ल"],
+answer:1
+},
+{
+question:"नींबू में कौन सा अम्ल पाया जाता है?",
+options:["टार्टरिक","ऑक्सैलिक","साइट्रिक","फॉर्मिक"],
+answer:2
+},
+{
+question:"चींटी के डंक में कौन सा अम्ल होता है?",
+options:["फॉर्मिक अम्ल","साइट्रिक अम्ल","लैक्टिक अम्ल","एसीटिक अम्ल"],
+answer:0
+},
+{
+question:"सोडियम का रासायनिक प्रतीक क्या है?",
+options:["So","Sd","Na","S"],
+answer:2
+},
+{
+question:"सोने का रासायनिक प्रतीक क्या है?",
+options:["Ag","Au","Go","Gd"],
+answer:1
+},
+{
+question:"पृथ्वी सूर्य की परिक्रमा कितने दिनों में करती है?",
+options:["365 दिन","366 दिन","364 दिन","360 दिन"],
+answer:0
+},
+{
+question:"शनि ग्रह के कितने प्रमुख वलय हैं?",
+options:["3","5","7","9"],
+answer:2
+},
+{
+question:"सौरमंडल का सबसे गर्म ग्रह कौन सा है?",
+options:["बुध","मंगल","शुक्र","बृहस्पति"],
+answer:2
+},
+{
+question:"किस ग्रह को 'नीला ग्रह' कहा जाता है?",
+options:["शुक्र","मंगल","पृथ्वी","नेपच्यून"],
+answer:2
+},
+{
+question:"सबसे बड़ा उपग्रह कौन सा है?",
+options:["टाइटन","गैनिमीड","यूरोपा","आयो"],
+answer:1
+},
+{
+question:"हैली धूमकेतु कितने वर्ष बाद दिखाई देता है?",
+options:["56","66","76","86"],
+answer:2
+},
+{
+question:"इंद्रधनुष में कितने रंग होते हैं?",
+options:["5","6","7","8"],
+answer:2
+},
+{
+question:"प्रकाश का कौन सा रंग सबसे अधिक विचलित होता है?",
+options:["लाल","हरा","बैंगनी","पीला"],
+answer:2
+},
+{
+question:"प्रकाश का कौन सा रंग सबसे कम विचलित होता है?",
+options:["लाल","बैंगनी","नीला","हरा"],
+answer:0
+},
+{
+question:"विद्युत बल्ब का फिलामेंट किस धातु का बना होता है?",
+options:["तांबा","एल्यूमिनियम","टंगस्टन","लोहा"],
+answer:2
+},
+{
+question:"विद्युत मोटर किस ऊर्जा को यांत्रिक ऊर्जा में बदलती है?",
+options:["रासायनिक","विद्युत","सौर","ताप"],
+answer:1
+},
+{
+question:"कौन सा यंत्र वायुदाब मापता है?",
+options:["थर्मामीटर","बैरोमीटर","हाइड्रोमीटर","ऑडियोमीटर"],
+answer:1
+},
+{
+question:"भूकंप की तीव्रता किस यंत्र से मापी जाती है?",
+options:["सिस्मोग्राफ","बैरोमीटर","थर्मामीटर","मैनोमीटर"],
+answer:0
+},
+{
+question:"तापमान मापने का यंत्र कौन सा है?",
+options:["बैरोमीटर","थर्मामीटर","ऑडियोमीटर","वोल्टमीटर"],
+answer:1
+},
+{
+question:"दूध का घनत्व मापने का यंत्र कौन सा है?",
+options:["लैक्टोमीटर","बैरोमीटर","हाइड्रोमीटर","थर्मामीटर"],
+answer:0
+},
+{
+question:"कौन सा जीव उभयचर है?",
+options:["मगरमच्छ","मेंढक","छिपकली","साँप"],
+answer:1
+},
+{
+question:"रेशम किससे प्राप्त होता है?",
+options:["मधुमक्खी","रेशम कीट","तितली","मकड़ी"],
+answer:1
+},
+{
+question:"शहद किस जीव से प्राप्त होता है?",
+options:["तितली","मक्खी","मधुमक्खी","भौंरा"],
+answer:2
+},
+{
+question:"मछलियाँ किस अंग से श्वसन करती हैं?",
+options:["फेफड़े","त्वचा","गलफड़े","नाक"],
+answer:2
+},
+{
+question:"कौन सा पक्षी पीछे की ओर उड़ सकता है?",
+options:["कबूतर","तोता","हमिंग बर्ड","कौवा"],
+answer:2
+},
+{
+question:"मानव शरीर में सबसे छोटी ग्रंथि कौन सी है?",
+options:["पिट्यूटरी","पीनियल","थायरॉइड","एड्रिनल"],
+answer:1
+},
+{
+question:"मलेरिया किसके द्वारा फैलता है?",
+options:["मक्खी","मच्छर","चींटी","पिस्सू"],
+answer:1
+},
+{
+question:"डेंगू किस मच्छर से फैलता है?",
+options:["एनोफिलीज","एडीज","क्यूलेक्स","ट्सेट्से"],
+answer:1
+},
+{
+question:"BCG का टीका किस रोग से बचाव के लिए लगाया जाता है?",
+options:["पोलियो","क्षय रोग","चेचक","खसरा"],
+answer:1
+},
+{
+question:"पोलियो का टीका किस नाम से प्रसिद्ध है?",
+options:["BCG","DPT","ओरल पोलियो वैक्सीन","MMR"],
+answer:2
+},
+{
+question:"कौन सा ग्रह सूर्य के चारों ओर सबसे तेज गति से घूमता है?",
+options:["शुक्र","मंगल","बुध","पृथ्वी"],
+answer:2
+},
+{
+question:"हाइड्रोजन बम किस सिद्धांत पर आधारित है?",
+options:["नाभिकीय विखंडन","नाभिकीय संलयन","रासायनिक अभिक्रिया","विद्युत ऊर्जा"],
+answer:1
+},
+{
+question:"परमाणु के केंद्र को क्या कहते हैं?",
+options:["कक्षा","नाभिक","इलेक्ट्रॉन","प्रोटॉन"],
+answer:1
+},
+{
+question:"इलेक्ट्रॉन की खोज किसने की थी?",
+options:["रदरफोर्ड","थॉमसन","बोर","चैडविक"],
+answer:1
+},
+{
+question:"न्यूट्रॉन की खोज किसने की थी?",
+options:["रदरफोर्ड","बोर","चैडविक","थॉमसन"],
+answer:2
+}
+];
+
+let index = 0;
+let score = 0;
+let timer;
+let timeLeft = 10;
+
+function startQuiz() {
+  document.getElementById("startScreen").classList.add("hide");
+  document.getElementById("quizScreen").classList.remove("hide");
+  loadQuestion();
+}
+
+function loadQuestion() {
+  resetTimer();
+  let q = quizData[index];
+  document.getElementById("question").innerText = q.question;
+  document.getElementById("qNo").innerText = index + 1;
+
+  let optionsHTML = "";
+  q.options.forEach((opt, i) => {
+    optionsHTML += `<div class="option" onclick="selectOption(${i})">${opt}</div>`;
+  });
+
+  document.getElementById("options").innerHTML = optionsHTML;
+}
+
+function selectOption(selected) {
+  let correct = quizData[index].answer;
+  let options = document.querySelectorAll(".option");
+
+  options.forEach((opt, i) => {
+    if (i === correct) opt.classList.add("correct");
+    else if (i === selected) opt.classList.add("wrong");
+
+    opt.style.pointerEvents = "none";
+  });
+
+  if (selected === correct) score++;
+}
+
+function nextQuestion() {
+  index++;
+  if (index < quizData.length) {
+    loadQuestion();
+  } else {
+    showResult();
+  }
+}
+
+function showResult() {
+  document.getElementById("quizScreen").classList.add("hide");
+  document.getElementById("resultScreen").classList.remove("hide");
+  document.getElementById("score").innerText = score + " / " + quizData.length;
+}
+
+function resetTimer() {
+  clearInterval(timer);
+  timeLeft = 10;
+  document.getElementById("timer").innerText = timeLeft;
+
+  timer = setInterval(() => {
+    timeLeft--;
+    document.getElementById("timer").innerText = timeLeft;
+
+    if (timeLeft === 0) {
+      nextQuestion();
+    }
+  }, 1000);
+}
+
+</script>
+
+</body>
+</html>

@@ -1,0 +1,339 @@
+<!DOCTYPE html>
+<html>
+<head>
+   <!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-KN4DRRWZ17"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-KN4DRRWZ17');
+</script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Human Body Quiz</title>
+
+<style>
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: Arial;
+}
+
+body {
+  background: #f5f5f5;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+}
+
+/* Container */
+.app {
+  width: 95%;
+  max-width: 500px;
+  background: white;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+}
+
+/* Header */
+header {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 20px;
+}
+
+.timer {
+  background: #2196F3;
+  color: white;
+  padding: 5px 10px;
+  border-radius: 5px;
+}
+
+/* Question */
+.question {
+  font-size: 20px;
+  margin-bottom: 15px;
+}
+
+/* Options */
+.option {
+  background: #eee;
+  padding: 10px;
+  margin: 8px 0;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.option:hover {
+  background: #ddd;
+}
+
+.correct {
+  background: #4CAF50 !important;
+  color: white;
+}
+
+.wrong {
+  background: #f44336 !important;
+  color: white;
+}
+
+/* Button */
+button {
+  margin-top: 15px;
+  padding: 10px;
+  width: 100%;
+  border: none;
+ background:linear-gradient(135deg,#0a2dbcf3,#779af583);
+  color: white;
+  font-size: 16px;
+  cursor: pointer;
+  border-radius: 5px;
+}
+
+/* Hidden */
+.hide {
+  display: none;
+}
+
+/* Result */
+.result {
+  text-align: center;
+}
+
+/* Responsive */
+@media (max-width: 600px) {
+  .question {
+    font-size: 18px;
+  }
+}
+</style>
+
+</head>
+<body>
+
+<div class="app">
+
+  <!-- Start Screen -->
+  <div id="startScreen">
+    <h2>Quiz App</h2>
+    <button onclick="startQuiz()">Start Quiz</button>
+  </div>
+
+  <!-- Quiz Screen -->
+  <div id="quizScreen" class="hide">
+    <header>
+      <div>Question <span id="qNo">1</span>/100</div>
+      <div class="timer" id="timer">10</div>
+    </header>
+
+    <div class="question" id="question"></div>
+    <div id="options"></div>
+
+    <button onclick="nextQuestion()">Next</button>
+  </div>
+
+  <!-- Result Screen -->
+  <div id="resultScreen" class="hide result">
+    <h2>Your Score</h2>
+    <h1 id="score"></h1>
+    <button onclick="location.reload()">Play Again</button>
+  </div>
+
+</div>
+
+<script>
+const quizData = [
+{ question:"मानव शरीर की सबसे बड़ी ग्रंथि कौन सी है?", options:["यकृत","अग्न्याशय","थायरॉयड","पिट्यूटरी"], answer:0 },
+{ question:"मानव शरीर में कितनी हड्डियाँ होती हैं?", options:["206","201","210","198"], answer:0 },
+{ question:"रक्त का तरल भाग क्या कहलाता है?", options:["प्लाज्मा","हीमोग्लोबिन","प्लेटलेट","लिम्फ"], answer:0 },
+{ question:"मानव हृदय में कितने कक्ष होते हैं?", options:["2","3","4","5"], answer:2 },
+{ question:"ऑक्सीजन ले जाने वाला रक्त कोशिका कौन सा है?", options:["RBC","WBC","Platelet","Plasma"], answer:0 },
+{ question:"शरीर में इंसुलिन कहाँ बनता है?", options:["अग्न्याशय","यकृत","हृदय","गुर्दा"], answer:0 },
+{ question:"मानव शरीर की सबसे छोटी कोशिका कौन सी है?", options:["न्यूरॉन","RBC","WBC","मसल सेल"], answer:0 },
+{ question:"मानव शरीर का तापमान सामान्य कितना होता है?", options:["98.6°F","100°F","96°F","99°F"], answer:0 },
+{ question:"रक्त को पंप करने वाला अंग कौन सा है?", options:["हृदय","फेफड़ा","मस्तिष्क","यकृत"], answer:0 },
+{ question:"मानव शरीर में सबसे बड़ा अंग कौन सा है?", options:["त्वचा","यकृत","हृदय","फेफड़ा"], answer:0 },
+
+{ question:"श्वसन तंत्र का मुख्य अंग कौन सा है?", options:["फेफड़ा","हृदय","गुर्दा","आंत"], answer:0 },
+{ question:"श्वसन में कौन सी गैस ली जाती है?", options:["ऑक्सीजन","कार्बन डाइऑक्साइड","नाइट्रोजन","हीलियम"], answer:0 },
+{ question:"रक्त का रंग लाल क्यों होता है?", options:["हीमोग्लोबिन","प्लाज्मा","पानी","आयरन"], answer:0 },
+{ question:"मानव शरीर में कितने किडनी होते हैं?", options:["1","2","3","4"], answer:1 },
+{ question:"पाचन की शुरुआत कहाँ होती है?", options:["मुंह","पेट","आंत","ग्रासनली"], answer:0 },
+{ question:"भोजन नली को क्या कहते हैं?", options:["इसोफेगस","ट्रेकिया","ब्रोंकस","इलियम"], answer:0 },
+{ question:"पित्त रस कहाँ बनता है?", options:["यकृत","अग्न्याशय","पेट","आंत"], answer:0 },
+{ question:"पाचन का मुख्य अंग कौन सा है?", options:["छोटी आंत","हृदय","फेफड़ा","मस्तिष्क"], answer:0 },
+{ question:"मानव शरीर में रक्त का निर्माण कहाँ होता है?", options:["अस्थि मज्जा","यकृत","हृदय","फेफड़ा"], answer:0 },
+{ question:"मस्तिष्क का मुख्य भाग कौन सा है?", options:["सेरीब्रम","हृदय","यकृत","आंत"], answer:0 },
+
+{ question:"न्यूरॉन किस तंत्र से संबंधित है?", options:["तंत्रिका तंत्र","पाचन तंत्र","श्वसन तंत्र","रक्त तंत्र"], answer:0 },
+{ question:"मानव शरीर में कितनी इंद्रियाँ होती हैं?", options:["5","6","7","8"], answer:0 },
+{ question:"दृष्टि का अंग कौन सा है?", options:["आंख","नाक","कान","त्वचा"], answer:0 },
+{ question:"श्रवण का अंग कौन सा है?", options:["कान","आंख","नाक","जीभ"], answer:0 },
+{ question:"स्वाद का ज्ञान किससे होता है?", options:["जीभ","नाक","आंख","त्वचा"], answer:0 },
+{ question:"गंध का ज्ञान किससे होता है?", options:["नाक","जीभ","आंख","कान"], answer:0 },
+{ question:"त्वचा का मुख्य कार्य क्या है?", options:["संवेदना","पाचन","श्वसन","रक्त संचार"], answer:0 },
+{ question:"रक्त में श्वेत कोशिकाएँ क्या करती हैं?", options:["रक्षा","ऑक्सीजन ले जाना","ऊर्जा देना","पाचन"], answer:0 },
+{ question:"प्लेटलेट्स का कार्य क्या है?", options:["रक्त का थक्का बनाना","ऑक्सीजन ले जाना","पाचन","ऊर्जा"], answer:0 },
+{ question:"हीमोग्लोबिन कहाँ पाया जाता है?", options:["RBC","WBC","प्लेटलेट","प्लाज्मा"], answer:0 },
+
+{ question:"मानव शरीर में सबसे बड़ी हड्डी कौन सी है?", options:["फीमर","ह्यूमरस","टिबिया","रेडियस"], answer:0 },
+{ question:"हड्डियों को जोड़ने वाला पदार्थ क्या है?", options:["लिगामेंट","टेंडन","मसल","नर्व"], answer:0 },
+{ question:"मांसपेशियों को हड्डी से जोड़ता है?", options:["टेंडन","लिगामेंट","त्वचा","रक्त"], answer:0 },
+{ question:"मस्तिष्क का सुरक्षा कवच क्या है?", options:["खोपड़ी","रीढ़","हृदय","पसलियाँ"], answer:0 },
+{ question:"रीढ़ की हड्डी को क्या कहते हैं?", options:["वर्टिब्रल कॉलम","फीमर","स्कैपुला","पेल्विस"], answer:0 },
+{ question:"मानव शरीर में ऊर्जा का स्रोत क्या है?", options:["ग्लूकोज","ऑक्सीजन","पानी","प्रोटीन"], answer:0 },
+{ question:"विटामिन D की कमी से कौन सा रोग होता है?", options:["रिकेट्स","स्कर्वी","एनीमिया","डायबिटीज"], answer:0 },
+{ question:"आयरन की कमी से कौन सा रोग होता है?", options:["एनीमिया","रिकेट्स","ग्लूकोमा","अस्थमा"], answer:0 },
+{ question:"विटामिन C की कमी से कौन सा रोग होता है?", options:["स्कर्वी","रिकेट्स","डायबिटीज","कैंसर"], answer:0 },
+{ question:"ब्लड ग्रुप की खोज किसने की?", options:["कार्ल लैंडस्टीनर","न्यूटन","आइंस्टीन","डार्विन"], answer:0 },
+
+{ question:"मानव शरीर में कितने प्रकार के रक्त समूह होते हैं?", options:["4","3","5","2"], answer:0 },
+{ question:"ABO सिस्टम किससे संबंधित है?", options:["रक्त समूह","पाचन","श्वसन","नर्व सिस्टम"], answer:0 },
+{ question:"हृदय की धड़कन को क्या कहते हैं?", options:["पल्स","ब्लड प्रेशर","श्वसन","नाड़ी"], answer:0 },
+{ question:"ब्लड प्रेशर मापने का यंत्र कौन सा है?", options:["स्फिग्मोमैनोमीटर","थर्मामीटर","ईसीजी","स्टेथोस्कोप"], answer:0 },
+{ question:"फेफड़ों में गैसों का आदान-प्रदान कहाँ होता है?", options:["एल्वियोली","ब्रोंकस","ट्रेकिया","नाक"], answer:0 },
+{ question:"ऑक्सीजन युक्त रक्त कहाँ जाता है?", options:["शरीर के अंगों में","फेफड़ों में","हृदय में","यकृत में"], answer:0 },
+{ question:"पाचन एंजाइम कहाँ बनते हैं?", options:["अग्न्याशय","हृदय","फेफड़ा","त्वचा"], answer:0 },
+{ question:"मानव शरीर में कितनी पसलियाँ होती हैं?", options:["24","20","22","26"], answer:0 },
+{ question:"डायाफ्राम किससे संबंधित है?", options:["श्वसन","पाचन","रक्त","नर्व"], answer:0 },
+{ question:"मानव शरीर का नियंत्रण केंद्र कौन सा है?", options:["मस्तिष्क","हृदय","फेफड़ा","यकृत"], answer:0 },
+
+{ question:"यूरिन का निर्माण कहाँ होता है?", options:["किडनी","यकृत","हृदय","फेफड़ा"], answer:0 },
+{ question:"मानव शरीर में पानी का प्रतिशत कितना होता है?", options:["60%","40%","80%","20%"], answer:0 },
+{ question:"DNA कहाँ पाया जाता है?", options:["कोशिका के नाभिक में","साइटोप्लाज्म","रक्त","त्वचा"], answer:0 },
+{ question:"RNA का मुख्य कार्य क्या है?", options:["प्रोटीन संश्लेषण","ऊर्जा उत्पादन","रक्त निर्माण","श्वसन"], answer:0 },
+{ question:"कोशिका का पावर हाउस कौन सा है?", options:["माइटोकॉन्ड्रिया","न्यूक्लियस","राइबोसोम","गॉल्जी बॉडी"], answer:0 },
+{ question:"कोशिका का नियंत्रण केंद्र क्या है?", options:["नाभिक","माइटोकॉन्ड्रिया","राइबोसोम","लाइसोसोम"], answer:0 },
+{ question:"इंसान के शरीर में सबसे लंबी नस कौन सी है?", options:["सायटिक नर्व","ऑप्टिक नर्व","फेशियल नर्व","वेगस नर्व"], answer:0 },
+{ question:"हड्डियों को मजबूत बनाने वाला तत्व कौन सा है?", answer:0, options:["कैल्शियम","आयरन","सोडियम","पोटैशियम"] },
+{ question:"लाल रक्त कोशिकाएँ कहाँ बनती हैं?", options:["अस्थि मज्जा","यकृत","फेफड़ा","हृदय"], answer:0 },
+{ question:"मानव शरीर का सबसे संवेदनशील अंग कौन सा है?", options:["त्वचा","आंख","कान","नाक"], answer:0 },
+
+{ question:"हार्मोन कहाँ बनते हैं?", options:["ग्रंथियाँ","हड्डियाँ","रक्त","त्वचा"], answer:0 },
+{ question:"थायरॉयड ग्रंथि कहाँ स्थित होती है?", options:["गर्दन","छाती","पेट","मस्तिष्क"], answer:0 },
+{ question:"इंसुलिन का कार्य क्या है?", options:["ब्लड शुगर नियंत्रित करना","पाचन","श्वसन","रक्त निर्माण"], answer:0 },
+{ question:"मानव शरीर में कितनी क्रोमोसोम होती हैं?", options:["46","44","48","42"], answer:0 },
+{ question:"पुरुष में XY क्रोमोसोम होते हैं, महिलाओं में?", options:["XX","XY","YY","XXY"], answer:0 },
+
+{ question:"इम्यून सिस्टम का मुख्य कार्य क्या है?", options:["बीमारियों से बचाव","पाचन","श्वसन","ऊर्जा"], answer:0 },
+{ question:"लसीका प्रणाली किससे संबंधित है?", options:["इम्यून सिस्टम","पाचन","हड्डी","हृदय"], answer:0 },
+{ question:"लाल रक्त कोशिकाओं का जीवनकाल कितना होता है?", options:["120 दिन","90 दिन","150 दिन","60 दिन"], answer:0 },
+{ question:"श्वेत रक्त कोशिकाएँ कहाँ बनती हैं?", options:["अस्थि मज्जा","हृदय","फेफड़ा","त्वचा"], answer:0 },
+{ question:"मानव शरीर में सबसे तेज प्रतिक्रिया कौन देता है?", options:["नर्व सिस्टम","पाचन","रक्त","हड्डी"], answer:0 }
+,
+
+{ question:"मानव शरीर में सबसे छोटी हड्डी कौन सी है?", options:["स्टेप्स","फीमर","टिबिया","रेडियस"], answer:0 },
+{ question:"कौन सा अंग इंसुलिन को तोड़ता है?", options:["यकृत","अग्न्याशय","हृदय","फेफड़ा"], answer:0 },
+{ question:"पाचन तंत्र में सबसे लंबी आंत कौन सी है?", options:["छोटी आंत","बड़ी आंत","ग्रासनली","पेट"], answer:0 },
+{ question:"मनुष्य में कुल दाँत कितने होते हैं?", options:["32","28","30","34"], answer:0 },
+{ question:"लार में कौन सा एंजाइम पाया जाता है?", options:["टायलिन","पेप्सिन","ट्रिप्सिन","लिपेज"], answer:0 },
+{ question:"पेप्सिन कहाँ सक्रिय होता है?", options:["पेट","आंत","मुंह","यकृत"], answer:0 },
+{ question:"मानव शरीर का सबसे कठोर पदार्थ कौन सा है?", options:["दाँत का एनामेल","हड्डी","नाखून","त्वचा"], answer:0 },
+{ question:"विटामिन A की कमी से कौन सा रोग होता है?", options:["रतौंधी","स्कर्वी","रिकेट्स","एनीमिया"], answer:0 },
+{ question:"मानव शरीर में रक्त का PH कितना होता है?", options:["7.4","6.8","8.0","5.5"], answer:0 },
+{ question:"लाल रक्त कोशिकाओं का मुख्य कार्य क्या है?", options:["ऑक्सीजन परिवहन","रक्षा","हार्मोन बनाना","पाचन"], answer:0 },
+
+{ question:"कौन सा अंग शरीर से विषैले पदार्थ निकालता है?", options:["किडनी","हृदय","फेफड़ा","त्वचा"], answer:0 },
+{ question:"पसीना किस अंग से निकलता है?", options:["त्वचा","किडनी","फेफड़ा","यकृत"], answer:0 },
+{ question:"मानव शरीर में सबसे बड़ा मांसपेशी कौन सी है?", options:["ग्लूटियस मैक्सिमस","बाइसेप्स","ट्राइसेप्स","डेल्टॉइड"], answer:0 },
+{ question:"कौन सा अंग रक्त को शुद्ध करता है?", options:["किडनी","हृदय","फेफड़ा","आंत"], answer:0 },
+{ question:"मानव शरीर में कितने प्रकार की मांसपेशियाँ होती हैं?", options:["3","2","4","5"], answer:0 },
+{ question:"हृदय से रक्त बाहर ले जाने वाली नली क्या कहलाती है?", options:["धमनी","शिरा","केशिका","लसीका"], answer:0 },
+{ question:"रक्त को वापस हृदय तक लाने वाली नली क्या कहलाती है?", options:["शिरा","धमनी","केशिका","नस"], answer:0 },
+{ question:"मानव शरीर में रक्त का कितना भाग प्लाज्मा होता है?", options:["55%","40%","70%","30%"], answer:0 },
+{ question:"मस्तिष्क का कौन सा भाग संतुलन नियंत्रित करता है?", options:["सेरिबेलम","सेरिब्रम","मेडुला","हाइपोथैलेमस"], answer:0 },
+{ question:"शरीर में ऑक्सीजन कहाँ से रक्त में जाती है?", options:["फेफड़ों की एल्वियोली","हृदय","यकृत","किडनी"], answer:0 },
+
+{ question:"मानव शरीर में कितने जोड़ी क्रेनियल नर्व होती हैं?", options:["12","10","14","8"], answer:0 },
+{ question:"रीढ़ की हड्डी में कितने वर्टिब्रा होते हैं?", options:["33","30","28","36"], answer:0 },
+{ question:"पाचन का अंतिम चरण कहाँ होता है?", options:["छोटी आंत","पेट","मुंह","ग्रासनली"], answer:0 },
+{ question:"लाल रक्त कोशिकाओं का रंग किस तत्व के कारण होता है?", options:["आयरन","कैल्शियम","सोडियम","मैग्नीशियम"], answer:0 },
+{ question:"मानव शरीर में ऊर्जा संग्रहित रूप क्या है?", options:["ग्लाइकोजन","प्रोटीन","फैट","विटामिन"], answer:0 },
+{ question:"मानव शरीर में सबसे बड़ी शिरा कौन सी है?", options:["वेना कावा","पल्मोनरी आर्टरी","एओर्टा","कैरोटिड"], answer:0 },
+{ question:"मानव शरीर में हार्ट बीट को नियंत्रित कौन करता है?", options:["SA नोड","AV नोड","मस्तिष्क","लिवर"], answer:0 },
+{ question:"कैल्शियम का अवशोषण किस विटामिन से होता है?", options:["विटामिन D","विटामिन A","विटामिन B","विटामिन C"], answer:0 },
+{ question:"मानव शरीर में सबसे तेज संकेत कौन भेजता है?", options:["नर्व इम्पल्स","रक्त","हार्मोन","पाचन"], answer:0 },
+{ question:"मानव शरीर में रक्त का कौन सा घटक सबसे अधिक होता है?", options:["लाल रक्त कोशिका","श्वेत रक्त कोशिका","प्लेटलेट","हार्मोन"], answer:0 }
+];
+
+
+let index = 0;
+let score = 0;
+let timer;
+let timeLeft = 10;
+
+function startQuiz() {
+  document.getElementById("startScreen").classList.add("hide");
+  document.getElementById("quizScreen").classList.remove("hide");
+  loadQuestion();
+}
+
+function loadQuestion() {
+  resetTimer();
+  let q = quizData[index];
+  document.getElementById("question").innerText = q.question;
+  document.getElementById("qNo").innerText = index + 1;
+
+  let optionsHTML = "";
+  q.options.forEach((opt, i) => {
+    optionsHTML += `<div class="option" onclick="selectOption(${i})">${opt}</div>`;
+  });
+
+  document.getElementById("options").innerHTML = optionsHTML;
+}
+
+function selectOption(selected) {
+  let correct = quizData[index].answer;
+  let options = document.querySelectorAll(".option");
+
+  options.forEach((opt, i) => {
+    if (i === correct) opt.classList.add("correct");
+    else if (i === selected) opt.classList.add("wrong");
+
+    opt.style.pointerEvents = "none";
+  });
+
+  if (selected === correct) score++;
+}
+
+function nextQuestion() {
+  index++;
+  if (index < quizData.length) {
+    loadQuestion();
+  } else {
+    showResult();
+  }
+}
+
+  function showResult() {
+  document.getElementById("quizScreen").classList.add("hide");
+  document.getElementById("resultScreen").classList.remove("hide");
+  document.getElementById("score").innerText = score + " / " + quizData.length;
+}
+
+function resetTimer() {
+  clearInterval(timer);
+  timeLeft = 10;
+  document.getElementById("timer").innerText = timeLeft;
+
+  timer = setInterval(() => {
+    timeLeft--;
+    document.getElementById("timer").innerText = timeLeft;
+
+    if (timeLeft === 0) {
+      nextQuestion();
+    }
+  }, 1000);
+}
+
+</script>
+
+</body>
+</html>

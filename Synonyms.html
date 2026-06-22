@@ -1,0 +1,731 @@
+<!DOCTYPE html>
+<html>
+<head>
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-KN4DRRWZ17"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-KN4DRRWZ17');
+</script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title> Synonyms Quiz</title>
+
+<style>
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: Arial;
+}
+
+body {
+  background: #f5f5f5;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+}
+
+/* Container */
+.app {
+  width: 95%;
+  max-width: 500px;
+  background: white;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+}
+
+/* Header */
+header {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 20px;
+}
+
+.timer {
+  background: #2196F3;
+  color: white;
+  padding: 5px 10px;
+  border-radius: 5px;
+}
+
+/* Question */
+.question {
+  font-size: 20px;
+  margin-bottom: 15px;
+}
+
+/* Options */
+.option {
+  background: #eee;
+  padding: 10px;
+  margin: 8px 0;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.option:hover {
+  background: #ddd;
+}
+
+.correct {
+  background: #4CAF50 !important;
+  color: white;
+}
+
+.wrong {
+  background: #f44336 !important;
+  color: white;
+}
+
+/* Button */
+button {
+  margin-top: 15px;
+  padding: 10px;
+  width: 100%;
+  border: none;
+ background:linear-gradient(135deg,#0a2dbcf3,#779af583);
+  color: white;
+  font-size: 16px;
+  cursor: pointer;
+  border-radius: 5px;
+}
+
+/* Hidden */
+.hide {
+  display: none;
+}
+
+/* Result */
+.result {
+  text-align: center;
+}
+
+/* Responsive */
+@media (max-width: 600px) {
+  .question {
+    font-size: 18px;
+  }
+}
+</style>
+
+</head>
+<body>
+
+<div class="app">
+
+  <!-- Start Screen -->
+  <div id="startScreen">
+    <h2>Quiz App</h2>
+    <button onclick="startQuiz()">Start Quiz</button>
+  </div>
+
+  <!-- Quiz Screen -->
+  <div id="quizScreen" class="hide">
+    <header>
+      <div>Question <span id="qNo">1</span>/100</div>
+      <div class="timer" id="timer">10</div>
+    </header>
+
+    <div class="question" id="question"></div>
+    <div id="options"></div>
+
+    <button onclick="nextQuestion()">Next</button>
+  </div>
+
+  <!-- Result Screen -->
+  <div id="resultScreen" class="hide result">
+    <h2>Your Score</h2>
+    <h1 id="score"></h1>
+    <button onclick="location.reload()">Play Again</button>
+  </div>
+
+</div>
+
+<script>
+const quizData = [
+
+
+  {
+    "question": "Synonym of 'Happy' is:",
+    "options": ["Sad", "Joyful", "Angry", "Tired"],
+    "answer": 1
+  },
+  {
+    "question": "Synonym of 'Big' is:",
+    "options": ["Small", "Large", "Tiny", "Weak"],
+    "answer": 1
+  },
+  {
+    "question": "Synonym of 'Fast' is:",
+    "options": ["Slow", "Quick", "Lazy", "Late"],
+    "answer": 1
+  },
+  {
+    "question": "Synonym of 'Begin' is:",
+    "options": ["End", "Start", "Stop", "Close"],
+    "answer": 1
+  },
+  {
+    "question": "Synonym of 'Beautiful' is:",
+    "options": ["Ugly", "Pretty", "Bad", "Weak"],
+    "answer": 1
+  },
+  {
+    "question": "Synonym of 'Smart' is:",
+    "options": ["Intelligent", "Dull", "Weak", "Lazy"],
+    "answer": 0
+  },
+  {
+    "question": "Synonym of 'Angry' is:",
+    "options": ["Mad", "Happy", "Calm", "Silent"],
+    "answer": 0
+  },
+  {
+    "question": "Synonym of 'Easy' is:",
+    "options": ["Simple", "Hard", "Difficult", "Complex"],
+    "answer": 0
+  },
+  {
+    "question": "Synonym of 'Small' is:",
+    "options": ["Tiny", "Huge", "Large", "Wide"],
+    "answer": 0
+  },
+  {
+    "question": "Synonym of 'Strong' is:",
+    "options": ["Powerful", "Weak", "Soft", "Slow"],
+    "answer": 0
+  },
+  {
+    "question": "Synonym of 'Quick' is:",
+    "options": ["Fast", "Slow", "Late", "Weak"],
+    "answer": 0
+  },
+  {
+    "question": "Synonym of 'Rich' is:",
+    "options": ["Wealthy", "Poor", "Weak", "Thin"],
+    "answer": 0
+  },
+  {
+    "question": "Synonym of 'Brave' is:",
+    "options": ["Courageous", "Coward", "Weak", "Afraid"],
+    "answer": 0
+  },
+  {
+    "question": "Synonym of 'Clean' is:",
+    "options": ["Dirty", "Pure", "Messy", "Ugly"],
+    "answer": 1
+  },
+  {
+    "question": "Synonym of 'Start' is:",
+    "options": ["Begin", "Stop", "End", "Close"],
+    "answer": 0
+  },
+  {
+    "question": "Synonym of 'End' is:",
+    "options": ["Finish", "Start", "Begin", "Open"],
+    "answer": 0
+  },
+  {
+    "question": "Synonym of 'Cold' is:",
+    "options": ["Chilly", "Hot", "Warm", "Dry"],
+    "answer": 0
+  },
+  {
+    "question": "Synonym of 'Hot' is:",
+    "options": ["Warm", "Cold", "Cool", "Freezing"],
+    "answer": 0
+  },
+  {
+    "question": "Synonym of 'Love' is:",
+    "options": ["Hate", "Affection", "Anger", "Fear"],
+    "answer": 1
+  },
+  {
+    "question": "Synonym of 'Friend' is:",
+    "options": ["Enemy", "Companion", "Stranger", "Opponent"],
+    "answer": 1
+  },
+  {
+    "question": "Synonym of 'Help' is:",
+    "options": ["Assist", "Harm", "Stop", "Break"],
+    "answer": 0
+  },
+  {
+    "question": "Synonym of 'Work' is:",
+    "options": ["Job", "Rest", "Sleep", "Play"],
+    "answer": 0
+  },
+  {
+    "question": "Synonym of 'Light' is:",
+    "options": ["Heavy", "Bright", "Dark", "Weak"],
+    "answer": 1
+  },
+  {
+    "question": "Synonym of 'Dark' is:",
+    "options": ["Black", "Bright", "White", "Clear"],
+    "answer": 0
+  },
+  {
+    "question": "Synonym of 'True' is:",
+    "options": ["False", "Correct", "Wrong", "Fake"],
+    "answer": 1
+  },
+  {
+    "question": "Synonym of 'False' is:",
+    "options": ["Wrong", "True", "Real", "Right"],
+    "answer": 0
+  },
+  {
+    "question": "Synonym of 'Open' is:",
+    "options": ["Close", "Wide", "Start", "Stop"],
+    "answer": 1
+  },
+  {
+    "question": "Synonym of 'Close' is:",
+    "options": ["Shut", "Open", "Start", "Go"],
+    "answer": 0
+  },
+  {
+    "question": "Synonym of 'Give' is:",
+    "options": ["Provide", "Take", "Receive", "Hold"],
+    "answer": 0
+  },
+  {
+    "question": "Synonym of 'Take' is:",
+    "options": ["Grab", "Give", "Send", "Throw"],
+    "answer": 0
+  },
+  {
+    "question": "Synonym of 'Answer' is:",
+    "options": ["Reply", "Question", "Ask", "Doubt"],
+    "answer": 0
+  },
+  {
+    "question": "Synonym of 'Ask' is:",
+    "options": ["Question", "Tell", "Answer", "Reply"],
+    "answer": 0
+  },
+  {
+    "question": "Synonym of 'Beginner' is:",
+    "options": ["Expert", "Novice", "Master", "Pro"],
+    "answer": 1
+  },
+  {
+    "question": "Synonym of 'Old' is:",
+    "options": ["Ancient", "New", "Young", "Fresh"],
+    "answer": 0
+  },
+  {
+    "question": "Synonym of 'New' is:",
+    "options": ["Modern", "Old", "Ancient", "Past"],
+    "answer": 0
+  },
+  {
+    "question": "Synonym of 'Happy Mood' (Happy) is:",
+    "options": ["Joyful", "Sad", "Angry", "Tired"],
+    "answer": 0
+  },
+  {
+    "question": "Synonym of 'Danger' is:",
+    "options": ["Risk", "Safety", "Peace", "Calm"],
+    "answer": 0
+  },
+  {
+    "question": "Synonym of 'Safe' is:",
+    "options": ["Secure", "Dangerous", "Risky", "Weak"],
+    "answer": 0
+  },
+  {
+    "question": "Synonym of 'Strongly' is:",
+    "options": ["Powerfully", "Weakly", "Softly", "Slowly"],
+    "answer": 0
+  },
+  {
+    "question": "Synonym of 'Quickly' is:",
+    "options": ["Fast", "Slowly", "Late", "Weak"],
+    "answer": 0
+  },
+  {
+    "question": "Synonym of 'Quiet' is:",
+    "options": ["Silent", "Loud", "Noisy", "Rough"],
+    "answer": 0
+  },
+  {
+    "question": "Synonym of 'Loud' is:",
+    "options": ["Noisy", "Silent", "Soft", "Weak"],
+    "answer": 0
+  },
+  {
+    "question": "Synonym of 'Honest' is:",
+    "options": ["Truthful", "Fake", "Liar", "Weak"],
+    "answer": 0
+  },
+  {
+    "question": "Synonym of 'Lie' is:",
+    "options": ["Falsehood", "Truth", "Fact", "Reality"],
+    "answer": 0
+  },
+  {
+    "question": "Synonym of 'Win' is:",
+    "options": ["Victory", "Lose", "Fail", "Drop"],
+    "answer": 0
+  },
+  {
+    "question": "Synonym of 'Lose' is:",
+    "options": ["Defeat", "Win", "Gain", "Earn"],
+    "answer": 0
+  },
+  {
+    "question": "Synonym of 'Buy' is:",
+    "options": ["Purchase", "Sell", "Give", "Throw"],
+    "answer": 0
+  },
+  {
+    "question": "Synonym of 'Sell' is:",
+    "options": ["Trade", "Buy", "Take", "Hold"],
+    "answer": 0
+  },
+  {
+    "question": "Synonym of 'Think' is:",
+    "options": ["Consider", "Forget", "Ignore", "Sleep"],
+    "answer": 0
+  },
+  {
+    "question": "Synonym of 'Talk' is:",
+    "options": ["Speak", "Silent", "Sleep", "Stop"],
+    "answer": 0
+  },
+  {
+    "question": "Synonym of 'Beautifully' is:",
+    "options": ["Nicely", "Ugly", "Badly", "Roughly"],
+    "answer": 0
+  },
+  {
+    "question": "Synonym of 'Brilliant' is:",
+    "options": ["Dull", "Smart", "Weak", "Slow"],
+    "answer": 1
+  },
+  {
+    "question": "Synonym of 'Calm' is:",
+    "options": ["Peaceful", "Angry", "Noisy", "Fast"],
+    "answer": 0
+  },
+  {
+    "question": "Synonym of 'Dangerous' is:",
+    "options": ["Safe", "Risky", "Secure", "Soft"],
+    "answer": 1
+  },
+  {
+    "question": "Synonym of 'Deep' is:",
+    "options": ["Shallow", "Low", "High", "Wide"],
+    "answer": 0
+  },
+  {
+    "question": "Synonym of 'Dirty' is:",
+    "options": ["Clean", "Pure", "Messy", "Neat"],
+    "answer": 2
+  },
+  {
+    "question": "Synonym of 'Early' is:",
+    "options": ["Late", "Soon", "Quick", "Fast"],
+    "answer": 1
+  },
+  {
+    "question": "Synonym of 'Easy' is:",
+    "options": ["Simple", "Hard", "Difficult", "Complex"],
+    "answer": 0
+  },
+  {
+    "question": "Synonym of 'Empty' is:",
+    "options": ["Blank", "Full", "Heavy", "Large"],
+    "answer": 0
+  },
+  {
+    "question": "Synonym of 'Famous' is:",
+    "options": ["Popular", "Unknown", "Hidden", "Small"],
+    "answer": 0
+  },
+  {
+    "question": "Synonym of 'Fear' is:",
+    "options": ["Courage", "Dread", "Joy", "Peace"],
+    "answer": 1
+  },
+  {
+    "question": "Synonym of 'Freedom' is:",
+    "options": ["Slavery", "Liberty", "Bondage", "Control"],
+    "answer": 1
+  },
+  {
+    "question": "Synonym of 'Fresh' is:",
+    "options": ["New", "Old", "Dirty", "Weak"],
+    "answer": 0
+  },
+  {
+    "question": "Synonym of 'Generous' is:",
+    "options": ["Kind", "Stingy", "Selfish", "Harsh"],
+    "answer": 0
+  },
+  {
+    "question": "Synonym of 'Great' is:",
+    "options": ["Big", "Small", "Weak", "Tiny"],
+    "answer": 0
+  },
+  {
+    "question": "Synonym of 'Guide' is:",
+    "options": ["Lead", "Follow", "Push", "Pull"],
+    "answer": 0
+  },
+  {
+    "question": "Synonym of 'Hard' is:",
+    "options": ["Difficult", "Easy", "Soft", "Light"],
+    "answer": 0
+  },
+  {
+    "question": "Synonym of 'Hate' is:",
+    "options": ["Dislike", "Love", "Care", "Like"],
+    "answer": 0
+  },
+  {
+    "question": "Synonym of 'Heavy' is:",
+    "options": ["Weighty", "Light", "Soft", "Thin"],
+    "answer": 0
+  },
+  {
+    "question": "Synonym of 'Hope' is:",
+    "options": ["Wish", "Fear", "Hate", "Doubt"],
+    "answer": 0
+  },
+  {
+    "question": "Synonym of 'Huge' is:",
+    "options": ["Large", "Tiny", "Small", "Weak"],
+    "answer": 0
+  },
+  {
+    "question": "Synonym of 'Important' is:",
+    "options": ["Major", "Minor", "Small", "Weak"],
+    "answer": 0
+  },
+  {
+    "question": "Synonym of 'Intelligent' is:",
+    "options": ["Smart", "Dull", "Weak", "Lazy"],
+    "answer": 0
+  },
+  {
+    "question": "Synonym of 'Joy' is:",
+    "options": ["Happiness", "Sadness", "Anger", "Fear"],
+    "answer": 0
+  },
+  {
+    "question": "Synonym of 'Kind' is:",
+    "options": ["Good", "Cruel", "Harsh", "Rude"],
+    "answer": 0
+  },
+  {
+    "question": "Synonym of 'Large' is:",
+    "options": ["Big", "Small", "Tiny", "Weak"],
+    "answer": 0
+  },
+  {
+    "question": "Synonym of 'Lazy' is:",
+    "options": ["Idle", "Active", "Fast", "Strong"],
+    "answer": 0
+  },
+  {
+    "question": "Synonym of 'Little' is:",
+    "options": ["Small", "Big", "Large", "Huge"],
+    "answer": 0
+  },
+  {
+    "question": "Synonym of 'Long' is:",
+    "options": ["Lengthy", "Short", "Small", "Tiny"],
+    "answer": 0
+  },
+  {
+    "question": "Synonym of 'Lucky' is:",
+    "options": ["Fortunate", "Unlucky", "Sad", "Weak"],
+    "answer": 0
+  },
+  {
+    "question": "Synonym of 'Mature' is:",
+    "options": ["Adult", "Childish", "Young", "Small"],
+    "answer": 0
+  },
+  {
+    "question": "Synonym of 'Modern' is:",
+    "options": ["New", "Old", "Ancient", "Past"],
+    "answer": 0
+  },
+  {
+    "question": "Synonym of 'Neat' is:",
+    "options": ["Clean", "Dirty", "Messy", "Rough"],
+    "answer": 0
+  },
+  {
+    "question": "Synonym of 'New' is:",
+    "options": ["Fresh", "Old", "Ancient", "Past"],
+    "answer": 0
+  },
+  {
+    "question": "Synonym of 'Nice' is:",
+    "options": ["Good", "Bad", "Ugly", "Weak"],
+    "answer": 0
+  },
+  {
+    "question": "Synonym of 'Old' is:",
+    "options": ["Ancient", "New", "Fresh", "Young"],
+    "answer": 0
+  },
+  {
+    "question": "Synonym of 'Pain' is:",
+    "options": ["Suffering", "Joy", "Happiness", "Peace"],
+    "answer": 0
+  },
+  {
+    "question": "Synonym of 'Quick' is:",
+    "options": ["Fast", "Slow", "Late", "Weak"],
+    "answer": 0
+  },
+  {
+    "question": "Synonym of 'Quiet' is:",
+    "options": ["Silent", "Loud", "Noisy", "Harsh"],
+    "answer": 0
+  },
+  {
+    "question": "Synonym of 'Rapid' is:",
+    "options": ["Fast", "Slow", "Weak", "Late"],
+    "answer": 0
+  },
+  {
+    "question": "Synonym of 'Rich' is:",
+    "options": ["Wealthy", "Poor", "Weak", "Small"],
+    "answer": 0
+  },
+  {
+    "question": "Synonym of 'Safe' is:",
+    "options": ["Secure", "Dangerous", "Risky", "Weak"],
+    "answer": 0
+  },
+  {
+    "question": "Synonym of 'Short' is:",
+    "options": ["Brief", "Long", "Huge", "Wide"],
+    "answer": 0
+  },
+  {
+    "question": "Synonym of 'Simple' is:",
+    "options": ["Easy", "Hard", "Complex", "Difficult"],
+    "answer": 0
+  },
+  {
+    "question": "Synonym of 'Small' is:",
+    "options": ["Tiny", "Big", "Large", "Huge"],
+    "answer": 0
+  },
+  {
+    "question": "Synonym of 'Strong' is:",
+    "options": ["Powerful", "Weak", "Soft", "Thin"],
+    "answer": 0
+  },
+  {
+    "question": "Synonym of 'Sweet' is:",
+    "options": ["Sugary", "Bitter", "Sour", "Salty"],
+    "answer": 0
+  },
+  {
+    "question": "Synonym of 'Tall' is:",
+    "options": ["High", "Short", "Small", "Tiny"],
+    "answer": 0
+  },
+  {
+    "question": "Synonym of 'Truth' is:",
+    "options": ["Reality", "Lie", "Fake", "False"],
+    "answer": 0
+  },
+  {
+    "question": "Synonym of 'Weak' is:",
+    "options": ["Feeble", "Strong", "Hard", "Powerful"],
+    "answer": 0
+  }
+
+];
+
+
+let index = 0;
+let score = 0;
+let timer;
+let timeLeft = 10;
+
+function startQuiz() {
+  document.getElementById("startScreen").classList.add("hide");
+  document.getElementById("quizScreen").classList.remove("hide");
+  loadQuestion();
+}
+
+function loadQuestion() {
+  resetTimer();
+  let q = quizData[index];
+  document.getElementById("question").innerText = q.question;
+  document.getElementById("qNo").innerText = index + 1;
+
+  let optionsHTML = "";
+  q.options.forEach((opt, i) => {
+    optionsHTML += `<div class="option" onclick="selectOption(${i})">${opt}</div>`;
+  });
+
+  document.getElementById("options").innerHTML = optionsHTML;
+}
+
+function selectOption(selected) {
+  let correct = quizData[index].answer;
+  let options = document.querySelectorAll(".option");
+
+  options.forEach((opt, i) => {
+    if (i === correct) opt.classList.add("correct");
+    else if (i === selected) opt.classList.add("wrong");
+
+    opt.style.pointerEvents = "none";
+  });
+
+  if (selected === correct) score++;
+}
+
+function nextQuestion() {
+  index++;
+  if (index < quizData.length) {
+    loadQuestion();
+  } else {
+    showResult();
+  }
+}
+
+  function showResult() {
+  document.getElementById("quizScreen").classList.add("hide");
+  document.getElementById("resultScreen").classList.remove("hide");
+  document.getElementById("score").innerText = score + " / " + quizData.length;
+}
+
+function resetTimer() {
+  clearInterval(timer);
+  timeLeft = 10;
+  document.getElementById("timer").innerText = timeLeft;
+
+  timer = setInterval(() => {
+    timeLeft--;
+    document.getElementById("timer").innerText = timeLeft;
+
+    if (timeLeft === 0) {
+      nextQuestion();
+    }
+  }, 1000);
+}
+
+</script>
+
+</body>
+</html>

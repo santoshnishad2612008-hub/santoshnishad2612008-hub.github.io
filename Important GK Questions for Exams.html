@@ -1,0 +1,349 @@
+<!DOCTYPE html>
+<html>
+<head>
+     <!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-KN4DRRWZ17"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-KN4DRRWZ17');
+</script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>important Gk Questions for Exam</title>
+
+<style>
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: Arial;
+}
+
+body {
+  background: #f5f5f5;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+}
+
+/* Container */
+.app {
+  width: 95%;
+  max-width: 500px;
+  background: white;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+}
+
+/* Header */
+header {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 20px;
+}
+
+.timer {
+  background: #2196F3;
+  color: white;
+  padding: 5px 10px;
+  border-radius: 5px;
+}
+
+/* Question */
+.question {
+  font-size: 20px;
+  margin-bottom: 15px;
+}
+
+/* Options */
+.option {
+  background: #eee;
+  padding: 10px;
+  margin: 8px 0;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.option:hover {
+  background: #ddd;
+}
+
+.correct {
+  background: #4CAF50 !important;
+  color: white;
+}
+
+.wrong {
+  background: #f44336 !important;
+  color: white;
+}
+
+/* Button */
+button {
+  margin-top: 15px;
+  padding: 10px;
+  width: 100%;
+  border: none;
+ background:linear-gradient(135deg,#0a2dbcf3,#779af583);
+  color: white;
+  font-size: 16px;
+  cursor: pointer;
+  border-radius: 5px;
+}
+
+/* Hidden */
+.hide {
+  display: none;
+}
+
+/* Result */
+.result {
+  text-align: center;
+}
+
+/* Responsive */
+@media (max-width: 600px) {
+  .question {
+    font-size: 18px;
+  }
+}
+</style>
+
+</head>
+<body>
+
+<div class="app">
+
+  <!-- Start Screen -->
+  <div id="startScreen">
+    <h2>Quiz App</h2>
+    <button onclick="startQuiz()">Start Quiz</button>
+  </div>
+
+  <!-- Quiz Screen -->
+  <div id="quizScreen" class="hide">
+    <header>
+      <div>Question <span id="qNo">1</span>/100</div>
+      <div class="timer" id="timer">10</div>
+    </header>
+
+    <div class="question" id="question"></div>
+    <div id="options"></div>
+
+    <button onclick="nextQuestion()">Next</button>
+  </div>
+
+  <!-- Result Screen -->
+  <div id="resultScreen" class="hide result">
+    <h2>Your Score</h2>
+    <h1 id="score"></h1>
+    <button onclick="location.reload()">Play Again</button>
+  </div>
+
+</div>
+
+<script>
+const quizData = [
+
+{ "question":"भारत का राष्ट्रीय पशु कौन है?", "options":["शेर","बाघ","हाथी","गैंडा"], "answer":1 },
+{ "question":"भारत का राष्ट्रीय पक्षी कौन है?", "options":["मोर","तोता","कबूतर","हंस"], "answer":0 },
+{ "question":"भारत का राष्ट्रीय फूल कौन सा है?", "options":["गुलाब","कमल","सूरजमुखी","गेंदा"], "answer":1 },
+{ "question":"भारतीय संविधान कब लागू हुआ?", "options":["15 अगस्त 1947","26 जनवरी 1950","2 अक्टूबर 1950","26 नवंबर 1949"], "answer":1 },
+{ "question":"भारत की राजधानी क्या है?", "options":["मुंबई","कोलकाता","नई दिल्ली","चेन्नई"], "answer":2 },
+
+{ "question":"ताजमहल कहाँ स्थित है?", "options":["दिल्ली","आगरा","जयपुर","लखनऊ"], "answer":1 },
+{ "question":"भारत का सबसे बड़ा राज्य क्षेत्रफल के अनुसार कौन सा है?", "options":["महाराष्ट्र","मध्य प्रदेश","राजस्थान","उत्तर प्रदेश"], "answer":2 },
+{ "question":"गंगा नदी का उद्गम कहाँ से होता है?", "options":["यमुनोत्री","गंगोत्री","केदारनाथ","अमरनाथ"], "answer":1 },
+{ "question":"भारत का राष्ट्रीय खेल कौन सा है?", "options":["क्रिकेट","हॉकी","फुटबॉल","कबड्डी"], "answer":1 },
+{ "question":"भारतीय राष्ट्रीय ध्वज किसने डिजाइन किया?", "options":["पिंगली वेंकैया","नेहरू","गांधी","पटेल"], "answer":0 },
+
+{ "question":"हिमालय पर्वत किस प्रकार का है?", "options":["ज्वालामुखी","वलित पर्वत","ब्लॉक पर्वत","अवशिष्ट पर्वत"], "answer":1 },
+{ "question":"सूर्य के सबसे निकट ग्रह कौन सा है?", "options":["पृथ्वी","शुक्र","बुध","मंगल"], "answer":2 },
+{ "question":"मानव शरीर में सबसे बड़ा अंग कौन सा है?", "options":["हृदय","यकृत","त्वचा","मस्तिष्क"], "answer":2 },
+{ "question":"पानी का रासायनिक सूत्र क्या है?", "options":["CO2","H2O","O2","NaCl"], "answer":1 },
+{ "question":"भारत के पहले प्रधानमंत्री कौन थे?", "options":["नेहरू","गांधी","पटेल","बोस"], "answer":0 },
+
+{ "question":"कंप्यूटर का मस्तिष्क किसे कहा जाता है?", "options":["RAM","CPU","हार्ड डिस्क","मॉनिटर"], "answer":1 },
+{ "question":"भारत में योजना आयोग की जगह किसने ली?", "options":["नीति आयोग","राज्य आयोग","वित्त आयोग","लोक आयोग"], "answer":0 },
+{ "question":"भारतीय रिजर्व बैंक की स्थापना कब हुई?", "options":["1935","1947","1950","1965"], "answer":0 },
+{ "question":"सबसे तेज चलने वाला जीव कौन है?", "options":["चीता","शेर","घोड़ा","बाघ"], "answer":0 },
+{ "question":"ऑक्सीजन का प्रतीक क्या है?", "options":["O","Ox","Og","On"], "answer":0 },
+
+{ "question":"भारत का सबसे लंबा नदी कौन सी है?", "options":["यमुना","गंगा","गोदावरी","कावेरी"], "answer":1 },
+{ "question":"भारत का राष्ट्रीय वृक्ष कौन सा है?", "options":["नीम","बरगद","पीपल","साल"], "answer":1 },
+{ "question":"दूध का मुख्य घटक क्या है?", "options":["प्रोटीन","जल","वसा","लैक्टोज"], "answer":1 },
+{ "question":"मनुष्य का सामान्य शरीर तापमान कितना होता है?", "options":["98.6°F","100°F","96°F","99°F"], "answer":0 },
+{ "question":"भारत का सबसे ऊँचा पर्वत शिखर कौन सा है?", "options":["K2","कंचनजंगा","एवरेस्ट","नंदा देवी"], "answer":1 },
+
+{ "question":"भारत का राष्ट्रीय जलीय जीव कौन है?", "options":["डॉल्फिन","मगरमच्छ","कछुआ","शार्क"], "answer":0 },
+{ "question":"मंगल ग्रह को क्या कहा जाता है?", "options":["नीला ग्रह","लाल ग्रह","हरा ग्रह","सफेद ग्रह"], "answer":1 },
+{ "question":"भारत का सबसे बड़ा बंदरगाह कौन सा है?", "options":["मुंबई पोर्ट","चेन्नई पोर्ट","कोलकाता पोर्ट","कोचीन पोर्ट"], "answer":0 },
+{ "question":"कौन सा विटामिन सूर्य के प्रकाश से मिलता है?", "options":["विटामिन A","विटामिन B","विटामिन C","विटामिन D"], "answer":3 },
+{ "question":"भारत की सबसे लंबी नदी कौन सी है?", "options":["गंगा","ब्रह्मपुत्र","गोदावरी","कृष्णा"], "answer":0 },
+
+{ "question":"इंटरनेट का जनक किसे कहा जाता है?", "options":["टिम बर्नर्स ली","बिल गेट्स","स्टीव जॉब्स","मार्क जुकरबर्ग"], "answer":0 },
+{ "question":"भारत का संविधान कितने दिनों में बना?", "options":["2 साल 11 महीने 18 दिन","3 साल","1 साल","5 साल"], "answer":0 },
+{ "question":"विश्व का सबसे बड़ा महासागर कौन सा है?", "options":["अटलांटिक","हिंद महासागर","प्रशांत महासागर","आर्कटिक"], "answer":2 },
+{ "question":"लाल किला कहाँ स्थित है?", "options":["दिल्ली","आगरा","लखनऊ","जयपुर"], "answer":0 },
+{ "question":"भारत का राष्ट्रीय मिठाई कौन सा माना जाता है?", "options":["रसगुल्ला","जलेबी","लड्डू","गुलाब जामुन"], "answer":3 },
+
+{ "question":"सबसे हल्की गैस कौन सी है?", "options":["ऑक्सीजन","हाइड्रोजन","हीलियम","नाइट्रोजन"], "answer":1 },
+{ "question":"कौन सा ग्रह ‘सुबह का तारा’ कहलाता है?", "options":["मंगल","शुक्र","बुध","शनि"], "answer":1 },
+{ "question":"भारत का सबसे बड़ा राज्य जनसंख्या के अनुसार कौन सा है?", "options":["बिहार","महाराष्ट्र","उत्तर प्रदेश","पश्चिम बंगाल"], "answer":2 },
+{ "question":"DNA का पूरा नाम क्या है?", "options":["Deoxyribonucleic Acid","Dynamic Nuclear Acid","Deoxygen Acid","None"], "answer":0 },
+{ "question":"भारत का सबसे बड़ा रेगिस्तान कौन सा है?", "options":["थार रेगिस्तान","कच्छ","लद्दाख","रेगिस्तान नहीं है"], "answer":0 },
+
+{ "question":"कौन सा ग्रह पृथ्वी का जुड़वां कहलाता है?", "options":["मंगल","शुक्र","बुध","शनि"], "answer":1 },
+{ "question":"कितने महाद्वीप हैं?", "options":["5","6","7","8"], "answer":2 },
+{ "question":"भारत का सर्वोच्च नागरिक सम्मान कौन सा है?", "options":["पद्म श्री","पद्म भूषण","भारत रत्न","वीर चक्र"], "answer":2 },
+{ "question":"चंद्रमा पर पहला कदम किसने रखा?", "options":["यूरी गागरिन","नील आर्मस्ट्रांग","कल्पना चावला","राकेश शर्मा"], "answer":1 },
+{ "question":"कौन सी नदी ‘बिहार की शोक’ कहलाती है?", "options":["गंगा","कोसी","यमुना","घाघरा"], "answer":1 },
+
+{ "question":"भारत का पहला राष्ट्रपति कौन था?", "options":["राजेन्द्र प्रसाद","नेहरू","पटेल","राधाकृष्णन"], "answer":0 },
+{ "question":"विश्व का सबसे छोटा देश कौन सा है?", "options":["नेपाल","वेटिकन सिटी","भूटान","मोनाको"], "answer":1 },
+{ "question":"ओजोन परत कहाँ स्थित है?", "options":["क्षोभमंडल","समतापमंडल","आयनमंडल","बहिर्मंडल"], "answer":1 },
+{ "question":"कौन सा विटामिन खून जमने में मदद करता है?", "options":["विटामिन A","विटामिन K","विटामिन C","विटामिन D"], "answer":1 },
+{ "question":"भारत में सबसे पहले सूर्य कहाँ उगता है?", "options":["गुजरात","अरुणाचल प्रदेश","असम","सिक्किम"], "answer":1 },
+
+{ "question":"विश्व का सबसे बड़ा महाद्वीप कौन सा है?", "options":["अफ्रीका","एशिया","यूरोप","अमेरिका"], "answer":1 },
+{ "question":"कंप्यूटर का आविष्कार किसने किया?", "options":["चार्ल्स बैबेज","न्यूटन","आइंस्टीन","गैलीलियो"], "answer":0 },
+{ "question":"भारत का राष्ट्रीय गान किसने लिखा?", "options":["रवीन्द्रनाथ टैगोर","प्रेमचंद","सुभाष बोस","नेहरू"], "answer":0 },
+{ "question":"सबसे बड़ा ग्रह कौन सा है?", "options":["पृथ्वी","शनि","बृहस्पति","यूरेनस"], "answer":2 },
+{ "question":"लौह पुरुष किसे कहा जाता है?", "options":["नेहरू","पटेल","गांधी","बोस"], "answer":1 },
+
+{ "question":"कौन सी गैस पौधों के लिए आवश्यक है?", "options":["ऑक्सीजन","कार्बन डाइऑक्साइड","नाइट्रोजन","हीलियम"], "answer":1 },
+{ "question":"भारत का सबसे ऊँचा जलप्रपात कौन सा है?", "options":["जोग जलप्रपात","दूधसागर","होगेनक्कल","चेरापूंजी"], "answer":0 },
+{ "question":"विश्व का सबसे बड़ा द्वीप कौन सा है?", "options":["ग्रीनलैंड","ऑस्ट्रेलिया","मेडागास्कर","जावा"], "answer":0 },
+{ "question":"भारत का सबसे बड़ा राज्य कौन सा है?", "options":["मध्य प्रदेश","महाराष्ट्र","राजस्थान","गुजरात"], "answer":2 },
+{ "question":"कौन सा देश ‘उगते सूर्य का देश’ कहलाता है?", "options":["चीन","जापान","कोरिया","थाईलैंड"], "answer":1 },
+
+{ "question":"भारत का पहला उपग्रह कौन सा था?", "options":["आर्यभट्ट","INSAT","PSLV","GSAT"], "answer":0 },
+{ "question":"मानव हृदय में कितने कक्ष होते हैं?", "options":["2","3","4","5"], "answer":2 },
+{ "question":"भारत का सबसे बड़ा डेल्टा कौन सा है?", "options":["सुंदरबन डेल्टा","महानदी डेल्टा","कावेरी डेल्टा","गोदावरी डेल्टा"], "answer":0 },
+{ "question":"कौन सा ग्रह ‘नीला ग्रह’ कहलाता है?", "options":["मंगल","पृथ्वी","शुक्र","बृहस्पति"], "answer":1 },
+{ "question":"भारत की मुद्रा क्या है?", "options":["डॉलर","येन","रुपया","पाउंड"], "answer":2 },
+
+{ "question":"विश्व का सबसे बड़ा रेगिस्तान कौन सा है?", "options":["सहारा","थार","गोबी","कालाहारी"], "answer":0 },
+{ "question":"कौन सा अंग इंसुलिन बनाता है?", "options":["यकृत","अग्न्याशय","हृदय","गुर्दा"], "answer":1 },
+{ "question":"भारत का सबसे बड़ा राज्यसभा भवन कहाँ है?", "options":["मुंबई","दिल्ली","कोलकाता","चेन्नई"], "answer":1 },
+{ "question":"सबसे भारी धातु कौन सी है?", "options":["लोहा","सीसा","पारा","यूरेनियम"], "answer":2 },
+{ "question":"भारत का राष्ट्रीय पर्वत कौन सा है?", "options":["हिमालय","अरावली","विंध्य","सतपुड़ा"], "answer":0 },
+
+{ "question":"सबसे अधिक जनसंख्या वाला देश कौन सा है?", "options":["भारत","चीन","अमेरिका","रूस"], "answer":0 },
+{ "question":"कौन सा ग्रह सबसे गर्म है?", "options":["मंगल","शुक्र","बुध","शनि"], "answer":1 },
+{ "question":"भारत का सर्वोच्च न्यायालय कहाँ है?", "options":["मुंबई","दिल्ली","कोलकाता","चेन्नई"], "answer":1 },
+{ "question":"कौन सा तत्व जीवन के लिए सबसे जरूरी है?", "options":["ऑक्सीजन","कार्बन","हाइड्रोजन","नाइट्रोजन"], "answer":0 },
+{ "question":"भारत का राष्ट्रीय पशु कौन सा है?", "options":["शेर","बाघ","हाथी","गैंडा"], "answer":1 },
+
+{ "question":"भारत का सबसे बड़ा राज्य जनसंख्या घनत्व के अनुसार कौन सा है?", "options":["उत्तर प्रदेश","बिहार","महाराष्ट्र","पश्चिम बंगाल"], "answer":1 },
+{ "question":"पृथ्वी का उपग्रह कौन सा है?", "options":["मंगल","चंद्रमा","शुक्र","बृहस्पति"], "answer":1 },
+{ "question":"विश्व में कुल कितने महासागर हैं?", "options":["3","4","5","6"], "answer":1 },
+{ "question":"भारत का सबसे बड़ा बंदरगाह (क्षेत्रफल के अनुसार) कौन सा है?", "options":["मुंबई","कांडला","चेन्नई","कोलकाता"], "answer":1 },
+{ "question":"कौन सा विटामिन हड्डियों के लिए आवश्यक है?", "options":["विटामिन A","विटामिन B","विटामिन C","विटामिन D"], "answer":3 },
+
+{ "question":"मानव शरीर में रक्त का लाल रंग किस कारण होता है?", "options":["प्लाज्मा","हीमोग्लोबिन","प्लेटलेट्स","ल्यूकोसाइट"], "answer":1 },
+{ "question":"भारत का सबसे ऊँचा बांध कौन सा है?", "options":["भाखड़ा नांगल","हीराकुंड","सरदार सरोवर","टिहरी बांध"], "answer":3 },
+{ "question":"ओजोन दिवस कब मनाया जाता है?", "options":["5 जून","16 सितंबर","2 अक्टूबर","26 जनवरी"], "answer":1 },
+{ "question":"कौन सा ग्रह ‘लाल ग्रह’ कहलाता है?", "options":["शुक्र","मंगल","बुध","शनि"], "answer":1 },
+{ "question":"भारत का राष्ट्रीय फल कौन सा है?", "options":["सेब","आम","केला","अंगूर"], "answer":1 },
+
+{ "question":"भारत में पंचायती राज प्रणाली कब लागू हुई?", "options":["1950","1959","1992","1985"], "answer":2 },
+{ "question":"विश्व का सबसे ऊँचा पर्वत कौन सा है?", "options":["K2","कंचनजंगा","माउंट एवरेस्ट","नंगा पर्वत"], "answer":2 },
+{ "question":"कौन सी गैस पेय पदार्थों में उपयोग होती है?", "options":["ऑक्सीजन","नाइट्रोजन","कार्बन डाइऑक्साइड","हीलियम"], "answer":2 },
+{ "question":"भारत का सबसे बड़ा राज्य क्षेत्रफल के अनुसार कौन सा है?", "options":["राजस्थान","मध्य प्रदेश","महाराष्ट्र","उत्तर प्रदेश"], "answer":0 },
+{ "question":"कंप्यूटर का आउटपुट डिवाइस कौन सा है?", "options":["कीबोर्ड","माउस","मॉनिटर","CPU"], "answer":2 },
+
+{ "question":"भारत में सबसे बड़ा राज्यसभा भवन कहाँ स्थित है?", "options":["मुंबई","दिल्ली","कोलकाता","चेन्नई"], "answer":1 },
+{ "question":"गुरुत्वाकर्षण का नियम किसने दिया?", "options":["न्यूटन","आइंस्टीन","गैलीलियो","केप्लर"], "answer":0 },
+{ "question":"मानव शरीर में सबसे कठोर भाग कौन सा है?", "options":["हड्डी","दांत का इनेमल","नाखून","मांसपेशी"], "answer":1 },
+{ "question":"भारत का सबसे बड़ा राज्य (क्षेत्रफल) कौन सा है?", "options":["राजस्थान","गुजरात","मध्य प्रदेश","महाराष्ट्र"], "answer":0 },
+{ "question":"कौन सा ग्रह सबसे छोटा है?", "options":["बुध","मंगल","शुक्र","पृथ्वी"], "answer":0 },
+
+{ "question":"भारत का राष्ट्रीय जल जीव कौन है?", "options":["गंगा डॉल्फिन","मगरमच्छ","शार्क","कछुआ"], "answer":0 },
+{ "question":"कौन सा ग्रह सूर्य के सबसे दूर है?", "options":["नेपच्यून","शनि","यूरेनस","बृहस्पति"], "answer":0 },
+{ "question":"भारत का सबसे बड़ा रेलवे स्टेशन कौन सा है?", "options":["हावड़ा","नई दिल्ली","मुंबई सेंट्रल","चेन्नई"], "answer":0 },
+{ "question":"DNA की खोज किसने की?", "options":["वॉटसन और क्रिक","न्यूटन","डार्विन","आइंस्टीन"], "answer":0 },
+{ "question":"भारत का सबसे बड़ा मंदिर कौन सा है?", "options":["बृहदेश्वर मंदिर","कोणार्क मंदिर","खजुराहो मंदिर","सोमनाथ मंदिर"], "answer":0 }
+
+];
+
+
+let index = 0;
+let score = 0;
+let timer;
+let timeLeft = 10;
+
+function startQuiz() {
+  document.getElementById("startScreen").classList.add("hide");
+  document.getElementById("quizScreen").classList.remove("hide");
+  loadQuestion();
+}
+
+function loadQuestion() {
+  resetTimer();
+  let q = quizData[index];
+  document.getElementById("question").innerText = q.question;
+  document.getElementById("qNo").innerText = index + 1;
+
+  let optionsHTML = "";
+  q.options.forEach((opt, i) => {
+    optionsHTML += `<div class="option" onclick="selectOption(${i})">${opt}</div>`;
+  });
+
+  document.getElementById("options").innerHTML = optionsHTML;
+}
+
+function selectOption(selected) {
+  let correct = quizData[index].answer;
+  let options = document.querySelectorAll(".option");
+
+  options.forEach((opt, i) => {
+    if (i === correct) opt.classList.add("correct");
+    else if (i === selected) opt.classList.add("wrong");
+
+    opt.style.pointerEvents = "none";
+  });
+
+  if (selected === correct) score++;
+}
+
+function nextQuestion() {
+  index++;
+  if (index < quizData.length) {
+    loadQuestion();
+  } else {
+    showResult();
+  }
+}
+
+  function showResult() {
+  document.getElementById("quizScreen").classList.add("hide");
+  document.getElementById("resultScreen").classList.remove("hide");
+  document.getElementById("score").innerText = score + " / " + quizData.length;
+}
+
+function resetTimer() {
+  clearInterval(timer);
+  timeLeft = 10;
+  document.getElementById("timer").innerText = timeLeft;
+
+  timer = setInterval(() => {
+    timeLeft--;
+    document.getElementById("timer").innerText = timeLeft;
+
+    if (timeLeft === 0) {
+      nextQuestion();
+    }
+  }, 1000);
+}
+
+</script>
+
+</body>
+</html>

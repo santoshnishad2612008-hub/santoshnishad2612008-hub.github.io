@@ -1,0 +1,406 @@
+<!DOCTYPE html>
+<html>
+<head>
+   <!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-KN4DRRWZ17"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-KN4DRRWZ17');
+</script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Biology Quiz</title>
+
+<style>
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: Arial;
+}
+
+body {
+  background: #f5f5f5;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+}
+
+/* Container */
+.app {
+  width: 95%;
+  max-width: 500px;
+  background: white;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+}
+
+/* Header */
+header {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 20px;
+}
+
+.timer {
+  background: #2196F3;
+  color: white;
+  padding: 5px 10px;
+  border-radius: 5px;
+}
+
+/* Question */
+.question {
+  font-size: 20px;
+  margin-bottom: 15px;
+}
+
+/* Options */
+.option {
+  background: #eee;
+  padding: 10px;
+  margin: 8px 0;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.option:hover {
+  background: #ddd;
+}
+
+.correct {
+  background: #4CAF50 !important;
+  color: white;
+}
+
+.wrong {
+  background: #f44336 !important;
+  color: white;
+}
+
+/* Button */
+button {
+  margin-top: 15px;
+  padding: 10px;
+  width: 100%;
+  border: none;
+ background:linear-gradient(135deg,#0a2dbcf3,#779af583);
+  color: white;
+  font-size: 16px;
+  cursor: pointer;
+  border-radius: 5px;
+}
+
+/* Hidden */
+.hide {
+  display: none;
+}
+
+/* Result */
+.result {
+  text-align: center;
+}
+
+/* Responsive */
+@media (max-width: 600px) {
+  .question {
+    font-size: 18px;
+  }
+}
+</style>
+
+</head>
+<body>
+
+<div class="app">
+
+  <!-- Start Screen -->
+  <div id="startScreen">
+    <h2>Quiz App</h2>
+    <button onclick="startQuiz()">Start Quiz</button>
+  </div>
+
+  <!-- Quiz Screen -->
+  <div id="quizScreen" class="hide">
+    <header>
+      <div>Question <span id="qNo">1</span>/149</div>
+      <div class="timer" id="timer">10</div>
+    </header>
+
+    <div class="question" id="question"></div>
+    <div id="options"></div>
+
+    <button onclick="nextQuestion()">Next</button>
+  </div>
+
+  <!-- Result Screen -->
+  <div id="resultScreen" class="hide result">
+    <h2>Your Score</h2>
+    <h1 id="score"></h1>
+    <button onclick="location.reload()">Play Again</button>
+  </div>
+
+</div>
+
+<script>
+const quizData = [
+{ question:"जीवों की मूल इकाई क्या है?", options:["ऊतक","कोशिका","अंग","DNA"], answer:1 },
+{ question:"मानव शरीर में सबसे बड़ी कोशिका कौन सी है?", options:["तंत्रिका कोशिका","अंडाणु","लाल रक्त कोशिका","श्वेत रक्त कोशिका"], answer:1 },
+{ question:"DNA का पूरा नाम क्या है?", options:["Deoxyribonucleic Acid","Dynamic Nuclear Acid","Deoxyribose Nucleic","None"], answer:0 },
+{ question:"RNA में कौन सा बेस नहीं पाया जाता?", options:["Adenine","Uracil","Thymine","Guanine"], answer:2 },
+{ question:"प्रकाश संश्लेषण कहाँ होता है?", options:["माइटोकॉन्ड्रिया","क्लोरोप्लास्ट","न्यूक्लियस","राइबोसोम"], answer:1 },
+
+{ question:"मानव हृदय में कितने कक्ष होते हैं?", options:["2","3","4","5"], answer:2 },
+{ question:"रक्त का लाल रंग किस कारण होता है?", options:["प्लाज्मा","हीमोग्लोबिन","प्लेटलेट","WBC"], answer:1 },
+{ question:"श्वसन का मुख्य अंग कौन सा है?", options:["हृदय","फेफड़ा","यकृत","मस्तिष्क"], answer:1 },
+{ question:"पौधों में जल का परिवहन कौन करता है?", options:["फ्लोएम","जाइलम","पेरिनकाइमा","एपिडर्मिस"], answer:1 },
+{ question:"ATP का पूरा नाम क्या है?", options:["Adenosine Triphosphate","Adenine Triphosphate","Animal Transport Protein","None"], answer:0 },
+
+{ question:"मानव शरीर की सबसे छोटी हड्डी कौन सी है?", options:["स्टेप्स","फीमर","टिबिया","रेडियस"], answer:0 },
+{ question:"पाचन की शुरुआत कहाँ होती है?", options:["आमाशय","मुँह","छोटी आंत","बड़ी आंत"], answer:1 },
+{ question:"पौधों में भोजन का निर्माण कौन करता है?", options:["जड़","पत्ती","तना","फूल"], answer:1 },
+{ question:"इंसुलिन हार्मोन कहाँ बनता है?", options:["यकृत","अग्न्याशय","हृदय","फेफड़ा"], answer:1 },
+{ question:"मनुष्य का सामान्य तापमान कितना होता है?", options:["35°C","36°C","37°C","38°C"], answer:2 },
+
+{ question:"कौन सा विटामिन सूर्य से मिलता है?", options:["A","B","C","D"], answer:3 },
+{ question:"रक्त का थक्का बनाने में कौन सहायक है?", options:["RBC","WBC","प्लेटलेट","प्लाज्मा"], answer:2 },
+{ question:"DNA कहाँ पाया जाता है?", options:["साइटोप्लाज्म","न्यूक्लियस","राइबोसोम","गॉल्जी बॉडी"], answer:1 },
+{ question:"श्वेत रक्त कणिका का कार्य क्या है?", options:["ऑक्सीजन ले जाना","रोग से रक्षा","पाचन","ऊर्जा उत्पादन"], answer:1 },
+{ question:"पौधों का श्वसन अंग क्या है?", options:["जड़","पत्ती","फूल","बीज"], answer:1 },
+
+{ question:"मानव मस्तिष्क का कौन सा भाग संतुलन नियंत्रित करता है?", options:["सेरीब्रुम","सेरीबेलम","मेडुला","हाइपोथैलेमस"], answer:1 },
+{ question:"पौधों में गैस विनिमय कहाँ होता है?", options:["रंध्र (Stomata)","जाइलम","फ्लोएम","कोशिका भित्ति"], answer:0 },
+{ question:"सबसे बड़ा अंग कौन सा है?", options:["हृदय","त्वचा","यकृत","फेफड़ा"], answer:1 },
+{ question:"प्रोटीन का पाचन कहाँ होता है?", options:["आमाशय","मुंह","यकृत","अग्न्याशय"], answer:0 },
+{ question:"कौन सा विटामिन रक्त जमने में मदद करता है?", options:["A","K","C","D"], answer:1 },
+
+{ question:"मानव शरीर में कितनी हड्डियाँ होती हैं?", options:["206","208","200","210"], answer:0 },
+{ question:"कौन सा अंग रक्त को साफ करता है?", options:["हृदय","किडनी","फेफड़ा","यकृत"], answer:1 },
+{ question:"जीन कहाँ पाए जाते हैं?", options:["RNA","DNA","प्रोटीन","लिपिड"], answer:1 },
+{ question:"पौधों में जड़ का मुख्य कार्य क्या है?", options:["भोजन बनाना","जल अवशोषण","प्रजनन","गैस विनिमय"], answer:1 },
+{ question:"मानव शरीर का सबसे बड़ा ग्रंथि कौन सा है?", options:["अग्न्याशय","यकृत","थायरॉयड","पिट्यूटरी"], answer:1 },
+
+{ question:"फेफड़ों में गैस विनिमय कहाँ होता है?", options:["एल्वियोली","ब्रॉन्कस","ट्रेकिया","डायफ्राम"], answer:0 },
+{ question:"RBC का जीवनकाल कितना होता है?", options:["50 दिन","100 दिन","120 दिन","150 दिन"], answer:2 },
+{ question:"पौधों में वृद्धि हार्मोन कौन सा है?", options:["ऑक्सिन","इंसुलिन","एड्रेनालिन","थायरोक्सिन"], answer:0 },
+{ question:"मानव शरीर में ऊर्जा का मुख्य स्रोत क्या है?", options:["वसा","प्रोटीन","कार्बोहाइड्रेट","विटामिन"], answer:2 },
+{ question:"वायरस किसके बीच में आता है?", options:["जीव और निर्जीव","केवल जीव","केवल निर्जीव","कोई नहीं"], answer:0 },
+
+{ question:"ब्लड ग्रुप की खोज किसने की?", options:["पाश्चर","लैंडस्टीनर","डार्विन","न्यूटन"], answer:1 },
+{ question:"पौधों में भोजन का परिवहन कौन करता है?", options:["जाइलम","फ्लोएम","पत्ती","जड़"], answer:1 },
+{ question:"मानव हृदय कहाँ स्थित है?", options:["दाहिनी ओर","बाईं ओर मध्य में","पेट में","सिर में"], answer:1 },
+{ question:"पाचन तंत्र का सबसे लंबा भाग कौन सा है?", options:["आमाशय","छोटी आंत","बड़ी आंत","ग्रासनली"], answer:1 },
+{ question:"पौधों में श्वसन किस समय होता है?", options:["केवल दिन","केवल रात","दिन और रात","केवल गर्मी"], answer:2 },
+
+{ question:"मनुष्य में आनुवंशिक गुण किससे आते हैं?", options:["RNA","DNA","प्रोटीन","हार्मोन"], answer:1 },
+{ question:"कौन सा अंग शरीर का पावर हाउस कहलाता है?", options:["न्यूक्लियस","माइटोकॉन्ड्रिया","राइबोसोम","गॉल्जी बॉडी"], answer:1 },
+{ question:"मलेरिया किससे होता है?", options:["वायरस","बैक्टीरिया","प्रोटोजोआ","फंगस"], answer:2 },
+{ question:"डेंगू किससे फैलता है?", options:["मच्छर","मक्खी","चूहा","कुत्ता"], answer:0 },
+{ question:"पौधों में क्लोरोफिल कहाँ होता है?", options:["जड़","पत्ती","तना","फूल"], answer:1 },
+
+{ question:"मानव शरीर में रक्त का कौन सा भाग तरल होता है?", options:["RBC","WBC","प्लाज्मा","प्लेटलेट"], answer:2 },
+{ question:"किडनी का मुख्य कार्य क्या है?", options:["रक्त पंप करना","रक्त छानना","भोजन पचाना","ऑक्सीजन देना"], answer:1 },
+{ question:"थायरॉयड ग्रंथि क्या नियंत्रित करती है?", options:["हृदय गति","मेटाबॉलिज्म","श्वसन","पाचन"], answer:1 },
+{ question:"पौधों में बीज कहाँ बनते हैं?", options:["जड़","फूल","पत्ती","तना"], answer:1 },
+{ question:"मानव शरीर में सबसे बड़ा अंग कौन सा है?", options:["हृदय","त्वचा","यकृत","मस्तिष्क"], answer:1 },
+
+{ question:"एंजाइम क्या होते हैं?", options:["हार्मोन","प्रोटीन","वसा","खनिज"], answer:1 },
+{ question:"ऑक्सीजन रक्त में किससे जुड़ती है?", options:["प्लेटलेट","हीमोग्लोबिन","प्लाज्मा","WBC"], answer:1 },
+{ question:"पौधों में जल वाष्पीकरण क्या कहलाता है?", options:["प्रकाश संश्लेषण","ट्रांसपिरेशन","श्वसन","अवशोषण"], answer:1 },
+{ question:"मानव शरीर में पाचन का अंतिम भाग कौन सा है?", options:["आमाशय","छोटी आंत","बड़ी आंत","ग्रासनली"], answer:1 },
+{ question:"DNA की संरचना किसने दी?", options:["वॉटसन और क्रिक","डार्विन","पाश्चर","न्यूटन"], answer:0 },
+
+{ question:"शरीर में कैल्शियम का मुख्य कार्य क्या है?", options:["ऊर्जा","हड्डियाँ मजबूत करना","रक्त बनाना","पाचन"], answer:1 },
+{ question:"कौन सा अंग इंसान को सोचने में मदद करता है?", options:["हृदय","मस्तिष्क","फेफड़ा","किडनी"], answer:1 },
+{ question:"पौधों में प्रजनन अंग कौन सा है?", options:["जड़","फूल","पत्ती","तना"], answer:1 },
+{ question:"माइटोकॉन्ड्रिया किसके लिए जिम्मेदार है?", options:["ऊर्जा उत्पादन","पाचन","श्वसन","संचार"], answer:0 },
+{ question:"कौन सा रोग वायरस से होता है?", options:["टीबी","मलेरिया","खसरा","टाइफाइड"], answer:2 },
+
+{ question:"मानव शरीर में पित्त कहाँ बनता है?", options:["हृदय","यकृत","किडनी","फेफड़ा"], answer:1 },
+{ question:"पौधों में भोजन कहाँ संग्रहित होता है?", options:["जड़","फल","पत्ती","फूल"], answer:1 },
+{ question:"रक्त का pH कितना होता है?", options:["6.8","7.4","8.2","5.5"], answer:1 },
+{ question:"मानव शरीर में श्वसन की इकाई क्या है?", options:["एल्वियोली","कोशिका","न्यूरॉन","नेफ्रॉन"], answer:0 },
+{ question:"इंसान में कुल दांत कितने होते हैं?", options:["28","30","32","34"], answer:2 },
+
+{ question:"पौधों में खनिज कौन अवशोषित करता है?", options:["पत्ती","जड़","तना","फूल"], answer:1 },
+{ question:"एड्रेनालिन हार्मोन किससे जुड़ा है?", options:["डर/तनाव","भूख","नींद","विकास"], answer:0 },
+{ question:"मानव शरीर में रक्त का कौन सा भाग सफेद होता है?", options:["RBC","WBC","प्लेटलेट","प्लाज्मा"], answer:1 },
+{ question:"पौधों में वृद्धि कहाँ होती है?", options:["मेरिस्टेम","जड़","पत्ती","तना"], answer:0 },
+{ question:"मानव शरीर में सबसे लंबी कोशिका कौन सी है?", options:["न्यूरॉन","RBC","WBC","मसल सेल"], answer:0 },
+
+{ question:"प्रकाश संश्लेषण का उप-उत्पाद क्या है?", options:["CO2","O2","N2","H2"], answer:1 },
+{ question:"कौन सा अंग आवाज बनाता है?", options:["फेफड़ा","लैरिंक्स","हृदय","किडनी"], answer:1 },
+{ question:"पौधों में हार्मोन किसे कहते हैं?", options:["प्रोटीन","रासायनिक संदेशवाहक","वसा","खनिज"], answer:1 },
+{ question:"मानव शरीर में सबसे बड़ा रक्त वाहिका कौन सा है?", options:["धमनी","शिरा","केशिका","महाधमनी (Aorta)"], answer:3 },
+{ question:"टीबी किससे होता है?", options:["वायरस","बैक्टीरिया","फंगस","प्रोटोजोआ"], answer:1 },
+
+{ question:"पौधों में पानी ऊपर कैसे जाता है?", options:["जाइलम","फ्लोएम","जड़","तना"], answer:0 },
+{ question:"मानव शरीर में ऑक्सीजन कहाँ से ली जाती है?", options:["हृदय","फेफड़ा","किडनी","मस्तिष्क"], answer:1 },
+{ question:"DNA का कार्य क्या है?", options:["ऊर्जा देना","आनुवंशिक जानकारी देना","पाचन","श्वसन"], answer:1 },
+{ question:"कौन सा अंग रक्त पंप करता है?", options:["फेफड़ा","हृदय","किडनी","यकृत"], answer:1 },
+{ question:"जीवों की मूल इकाई क्या है?", options:["ऊतक","कोशिका","अंग","DNA"], answer:1 },
+{ question:"DNA का पूरा नाम क्या है?", options:["Deoxyribonucleic Acid","Dynamic Nuclear Acid","Deoxyribose Nucleic","None"], answer:0 },
+{ question:"RNA में कौन सा बेस नहीं पाया जाता?", options:["Adenine","Uracil","Thymine","Guanine"], answer:2 },
+{ question:"प्रकाश संश्लेषण कहाँ होता है?", options:["माइटोकॉन्ड्रिया","क्लोरोप्लास्ट","न्यूक्लियस","राइबोसोम"], answer:1 },
+{ question:"मानव शरीर की सबसे बड़ी कोशिका कौन सी है?", options:["तंत्रिका कोशिका","अंडाणु","RBC","WBC"], answer:1 },
+
+{ question:"मानव हृदय में कितने कक्ष होते हैं?", options:["2","3","4","5"], answer:2 },
+{ question:"रक्त का लाल रंग किस कारण होता है?", options:["प्लाज्मा","हीमोग्लोबिन","प्लेटलेट","WBC"], answer:1 },
+{ question:"श्वसन का मुख्य अंग कौन सा है?", options:["हृदय","फेफड़ा","यकृत","मस्तिष्क"], answer:1 },
+{ question:"पौधों में जल का परिवहन कौन करता है?", options:["फ्लोएम","जाइलम","पेरिनकाइमा","एपिडर्मिस"], answer:1 },
+{ question:"ATP का पूरा नाम क्या है?", options:["Adenosine Triphosphate","Adenine Triphosphate","Animal Transport Protein","None"], answer:0 },
+
+{ question:"मानव शरीर की सबसे छोटी हड्डी कौन सी है?", options:["स्टेप्स","फीमर","टिबिया","रेडियस"], answer:0 },
+{ question:"पाचन की शुरुआत कहाँ होती है?", options:["आमाशय","मुँह","छोटी आंत","बड़ी आंत"], answer:1 },
+{ question:"इंसुलिन कहाँ बनता है?", options:["यकृत","अग्न्याशय","हृदय","फेफड़ा"], answer:1 },
+{ question:"मनुष्य का सामान्य तापमान कितना होता है?", options:["35°C","36°C","37°C","38°C"], answer:2 },
+{ question:"कौन सा विटामिन सूर्य से मिलता है?", options:["A","B","C","D"], answer:3 },
+
+{ question:"रक्त का थक्का बनाने में कौन सहायक है?", options:["RBC","WBC","प्लेटलेट","प्लाज्मा"], answer:2 },
+{ question:"DNA कहाँ पाया जाता है?", options:["साइटोप्लाज्म","न्यूक्लियस","राइबोसोम","गॉल्जी बॉडी"], answer:1 },
+{ question:"श्वेत रक्त कणिका का कार्य क्या है?", options:["ऑक्सीजन ले जाना","रोग से रक्षा","पाचन","ऊर्जा"], answer:1 },
+{ question:"सबसे बड़ा अंग कौन सा है?", options:["हृदय","त्वचा","यकृत","फेफड़ा"], answer:1 },
+{ question:"कौन सा विटामिन रक्त जमने में मदद करता है?", options:["A","K","C","D"], answer:1 },
+
+{ question:"मानव शरीर में कितनी हड्डियाँ होती हैं?", options:["206","208","200","210"], answer:0 },
+{ question:"किडनी का कार्य क्या है?", options:["रक्त पंप","रक्त छानना","पाचन","श्वसन"], answer:1 },
+{ question:"जीन कहाँ पाए जाते हैं?", options:["RNA","DNA","प्रोटीन","लिपिड"], answer:1 },
+{ question:"पौधों में भोजन बनता है कहाँ?", options:["जड़","पत्ती","तना","फूल"], answer:1 },
+{ question:"मानव शरीर की सबसे बड़ी ग्रंथि कौन सी है?", options:["अग्न्याशय","यकृत","थायरॉयड","पिट्यूटरी"], answer:1 },
+
+{ question:"एल्वियोली किससे संबंधित है?", options:["हृदय","फेफड़ा","किडनी","यकृत"], answer:1 },
+{ question:"RBC का जीवनकाल कितना होता है?", options:["50 दिन","100 दिन","120 दिन","150 दिन"], answer:2 },
+{ question:"पौधों में वृद्धि हार्मोन कौन सा है?", options:["ऑक्सिन","इंसुलिन","एड्रेनालिन","थायरोक्सिन"], answer:0 },
+{ question:"ऊर्जा का मुख्य स्रोत क्या है?", options:["वसा","प्रोटीन","कार्बोहाइड्रेट","विटामिन"], answer:2 },
+{ question:"वायरस किसके बीच में आता है?", options:["जीव और निर्जीव","केवल जीव","केवल निर्जीव","कोई नहीं"], answer:0 },
+
+{ question:"ब्लड ग्रुप की खोज किसने की?", options:["पाश्चर","लैंडस्टीनर","डार्विन","न्यूटन"], answer:1 },
+{ question:"मानव हृदय कहाँ स्थित है?", options:["दाहिनी ओर","बाईं ओर मध्य में","पेट में","सिर में"], answer:1 },
+{ question:"पाचन तंत्र का सबसे लंबा भाग कौन सा है?", options:["आमाशय","छोटी आंत","बड़ी आंत","ग्रासनली"], answer:1 },
+{ question:"पौधों में श्वसन कब होता है?", options:["दिन","रात","दिन और रात","गर्मी"], answer:2 },
+{ question:"DNA की खोज किसने की?", options:["वॉटसन-क्रिक","डार्विन","पाश्चर","न्यूटन"], answer:0 },
+
+{ question:"एंजाइम क्या होते हैं?", options:["हार्मोन","प्रोटीन","वसा","खनिज"], answer:1 },
+{ question:"ऑक्सीजन किससे जुड़ती है?", options:["प्लेटलेट","हीमोग्लोबिन","प्लाज्मा","WBC"], answer:1 },
+{ question:"ट्रांसपिरेशन क्या है?", options:["पाचन","जल वाष्पीकरण","श्वसन","प्रकाश संश्लेषण"], answer:1 },
+{ question:"मानव शरीर में दांत कितने होते हैं?", options:["28","30","32","34"], answer:2 },
+{ question:"मलेरिया किससे होता है?", options:["वायरस","बैक्टीरिया","प्रोटोजोआ","फंगस"], answer:2 },
+
+{ question:"डेंगू किससे फैलता है?", options:["मच्छर","मक्खी","चूहा","कुत्ता"], answer:0 },
+{ question:"टीबी किससे होता है?", options:["वायरस","बैक्टीरिया","फंगस","प्रोटोजोआ"], answer:1 },
+{ question:"मानव शरीर में पित्त कहाँ बनता है?", options:["हृदय","यकृत","किडनी","फेफड़ा"], answer:1 },
+{ question:"रक्त का pH कितना होता है?", options:["6.8","7.4","8.2","5.5"], answer:1 },
+{ question:"पौधों में बीज कहाँ बनते हैं?", options:["जड़","फूल","पत्ती","तना"], answer:1 },
+
+{ question:"एड्रेनालिन किससे जुड़ा है?", options:["डर","भूख","नींद","विकास"], answer:0 },
+{ question:"कौन सा अंग सोचने का काम करता है?", options:["हृदय","मस्तिष्क","फेफड़ा","किडनी"], answer:1 },
+{ question:"प्रकाश संश्लेषण का उप-उत्पाद क्या है?", options:["CO2","O2","N2","H2"], answer:1 },
+{ question:"लैरिंक्स क्या बनाता है?", options:["आवाज़","रक्त","भोजन","ऊर्जा"], answer:0 },
+{ question:"महाधमनी क्या है?", options:["सबसे बड़ी शिरा","सबसे बड़ी धमनी","छोटी धमनी","केशिका"], answer:1 },
+
+{ question:"कौन सा रोग वायरस से होता है?", options:["टीबी","खसरा","टाइफाइड","मलेरिया"], answer:1 },
+{ question:"पौधों में जल ऊपर कैसे जाता है?", options:["जाइलम","फ्लोएम","जड़","पत्ती"], answer:0 },
+{ question:"ऑक्सीजन कहाँ ली जाती है?", options:["हृदय","फेफड़ा","किडनी","यकृत"], answer:1 },
+{ question:"आनुवंशिक जानकारी कहाँ होती है?", options:["RNA","DNA","प्रोटीन","वसा"], answer:1 },
+{ question:"रक्त पंप कौन करता है?", options:["फेफड़ा","हृदय","किडनी","यकृत"], answer:1 },
+
+{ question:"कौन सा अंग ऊर्जा बनाता है?", options:["न्यूक्लियस","माइटोकॉन्ड्रिया","राइबोसोम","गॉल्जी बॉडी"], answer:1 },
+{ question:"पौधों में गैस विनिमय कहाँ होता है?", options:["रंध्र","जाइलम","फ्लोएम","जड़"], answer:0 },
+{ question:"मानव शरीर में सबसे लंबी कोशिका कौन सी है?", options:["न्यूरॉन","RBC","WBC","मसल सेल"], answer:0 },
+{ question:"इंसान में रक्त का कार्य क्या है?", options:["ऑक्सीजन ले जाना","भोजन बनाना","श्वसन","प्रकाश संश्लेषण"], answer:0 },
+{ question:"पौधों में वृद्धि कहाँ होती है?", options:["मेरिस्टेम","जड़","पत्ती","तना"], answer:0 },
+
+{ question:"पौधों में भोजन का परिवहन कौन करता है?", options:["जाइलम","फ्लोएम","पत्ती","जड़"], answer:1 },
+{ question:"कौन सा अंग शरीर का पावर हाउस है?", options:["न्यूक्लियस","माइटोकॉन्ड्रिया","हृदय","किडनी"], answer:1 },
+{ question:"मानव शरीर में रक्त किससे बना है?", options:["प्लाज्मा","केवल पानी","केवल RBC","केवल WBC"], answer:0 },
+{ question:"शरीर में कैल्शियम का कार्य क्या है?", options:["ऊर्जा","हड्डियाँ","रक्त","पाचन"], answer:1 },
+{ question:"टीकाकरण किससे बचाता है?", options:["रोग","भूख","नींद","थकान"], answer:0 },
+
+{ question:"पौधों में प्रकाश संश्लेषण कहाँ होता है?", options:["जड़","पत्ती","तना","फूल"], answer:1 },
+{ question:"किडनी का मुख्य कार्य क्या है?", options:["रक्त छानना","रक्त पंप","भोजन बनाना","श्वसन"], answer:0 },
+{ question:"DNA का कार्य क्या है?", options:["ऊर्जा","आनुवंशिक जानकारी","पाचन","श्वसन"], answer:1 },
+{ question:"मानव शरीर में सबसे बड़ा रक्त वाहिका कौन सा है?", options:["धमनी","शिरा","केशिका","महाधमनी"], answer:3 },
+{ question:"पौधों में पानी कहाँ से आता है?", options:["हवा","मिट्टी","सूर्य","पत्ती"], answer:1 }
+
+];
+
+
+let index = 0;
+let score = 0;
+let timer;
+let timeLeft = 10;
+
+function startQuiz() {
+  document.getElementById("startScreen").classList.add("hide");
+  document.getElementById("quizScreen").classList.remove("hide");
+  loadQuestion();
+}
+
+function loadQuestion() {
+  resetTimer();
+  let q = quizData[index];
+  document.getElementById("question").innerText = q.question;
+  document.getElementById("qNo").innerText = index + 1;
+
+  let optionsHTML = "";
+  q.options.forEach((opt, i) => {
+    optionsHTML += `<div class="option" onclick="selectOption(${i})">${opt}</div>`;
+  });
+
+  document.getElementById("options").innerHTML = optionsHTML;
+}
+
+function selectOption(selected) {
+  let correct = quizData[index].answer;
+  let options = document.querySelectorAll(".option");
+
+  options.forEach((opt, i) => {
+    if (i === correct) opt.classList.add("correct");
+    else if (i === selected) opt.classList.add("wrong");
+
+    opt.style.pointerEvents = "none";
+  });
+
+  if (selected === correct) score++;
+}
+
+function nextQuestion() {
+  index++;
+  if (index < quizData.length) {
+    loadQuestion();
+  } else {
+    showResult();
+  }
+}
+
+  function showResult() {
+  document.getElementById("quizScreen").classList.add("hide");
+  document.getElementById("resultScreen").classList.remove("hide");
+  document.getElementById("score").innerText = score + " / " + quizData.length;
+}
+
+function resetTimer() {
+  clearInterval(timer);
+  timeLeft = 10;
+  document.getElementById("timer").innerText = timeLeft;
+
+  timer = setInterval(() => {
+    timeLeft--;
+    document.getElementById("timer").innerText = timeLeft;
+
+    if (timeLeft === 0) {
+      nextQuestion();
+    }
+  }, 1000);
+}
+
+</script>
+
+</body>
+</html>

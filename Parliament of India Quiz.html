@@ -1,0 +1,339 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-KN4DRRWZ17"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-KN4DRRWZ17');
+</script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Parliyament of quiz Quiz</title>
+
+<style>
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: Arial;
+}
+
+body {
+  background: #f5f5f5;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+}
+
+/* Container */
+.app {
+  width: 95%;
+  max-width: 500px;
+  background: white;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+}
+
+/* Header */
+header {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 20px;
+}
+
+.timer {
+  background: #2196F3;
+  color: white;
+  padding: 5px 10px;
+  border-radius: 5px;
+}
+
+/* Question */
+.question {
+  font-size: 20px;
+  margin-bottom: 15px;
+}
+
+/* Options */
+.option {
+  background: #eee;
+  padding: 10px;
+  margin: 8px 0;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.option:hover {
+  background: #ddd;
+}
+
+.correct {
+  background: #4CAF50 !important;
+  color: white;
+}
+
+.wrong {
+  background: #f44336 !important;
+  color: white;
+}
+
+/* Button */
+button {
+  margin-top: 15px;
+  padding: 10px;
+  width: 100%;
+  border: none;
+ background:linear-gradient(135deg,#0a2dbcf3,#779af583);
+  color: white;
+  font-size: 16px;
+  cursor: pointer;
+  border-radius: 5px;
+}
+
+/* Hidden */
+.hide {
+  display: none;
+}
+
+/* Result */
+.result {
+  text-align: center;
+}
+
+/* Responsive */
+@media (max-width: 600px) {
+  .question {
+    font-size: 18px;
+  }
+}
+</style>
+
+</head>
+<body>
+
+<div class="app">
+
+  <!-- Start Screen -->
+  <div id="startScreen">
+    <h2>Quiz App</h2>
+    <button onclick="startQuiz()">Start Quiz</button>
+  </div>
+
+  <!-- Quiz Screen -->
+  <div id="quizScreen" class="hide">
+    <header>
+      <div>Question <span id="qNo">1</span>/100</div>
+      <div class="timer" id="timer">10</div>
+    </header>
+
+    <div class="question" id="question"></div>
+    <div id="options"></div>
+
+    <button onclick="nextQuestion()">Next</button>
+  </div>
+
+  <!-- Result Screen -->
+  <div id="resultScreen" class="hide result">
+    <h2>Your Score</h2>
+    <h1 id="score"></h1>
+    <button onclick="location.reload()">Play Again</button>
+  </div>
+
+</div>
+
+<script>
+const quizData = [
+
+{ question:"भारत की संसद के कितने सदन होते हैं?", options:["एक","दो","तीन","चार"], answer:1 },
+{ question:"राज्यसभा को क्या कहा जाता है?", options:["निचला सदन","उच्च सदन","लोक सदन","जनसभा"], answer:1 },
+{ question:"लोकसभा को क्या कहा जाता है?", options:["निचला सदन","उच्च सदन","राज्य सदन","परिषद"], answer:0 },
+{ question:"भारतीय संसद में राष्ट्रपति की भूमिका क्या है?", options:["सदस्य","अध्यक्ष","अभिन्न अंग","वक्ता"], answer:2 },
+{ question:"लोकसभा का कार्यकाल कितने वर्षों का होता है?", options:["4","5","6","7"], answer:1 },
+{ question:"राज्यसभा एक ____ सदन है।", options:["स्थायी","अस्थायी","भंग होने वाला","चुनावी"], answer:0 },
+{ question:"राज्यसभा के सदस्यों का कार्यकाल कितना होता है?", options:["4 वर्ष","5 वर्ष","6 वर्ष","3 वर्ष"], answer:2 },
+{ question:"लोकसभा के अध्यक्ष को क्या कहते हैं?", options:["सभापति","स्पीकर","प्रधानमंत्री","राज्यपाल"], answer:1 },
+{ question:"राज्यसभा के सभापति कौन होते हैं?", options:["राष्ट्रपति","उपराष्ट्रपति","प्रधानमंत्री","लोकसभा अध्यक्ष"], answer:1 },
+{ question:"वर्तमान में लोकसभा की अधिकतम सदस्य संख्या कितनी है?", options:["500","545","552","600"], answer:2 },
+
+{ question:"राज्यसभा की अधिकतम सदस्य संख्या कितनी है?", options:["250","300","238","260"], answer:0 },
+{ question:"लोकसभा के सदस्य कैसे चुने जाते हैं?", options:["नियुक्ति","प्रत्यक्ष चुनाव","अप्रत्यक्ष चुनाव","मनोनयन"], answer:1 },
+{ question:"राज्यसभा के सदस्य कैसे चुने जाते हैं?", options:["प्रत्यक्ष चुनाव","अप्रत्यक्ष चुनाव","जनमत","लॉटरी"], answer:1 },
+{ question:"भारतीय संसद कहाँ स्थित है?", options:["मुंबई","कोलकाता","नई दिल्ली","चेन्नई"], answer:2 },
+{ question:"संसद का निम्न सदन कौन सा है?", options:["राज्यसभा","लोकसभा","विधानसभा","परिषद"], answer:1 },
+{ question:"संसद का उच्च सदन कौन सा है?", options:["लोकसभा","राज्यसभा","विधानसभा","पंचायत"], answer:1 },
+{ question:"लोकसभा में न्यूनतम आयु कितनी होनी चाहिए?", options:["21","25","30","35"], answer:1 },
+{ question:"राज्यसभा में न्यूनतम आयु कितनी होनी चाहिए?", options:["25","30","35","21"], answer:1 },
+{ question:"लोकसभा का अध्यक्ष किसे चुनते हैं?", options:["प्रधानमंत्री","सदस्य","राष्ट्रपति","मुख्यमंत्री"], answer:1 },
+{ question:"स्पीकर का चुनाव कौन करता है?", options:["लोकसभा सदस्य","राज्यसभा सदस्य","राष्ट्रपति","प्रधानमंत्री"], answer:0 },
+
+{ question:"भारतीय संसद में कुल कितने अंग होते हैं?", options:["2","3","4","5"], answer:1 },
+{ question:"संसद के तीन अंग कौन हैं?", options:["राष्ट्रपति, लोकसभा, राज्यसभा","प्रधानमंत्री, राज्यसभा, विधानसभा","लोकसभा, विधानसभा, परिषद","राष्ट्रपति, विधानसभा, परिषद"], answer:0 },
+{ question:"संसद का प्रथम सत्र किसे कहते हैं?", options:["बजट सत्र","मानसून सत्र","शीतकालीन सत्र","विशेष सत्र"], answer:0 },
+{ question:"मानसून सत्र कब होता है?", options:["जनवरी-जून","जुलाई-अगस्त","सितंबर-दिसंबर","मार्च-अप्रैल"], answer:1 },
+{ question:"शून्यकाल (Zero Hour) किसमें होता है?", options:["राज्यसभा","लोकसभा","दोनों","किसी में नहीं"], answer:2 },
+{ question:"प्रश्नकाल (Question Hour) कब होता है?", options:["सत्र की शुरुआत में","सत्र के अंत में","रात में","कभी नहीं"], answer:0 },
+{ question:"संसद का नेतृत्व कौन करता है?", options:["प्रधानमंत्री","राष्ट्रपति","लोकसभा अध्यक्ष","मुख्यमंत्री"], answer:1 },
+{ question:"लोकसभा भंग कौन करता है?", options:["राष्ट्रपति","प्रधानमंत्री","स्पीकर","उपराष्ट्रपति"], answer:0 },
+{ question:"राज्यसभा भंग होती है या नहीं?", options:["हाँ","नहीं","कभी-कभी","हर 5 साल"], answer:1 },
+{ question:"लोकसभा चुनाव कितने वर्षों में होते हैं?", options:["4","5","6","7"], answer:1 },
+
+{ question:"भारत के प्रथम लोकसभा अध्यक्ष कौन थे?", options:["एम. ए. अयंगर","गणेश वासुदेव मावलंकर","नेहरू","पटेल"], answer:1 },
+{ question:"राज्यसभा की बैठक की अध्यक्षता कौन करता है?", options:["लोकसभा अध्यक्ष","उपराष्ट्रपति","प्रधानमंत्री","राष्ट्रपति"], answer:1 },
+{ question:"संसद में विधेयक कितने प्रकार के होते हैं?", options:["2","3","4","5"], answer:1 },
+{ question:"साधारण विधेयक कौन प्रस्तुत कर सकता है?", options:["केवल राष्ट्रपति","कोई भी सदस्य","केवल राज्यसभा","केवल प्रधानमंत्री"], answer:1 },
+{ question:"धन विधेयक कहाँ प्रस्तुत होता है?", options:["राज्यसभा","लोकसभा","दोनों","राष्ट्रपति भवन"], answer:1 },
+{ question:"धन विधेयक को कौन प्रमाणित करता है?", options:["प्रधानमंत्री","लोकसभा अध्यक्ष","राष्ट्रपति","राज्यसभा अध्यक्ष"], answer:1 },
+{ question:"राज्यसभा धन विधेयक को अधिकतम कितने दिन रोक सकती है?", options:["10","14","15","30"], answer:1 },
+{ question:"लोकसभा का कोरम कितना होता है?", options:["1/10","1/4","1/2","2/3"], answer:0 },
+{ question:"संसद की सर्वोच्च शक्ति किसमें निहित है?", options:["प्रधानमंत्री","संसद","राष्ट्रपति","न्यायपालिका"], answer:1 },
+{ question:"संसद का मुख्य कार्य क्या है?", options:["कानून बनाना","न्याय देना","सैन्य नियंत्रण","राज्य चलाना"], answer:0 },
+
+{ question:"संसद में प्रश्न पूछने का अधिकार किसे है?", options:["केवल मंत्री","केवल सदस्य","सभी सांसद","राष्ट्रपति"], answer:2 },
+{ question:"संसद का पहला सत्र कौन बुलाता है?", options:["प्रधानमंत्री","राष्ट्रपति","लोकसभा अध्यक्ष","उपराष्ट्रपति"], answer:1 },
+{ question:"संसद में अविश्वास प्रस्ताव किसके खिलाफ आता है?", options:["राष्ट्रपति","प्रधानमंत्री","लोकसभा अध्यक्ष","राज्यसभा"], answer:1 },
+{ question:"अविश्वास प्रस्ताव कहाँ लाया जाता है?", options:["राज्यसभा","लोकसभा","दोनों","कहीं नहीं"], answer:1 },
+{ question:"संसद में बजट कौन पेश करता है?", options:["राष्ट्रपति","प्रधानमंत्री","वित्त मंत्री","गृह मंत्री"], answer:2 },
+{ question:"भारत का संविधान किसे सर्वोच्च मानता है?", options:["संसद","न्यायपालिका","राष्ट्रपति","राज्यसभा"], answer:0 },
+{ question:"संसद का संयुक्त सत्र कौन बुलाता है?", options:["लोकसभा अध्यक्ष","राष्ट्रपति","प्रधानमंत्री","उपराष्ट्रपति"], answer:1 },
+{ question:"संयुक्त सत्र की अध्यक्षता कौन करता है?", options:["राष्ट्रपति","लोकसभा अध्यक्ष","राज्यसभा अध्यक्ष","प्रधानमंत्री"], answer:1 },
+{ question:"लोकसभा में कुल सीटें कितनी होती हैं (लगभग)?", options:["543","545","550","552"], answer:0 },
+{ question:"राज्यसभा में नामित सदस्य कितने होते हैं?", options:["10","12","15","20"], answer:1 },
+
+{ question:"राज्यसभा का गठन कब हुआ?", options:["1947","1950","1952","1955"], answer:2 },
+{ question:"लोकसभा का गठन कब हुआ?", options:["1950","1952","1955","1947"], answer:1 },
+{ question:"संसद भवन का उद्घाटन कब हुआ?", options:["1927","1930","1947","1950"], answer:0 },
+{ question:"संसद भवन किसने डिजाइन किया?", options:["लुटियंस और बेकर","नेहरू","गांधी","पटेल"], answer:0 },
+{ question:"संसद में स्पीकर की कुर्सी कहाँ होती है?", options:["लोकसभा","राज्यसभा","दोनों","बाहर"], answer:0 },
+{ question:"राज्यसभा का सभापति कौन नहीं हो सकता?", options:["प्रधानमंत्री","उपराष्ट्रपति","राष्ट्रपति","कोई नहीं"], answer:1 },
+{ question:"संसद में संशोधन विधेयक कौन लाता है?", options:["केवल सरकार","कोई भी सदस्य","राष्ट्रपति","न्यायालय"], answer:1 },
+{ question:"संविधान संशोधन किसके द्वारा किया जाता है?", options:["संसद","न्यायालय","राष्ट्रपति","राज्यपाल"], answer:0 },
+{ question:"संसद की स्थायी समितियाँ क्या करती हैं?", options:["कानून बनाना","विस्तृत अध्ययन","न्याय देना","कर लगाना"], answer:1 },
+{ question:"संसद में हंगामे को नियंत्रित कौन करता है?", options:["प्रधानमंत्री","स्पीकर","राष्ट्रपति","गृह मंत्री"], answer:1 },
+
+{ question:"लोकसभा में बहुमत का अर्थ क्या है?", options:["आधे से अधिक","आधे से कम","सभी सदस्य","एक तिहाई"], answer:0 },
+{ question:"राज्यसभा में उपसभापति कौन चुनता है?", options:["राष्ट्रपति","सदस्य","प्रधानमंत्री","लोकसभा"], answer:1 },
+{ question:"संसद में शपथ कौन दिलाता है?", options:["राष्ट्रपति","स्पीकर","प्रधानमंत्री","न्यायाधीश"], answer:0 },
+{ question:"लोकसभा में विश्वास मत किसके लिए होता है?", options:["राष्ट्रपति","सरकार","न्यायपालिका","राज्यसभा"], answer:1 },
+{ question:"संसद का मुख्यालय कहाँ है?", options:["नई दिल्ली","मुंबई","चेन्नई","कोलकाता"], answer:0 },
+{ question:"राज्यसभा में कितने राज्य प्रतिनिधित्व करते हैं?", options:["राज्य और केंद्रशासित प्रदेश","केवल राज्य","केवल केंद्र","कोई नहीं"], answer:0 },
+{ question:"संसद का कौन सा सदन स्थायी है?", options:["लोकसभा","राज्यसभा","दोनों","कोई नहीं"], answer:1 },
+{ question:"लोकसभा का विघटन कब हो सकता है?", options:["हर समय","कार्यकाल समाप्ति पर","राष्ट्रपति द्वारा","किसी भी समय"], answer:3 },
+{ question:"राज्यसभा में प्रश्नकाल कौन नियंत्रित करता है?", options:["स्पीकर","सभापति","प्रधानमंत्री","राष्ट्रपति"], answer:1 },
+{ question:"संसद में विधेयक को कानून बनने के लिए क्या चाहिए?", options:["सिर्फ लोकसभा","दोनों सदन और राष्ट्रपति की मंजूरी","सिर्फ राज्यसभा","सिर्फ प्रधानमंत्री"], answer:1 },
+
+{ question:"संसद में विपक्ष का नेता कौन होता है?", options:["प्रधानमंत्री","विपक्षी दल का प्रमुख","राष्ट्रपति","स्पीकर"], answer:1 },
+{ question:"संसद में कोरम न होने पर क्या होता है?", options:["बैठक स्थगित","चुनाव","कानून बनता है","कोई असर नहीं"], answer:0 },
+{ question:"लोकसभा में स्पीकर का वोट कब होता है?", options:["हमेशा","टाई होने पर","कभी नहीं","पहले"], answer:1 },
+{ question:"राज्यसभा में कुल सदस्य संख्या कितनी है?", options:["245","250","238","260"], answer:1 },
+{ question:"संसद का पहला दिन किसे कहा जाता है?", options:["उद्घाटन दिवस","पहला सत्र","बजट दिवस","शपथ दिवस"], answer:0 },
+{ question:"संसद में अवकाश कौन देता है?", options:["स्पीकर","राष्ट्रपति","प्रधानमंत्री","गृह मंत्री"], answer:0 },
+{ question:"लोकसभा का सचिवालय किसके अधीन होता है?", options:["सरकार","लोकसभा अध्यक्ष","राष्ट्रपति","न्यायपालिका"], answer:1 },
+{ question:"राज्यसभा का सचिवालय किसके अधीन होता है?", options:["सभापति","प्रधानमंत्री","राष्ट्रपति","लोकसभा"], answer:0 },
+{ question:"संसद में बहस का मुख्य उद्देश्य क्या है?", options:["मनोरंजन","नीति निर्माण","खेल","व्यापार"], answer:1 },
+{ question:"संसद में विधेयक को अस्वीकार कौन कर सकता है?", options:["केवल लोकसभा","दोनों सदन","केवल राज्यसभा","राष्ट्रपति"], answer:1 },
+
+{ question:"भारत में लोकतंत्र का आधार क्या है?", options:["संसद","सेना","राज्यपाल","न्यायालय"], answer:0 },
+{ question:"संसद में प्रश्नकाल कितने समय का होता है?", options:["1 घंटा","2 घंटे","30 मिनट","3 घंटे"], answer:0 },
+{ question:"राज्यसभा में मनोनीत सदस्य किस क्षेत्र से होते हैं?", options:["खेल, कला, साहित्य","राजनीति","सेना","न्यायालय"], answer:0 },
+{ question:"संसद का बजट किस महीने में प्रस्तुत होता है?", options:["फरवरी","जनवरी","मार्च","अप्रैल"], answer:0 },
+{ question:"संसद का अंतिम अधिकार किसे माना जाता है?", options:["न्यायपालिका","संसद","राष्ट्रपति","प्रधानमंत्री"], answer:1 },
+
+{ question:"लोकसभा में बहुमत दल का नेता कौन बनता है?", options:["राष्ट्रपति","प्रधानमंत्री","स्पीकर","विपक्षी नेता"], answer:1 },
+{ question:"संसद में 'गिलोटिन' किससे संबंधित है?", options:["बहस समाप्त करना","वोटिंग प्रक्रिया","चुनाव","समिति"], answer:0 },
+{ question:"संसद में कटौती प्रस्ताव (Cut Motion) का उपयोग किसके लिए होता है?", options:["बजट रोकने के लिए","कानून बनाने के लिए","चुनाव के लिए","शपथ के लिए"], answer:0 },
+{ question:"लोकसभा में कितने नामित सदस्य होते हैं?", options:["0","2","5","10"], answer:0 },
+{ question:"राज्यसभा में राष्ट्रपति द्वारा कितने सदस्य नामित किए जाते हैं?", options:["10","12","15","20"], answer:1 },
+{ question:"संसद में 'Adjournment Motion' का अर्थ क्या है?", options:["तत्काल मुद्दा उठाना","चुनाव","बजट","कानून"], answer:0 },
+{ question:"संसद की संयुक्त बैठक किस स्थिति में होती है?", options:["बजट पास करने में","दोनों सदनों में विवाद होने पर","चुनाव में","शपथ में"], answer:1 },
+{ question:"संसद में 'Question Hour' का मुख्य उद्देश्य क्या है?", options:["सरकार से प्रश्न पूछना","बजट बनाना","चुनाव कराना","कानून हटाना"], answer:0 },
+{ question:"लोकसभा अध्यक्ष का मुख्य कार्य क्या है?", options:["सदन की कार्यवाही चलाना","कानून बनाना","बजट पेश करना","राष्ट्रपति बनना"], answer:0 },
+{ question:"राज्यसभा में विधेयक पारित करने में कितनी शक्ति होती है?", options:["समान शक्ति","सीमित शक्ति","कोई शक्ति नहीं","पूर्ण शक्ति"], answer:1 },
+
+{ question:"संसद में 'No Confidence Motion' का क्या अर्थ है?", options:["सरकार पर अविश्वास","चुनाव","बजट","नीति"], answer:0 },
+{ question:"लोकसभा में स्पीकर की अनुपस्थिति में कौन कार्य करता है?", options:["उपाध्यक्ष","प्रधानमंत्री","राष्ट्रपति","राज्यपाल"], answer:0 },
+{ question:"राज्यसभा का सदस्य बनने के लिए न्यूनतम आयु क्या है?", options:["25","30","35","40"], answer:1 },
+{ question:"लोकसभा का सदस्य बनने के लिए न्यूनतम आयु क्या है?", options:["21","25","30","35"], answer:1 },
+{ question:"संसद का मुख्य कार्य किससे संबंधित है?", options:["कानून निर्माण","खेल","व्यापार","कृषि"], answer:0 }
+];
+
+
+let index = 0;
+let score = 0;
+let timer;
+let timeLeft = 10;
+
+function startQuiz() {
+  document.getElementById("startScreen").classList.add("hide");
+  document.getElementById("quizScreen").classList.remove("hide");
+  loadQuestion();
+}
+
+function loadQuestion() {
+  resetTimer();
+  let q = quizData[index];
+  document.getElementById("question").innerText = q.question;
+  document.getElementById("qNo").innerText = index + 1;
+
+  let optionsHTML = "";
+  q.options.forEach((opt, i) => {
+    optionsHTML += `<div class="option" onclick="selectOption(${i})">${opt}</div>`;
+  });
+
+  document.getElementById("options").innerHTML = optionsHTML;
+}
+
+function selectOption(selected) {
+  let correct = quizData[index].answer;
+  let options = document.querySelectorAll(".option");
+
+  options.forEach((opt, i) => {
+    if (i === correct) opt.classList.add("correct");
+    else if (i === selected) opt.classList.add("wrong");
+
+    opt.style.pointerEvents = "none";
+  });
+
+  if (selected === correct) score++;
+}
+
+function nextQuestion() {
+  index++;
+  if (index < quizData.length) {
+    loadQuestion();
+  } else {
+    showResult();
+  }
+}
+
+  function showResult() {
+  document.getElementById("quizScreen").classList.add("hide");
+  document.getElementById("resultScreen").classList.remove("hide");
+  document.getElementById("score").innerText = score + " / " + quizData.length;
+}
+
+function resetTimer() {
+  clearInterval(timer);
+  timeLeft = 10;
+  document.getElementById("timer").innerText = timeLeft;
+
+  timer = setInterval(() => {
+    timeLeft--;
+    document.getElementById("timer").innerText = timeLeft;
+
+    if (timeLeft === 0) {
+      nextQuestion();
+    }
+  }, 1000);
+}
+
+</script>
+
+</body>
+</html>

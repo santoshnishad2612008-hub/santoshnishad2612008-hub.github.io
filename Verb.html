@@ -1,0 +1,731 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-KN4DRRWZ17"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-KN4DRRWZ17');
+</script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title> Verb Quiz</title>
+
+<style>
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: Arial;
+}
+
+body {
+  background: #f5f5f5;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+}
+
+/* Container */
+.app {
+  width: 95%;
+  max-width: 500px;
+  background: white;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+}
+
+/* Header */
+header {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 20px;
+}
+
+.timer {
+  background: #2196F3;
+  color: white;
+  padding: 5px 10px;
+  border-radius: 5px;
+}
+
+/* Question */
+.question {
+  font-size: 20px;
+  margin-bottom: 15px;
+}
+
+/* Options */
+.option {
+  background: #eee;
+  padding: 10px;
+  margin: 8px 0;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.option:hover {
+  background: #ddd;
+}
+
+.correct {
+  background: #4CAF50 !important;
+  color: white;
+}
+
+.wrong {
+  background: #f44336 !important;
+  color: white;
+}
+
+/* Button */
+button {
+  margin-top: 15px;
+  padding: 10px;
+  width: 100%;
+  border: none;
+ background:linear-gradient(135deg,#0a2dbcf3,#779af583);
+  color: white;
+  font-size: 16px;
+  cursor: pointer;
+  border-radius: 5px;
+}
+
+/* Hidden */
+.hide {
+  display: none;
+}
+
+/* Result */
+.result {
+  text-align: center;
+}
+
+/* Responsive */
+@media (max-width: 600px) {
+  .question {
+    font-size: 18px;
+  }
+}
+</style>
+
+</head>
+<body>
+
+<div class="app">
+
+  <!-- Start Screen -->
+  <div id="startScreen">
+    <h2>Quiz App</h2>
+    <button onclick="startQuiz()">Start Quiz</button>
+  </div>
+
+  <!-- Quiz Screen -->
+  <div id="quizScreen" class="hide">
+    <header>
+      <div>Question <span id="qNo">1</span>/100</div>
+      <div class="timer" id="timer">10</div>
+    </header>
+
+    <div class="question" id="question"></div>
+    <div id="options"></div>
+
+    <button onclick="nextQuestion()">Next</button>
+  </div>
+
+  <!-- Result Screen -->
+  <div id="resultScreen" class="hide result">
+    <h2>Your Score</h2>
+    <h1 id="score"></h1>
+    <button onclick="location.reload()">Play Again</button>
+  </div>
+
+</div>
+
+<script>
+const quizData = [
+
+
+  {
+    "question": "Identify the verb in the sentence: 'Rahul plays cricket every day.'",
+    "options": ["Rahul", "plays", "cricket", "day"],
+    "answer": 1
+  },
+  {
+    "question": "Which word is a verb?",
+    "options": ["Teacher", "Beautiful", "Run", "School"],
+    "answer": 2
+  },
+  {
+    "question": "Choose the verb: 'The bird flies in the sky.'",
+    "options": ["bird", "flies", "sky", "the"],
+    "answer": 1
+  },
+  {
+    "question": "Identify the verb in: 'She sings very well.'",
+    "options": ["She", "sings", "very", "well"],
+    "answer": 1
+  },
+  {
+    "question": "Which word shows an action?",
+    "options": ["Verb", "Noun", "Adjective", "Pronoun"],
+    "answer": 0
+  },
+  {
+    "question": "Choose the verb: 'The baby cried loudly.'",
+    "options": ["baby", "cried", "loudly", "the"],
+    "answer": 1
+  },
+  {
+    "question": "Identify the verb: 'I eat an apple daily.'",
+    "options": ["I", "eat", "apple", "daily"],
+    "answer": 1
+  },
+  {
+    "question": "Which is a verb?",
+    "options": ["Table", "Jump", "Happy", "Garden"],
+    "answer": 1
+  },
+  {
+    "question": "Choose the verb: 'The dog barked at the stranger.'",
+    "options": ["dog", "barked", "stranger", "the"],
+    "answer": 1
+  },
+  {
+    "question": "Identify the verb: 'They watched a movie.'",
+    "options": ["They", "watched", "movie", "a"],
+    "answer": 1
+  },
+  {
+    "question": "Choose the correct verb: She ___ to school every day.",
+    "options": ["go", "goes", "going", "gone"],
+    "answer": 1
+  },
+  {
+    "question": "Which word is a helping verb?",
+    "options": ["Run", "Play", "Is", "Jump"],
+    "answer": 2
+  },
+  {
+    "question": "Choose the verb: 'The teacher explained the lesson.'",
+    "options": ["teacher", "explained", "lesson", "the"],
+    "answer": 1
+  },
+  {
+    "question": "Identify the verb: 'We visited Delhi last year.'",
+    "options": ["We", "visited", "Delhi", "year"],
+    "answer": 1
+  },
+  {
+    "question": "Which is an action verb?",
+    "options": ["Am", "Is", "Write", "Was"],
+    "answer": 2
+  },
+  {
+    "question": "Choose the verb: 'The sun shines brightly.'",
+    "options": ["sun", "shines", "brightly", "the"],
+    "answer": 1
+  },
+  {
+    "question": "Identify the verb: 'He opened the door.'",
+    "options": ["He", "opened", "door", "the"],
+    "answer": 1
+  },
+  {
+    "question": "Choose the correct verb: They ___ football on Sundays.",
+    "options": ["plays", "play", "playing", "played"],
+    "answer": 1
+  },
+  {
+    "question": "Which word is a verb?",
+    "options": ["Book", "Quickly", "Dance", "Blue"],
+    "answer": 2
+  },
+  {
+    "question": "Choose the verb: 'The train arrived on time.'",
+    "options": ["train", "arrived", "time", "on"],
+    "answer": 1
+  },
+  {
+    "question": "Identify the verb: 'The children laughed happily.'",
+    "options": ["children", "laughed", "happily", "the"],
+    "answer": 1
+  },
+  {
+    "question": "Choose the correct verb: I ___ my homework every evening.",
+    "options": ["do", "does", "did", "done"],
+    "answer": 0
+  },
+  {
+    "question": "Which is a linking verb?",
+    "options": ["Run", "Jump", "Is", "Write"],
+    "answer": 2
+  },
+  {
+    "question": "Choose the verb: 'She painted a beautiful picture.'",
+    "options": ["She", "painted", "beautiful", "picture"],
+    "answer": 1
+  },
+  {
+    "question": "Identify the verb: 'The boy kicked the ball.'",
+    "options": ["boy", "kicked", "ball", "the"],
+    "answer": 1
+  },
+  {
+    "question": "Choose the correct verb: He ___ coffee every morning.",
+    "options": ["drink", "drinks", "drinking", "drank"],
+    "answer": 1
+  },
+  {
+    "question": "Which word is a verb?",
+    "options": ["Chair", "Sing", "Tall", "Market"],
+    "answer": 1
+  },
+  {
+    "question": "Choose the verb: 'The horse ran fast.'",
+    "options": ["horse", "ran", "fast", "the"],
+    "answer": 1
+  },
+  {
+    "question": "Identify the verb: 'They built a new house.'",
+    "options": ["They", "built", "house", "new"],
+    "answer": 1
+  },
+  {
+    "question": "Choose the correct verb: We ___ English every day.",
+    "options": ["study", "studies", "studied", "studying"],
+    "answer": 0
+  },
+  {
+    "question": "Identify the verb in: 'She wrote a letter yesterday.'",
+    "options": ["She", "wrote", "letter", "yesterday"],
+    "answer": 1
+  },
+  {
+    "question": "Choose the correct verb: They ___ to the market every Sunday.",
+    "options": ["go", "goes", "going", "gone"],
+    "answer": 0
+  },
+  {
+    "question": "Which word is a verb?",
+    "options": ["Teacher", "Read", "Happy", "School"],
+    "answer": 1
+  },
+  {
+    "question": "Choose the verb: 'The baby slept peacefully.'",
+    "options": ["baby", "slept", "peacefully", "the"],
+    "answer": 1
+  },
+  {
+    "question": "Identify the verb: 'We enjoyed the movie.'",
+    "options": ["We", "enjoyed", "movie", "the"],
+    "answer": 1
+  },
+  {
+    "question": "Choose the correct verb: He ___ a car.",
+    "options": ["drive", "drives", "driving", "driven"],
+    "answer": 1
+  },
+  {
+    "question": "Which is a helping verb?",
+    "options": ["Walk", "Play", "Have", "Dance"],
+    "answer": 2
+  },
+  {
+    "question": "Choose the verb: 'The girl smiled happily.'",
+    "options": ["girl", "smiled", "happily", "the"],
+    "answer": 1
+  },
+  {
+    "question": "Identify the verb: 'The teacher checked the notebooks.'",
+    "options": ["teacher", "checked", "notebooks", "the"],
+    "answer": 1
+  },
+  {
+    "question": "Choose the correct verb: I ___ my friends every weekend.",
+    "options": ["meet", "meets", "meeting", "mets"],
+    "answer": 0
+  },
+  {
+    "question": "Which word is a verb?",
+    "options": ["Window", "Cook", "Blue", "Street"],
+    "answer": 1
+  },
+  {
+    "question": "Choose the verb: 'The farmer grows crops.'",
+    "options": ["farmer", "grows", "crops", "the"],
+    "answer": 1
+  },
+  {
+    "question": "Identify the verb: 'They listened carefully.'",
+    "options": ["They", "listened", "carefully", "the"],
+    "answer": 1
+  },
+  {
+    "question": "Choose the correct verb: She ___ music every evening.",
+    "options": ["listen", "listens", "listening", "listened"],
+    "answer": 1
+  },
+  {
+    "question": "Which is a linking verb?",
+    "options": ["Jump", "Run", "Are", "Dance"],
+    "answer": 2
+  },
+  {
+    "question": "Choose the verb: 'The mechanic repaired the bike.'",
+    "options": ["mechanic", "repaired", "bike", "the"],
+    "answer": 1
+  },
+  {
+    "question": "Identify the verb: 'He answered the question.'",
+    "options": ["He", "answered", "question", "the"],
+    "answer": 1
+  },
+  {
+    "question": "Choose the correct verb: We ___ our grandparents often.",
+    "options": ["visit", "visits", "visited", "visiting"],
+    "answer": 0
+  },
+  {
+    "question": "Which word is a verb?",
+    "options": ["Bottle", "Teach", "Tall", "Road"],
+    "answer": 1
+  },
+  {
+    "question": "Choose the verb: 'The bird built a nest.'",
+    "options": ["bird", "built", "nest", "a"],
+    "answer": 1
+  },
+  {
+    "question": "Identify the verb: 'The students completed the project.'",
+    "options": ["students", "completed", "project", "the"],
+    "answer": 1
+  },
+  {
+    "question": "Choose the correct verb: He ___ his room every day.",
+    "options": ["clean", "cleans", "cleaning", "cleaned"],
+    "answer": 1
+  },
+  {
+    "question": "Which is an action verb?",
+    "options": ["Was", "Were", "Swim", "Am"],
+    "answer": 2
+  },
+  {
+    "question": "Choose the verb: 'The doctor treated the patient.'",
+    "options": ["doctor", "treated", "patient", "the"],
+    "answer": 1
+  },
+  {
+    "question": "Identify the verb: 'The child drew a picture.'",
+    "options": ["child", "drew", "picture", "a"],
+    "answer": 1
+  },
+  {
+    "question": "Choose the correct verb: They ___ lunch at noon.",
+    "options": ["eat", "eats", "eating", "ates"],
+    "answer": 0
+  },
+  {
+    "question": "Which word is a verb?",
+    "options": ["Garden", "Build", "Happy", "Cloud"],
+    "answer": 1
+  },
+  {
+    "question": "Choose the verb: 'The singer performed beautifully.'",
+    "options": ["singer", "performed", "beautifully", "the"],
+    "answer": 1
+  },
+  {
+    "question": "Identify the verb: 'She carried the bag.'",
+    "options": ["She", "carried", "bag", "the"],
+    "answer": 1
+  },
+  {
+    "question": "Choose the correct verb: We ___ books from the library.",
+    "options": ["borrow", "borrows", "borrowing", "borrowed"],
+    "answer": 0
+  },
+  {
+    "question": "Identify the verb in: 'The player scored a goal.'",
+    "options": ["player", "scored", "goal", "a"],
+    "answer": 1
+  },
+  {
+    "question": "Choose the correct verb: She ___ her homework before dinner.",
+    "options": ["finish", "finishes", "finished", "finishing"],
+    "answer": 1
+  },
+  {
+    "question": "Which word is a verb?",
+    "options": ["Flower", "Write", "Blue", "Teacher"],
+    "answer": 1
+  },
+  {
+    "question": "Choose the verb: 'The chef prepared a delicious meal.'",
+    "options": ["chef", "prepared", "meal", "delicious"],
+    "answer": 1
+  },
+  {
+    "question": "Identify the verb: 'The children played in the park.'",
+    "options": ["children", "played", "park", "the"],
+    "answer": 1
+  },
+  {
+    "question": "Choose the correct verb: They ___ television every evening.",
+    "options": ["watch", "watches", "watching", "watched"],
+    "answer": 0
+  },
+  {
+    "question": "Which is a helping verb?",
+    "options": ["Sing", "Dance", "Can", "Write"],
+    "answer": 2
+  },
+  {
+    "question": "Choose the verb: 'The monkey climbed the tree.'",
+    "options": ["monkey", "climbed", "tree", "the"],
+    "answer": 1
+  },
+  {
+    "question": "Identify the verb: 'She opened the window.'",
+    "options": ["She", "opened", "window", "the"],
+    "answer": 1
+  },
+  {
+    "question": "Choose the correct verb: He ___ to music while studying.",
+    "options": ["listen", "listens", "listening", "listened"],
+    "answer": 1
+  },
+  {
+    "question": "Which word is a verb?",
+    "options": ["Table", "Speak", "Green", "City"],
+    "answer": 1
+  },
+  {
+    "question": "Choose the verb: 'The baby laughed at the clown.'",
+    "options": ["baby", "laughed", "clown", "the"],
+    "answer": 1
+  },
+  {
+    "question": "Identify the verb: 'The workers built a bridge.'",
+    "options": ["workers", "built", "bridge", "a"],
+    "answer": 1
+  },
+  {
+    "question": "Choose the correct verb: We ___ our teacher very much.",
+    "options": ["respect", "respects", "respecting", "respected"],
+    "answer": 0
+  },
+  {
+    "question": "Which is a linking verb?",
+    "options": ["Jump", "Run", "Become", "Write"],
+    "answer": 2
+  },
+  {
+    "question": "Choose the verb: 'The artist painted a portrait.'",
+    "options": ["artist", "painted", "portrait", "a"],
+    "answer": 1
+  },
+  {
+    "question": "Identify the verb: 'He repaired the computer.'",
+    "options": ["He", "repaired", "computer", "the"],
+    "answer": 1
+  },
+  {
+    "question": "Choose the correct verb: They ___ chess on weekends.",
+    "options": ["play", "plays", "playing", "played"],
+    "answer": 0
+  },
+  {
+    "question": "Which word is a verb?",
+    "options": ["Hospital", "Drive", "Tall", "Village"],
+    "answer": 1
+  },
+  {
+    "question": "Choose the verb: 'The dog chased the cat.'",
+    "options": ["dog", "chased", "cat", "the"],
+    "answer": 1
+  },
+  {
+    "question": "Identify the verb: 'The teacher explained the topic.'",
+    "options": ["teacher", "explained", "topic", "the"],
+    "answer": 1
+  },
+  {
+    "question": "Choose the correct verb: She ___ English fluently.",
+    "options": ["speak", "speaks", "speaking", "spoke"],
+    "answer": 1
+  },
+  {
+    "question": "Which is an action verb?",
+    "options": ["Am", "Is", "Kick", "Was"],
+    "answer": 2
+  },
+  {
+    "question": "Choose the verb: 'The pilot flew the airplane safely.'",
+    "options": ["pilot", "flew", "airplane", "safely"],
+    "answer": 1
+  },
+  {
+    "question": "Identify the verb: 'The student solved the puzzle.'",
+    "options": ["student", "solved", "puzzle", "the"],
+    "answer": 1
+  },
+  {
+    "question": "Choose the correct verb: We ___ early in the morning.",
+    "options": ["wake", "wakes", "waking", "woke"],
+    "answer": 0
+  },
+  {
+    "question": "Which word is a verb?",
+    "options": ["Mountain", "Learn", "Beautiful", "River"],
+    "answer": 1
+  },
+  {
+    "question": "Choose the verb: 'The nurse cared for the patient.'",
+    "options": ["nurse", "cared", "patient", "the"],
+    "answer": 1
+  },
+  {
+    "question": "Identify the verb: 'She mailed the letter yesterday.'",
+    "options": ["She", "mailed", "letter", "yesterday"],
+    "answer": 1
+  },
+  {
+    "question": "Choose the correct verb: They ___ hard for the exam.",
+    "options": ["study", "studies", "studying", "studied"],
+    "answer": 0
+  },
+  {
+    "question": "Which is a helping verb?",
+    "options": ["Read", "May", "Dance", "Walk"],
+    "answer": 1
+  },
+  {
+    "question": "Choose the verb: 'The gardener watered the plants.'",
+    "options": ["gardener", "watered", "plants", "the"],
+    "answer": 1
+  },
+  {
+    "question": "Identify the verb: 'The boy threw the ball.'",
+    "options": ["boy", "threw", "ball", "the"],
+    "answer": 1
+  },
+  {
+    "question": "Choose the correct verb: He ___ his bicycle to school.",
+    "options": ["ride", "rides", "riding", "rode"],
+    "answer": 1
+  },
+  {
+    "question": "Which word is a verb?",
+    "options": ["Library", "Teach", "Strong", "Bottle"],
+    "answer": 1
+  },
+  {
+    "question": "Choose the verb: 'The audience applauded loudly.'",
+    "options": ["audience", "applauded", "loudly", "the"],
+    "answer": 1
+  },
+  {
+    "question": "Identify the verb: 'The carpenter made a table.'",
+    "options": ["carpenter", "made", "table", "a"],
+    "answer": 1
+  },
+  {
+    "question": "Choose the correct verb: She ___ a story every night.",
+    "options": ["read", "reads", "reading", "readed"],
+    "answer": 1
+  },
+  {
+    "question": "Which is an action verb?",
+    "options": ["Were", "Was", "Throw", "Am"],
+    "answer": 2
+  },
+  {
+    "question": "Choose the verb: 'The scientist discovered a new planet.'",
+    "options": ["scientist", "discovered", "planet", "new"],
+    "answer": 1
+  }
+
+];
+
+
+let index = 0;
+let score = 0;
+let timer;
+let timeLeft = 10;
+
+function startQuiz() {
+  document.getElementById("startScreen").classList.add("hide");
+  document.getElementById("quizScreen").classList.remove("hide");
+  loadQuestion();
+}
+
+function loadQuestion() {
+  resetTimer();
+  let q = quizData[index];
+  document.getElementById("question").innerText = q.question;
+  document.getElementById("qNo").innerText = index + 1;
+
+  let optionsHTML = "";
+  q.options.forEach((opt, i) => {
+    optionsHTML += `<div class="option" onclick="selectOption(${i})">${opt}</div>`;
+  });
+
+  document.getElementById("options").innerHTML = optionsHTML;
+}
+
+function selectOption(selected) {
+  let correct = quizData[index].answer;
+  let options = document.querySelectorAll(".option");
+
+  options.forEach((opt, i) => {
+    if (i === correct) opt.classList.add("correct");
+    else if (i === selected) opt.classList.add("wrong");
+
+    opt.style.pointerEvents = "none";
+  });
+
+  if (selected === correct) score++;
+}
+
+function nextQuestion() {
+  index++;
+  if (index < quizData.length) {
+    loadQuestion();
+  } else {
+    showResult();
+  }
+}
+
+  function showResult() {
+  document.getElementById("quizScreen").classList.add("hide");
+  document.getElementById("resultScreen").classList.remove("hide");
+  document.getElementById("score").innerText = score + " / " + quizData.length;
+}
+
+function resetTimer() {
+  clearInterval(timer);
+  timeLeft = 10;
+  document.getElementById("timer").innerText = timeLeft;
+
+  timer = setInterval(() => {
+    timeLeft--;
+    document.getElementById("timer").innerText = timeLeft;
+
+    if (timeLeft === 0) {
+      nextQuestion();
+    }
+  }, 1000);
+}
+
+</script>
+
+</body>
+</html>

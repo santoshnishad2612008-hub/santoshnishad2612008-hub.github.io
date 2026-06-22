@@ -1,0 +1,352 @@
+<!DOCTYPE html>
+<html>
+<head>
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-KN4DRRWZ17"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-KN4DRRWZ17');
+</script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title> vilomsabd Quiz </title>
+
+<style>
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: Arial;
+}
+
+body {
+  background: #f5f5f5;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+}
+
+/* Container */
+.app {
+  width: 95%;
+  max-width: 500px;
+  background: white;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+}
+
+/* Header */
+header {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 20px;
+}
+
+.timer {
+  background: #2196F3;
+  color: white;
+  padding: 5px 10px;
+  border-radius: 5px;
+}
+
+/* Question */
+.question {
+  font-size: 20px;
+  margin-bottom: 15px;
+}
+
+/* Options */
+.option {
+  background: #eee;
+  padding: 10px;
+  margin: 8px 0;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.option:hover {
+  background: #ddd;
+}
+
+.correct {
+  background: #4CAF50 !important;
+  color: white;
+}
+
+.wrong {
+  background: #f44336 !important;
+  color: white;
+}
+
+/* Button */
+button {
+  margin-top: 15px;
+  padding: 10px;
+  width: 100%;
+  border: none;
+ background:linear-gradient(135deg,#0a2dbcf3,#779af583);
+  color: white;
+  font-size: 16px;
+  cursor: pointer;
+  border-radius: 5px;
+}
+
+/* Hidden */
+.hide {
+  display: none;
+}
+
+/* Result */
+.result {
+  text-align: center;
+}
+
+/* Responsive */
+@media (max-width: 600px) {
+  .question {
+    font-size: 18px;
+  }
+}
+</style>
+
+</head>
+<body>
+
+<div class="app">
+
+  <!-- Start Screen -->
+  <div id="startScreen">
+    <h2>Quiz App</h2>
+    <button onclick="startQuiz()">Start Quiz</button>
+  </div>
+
+  <!-- Quiz Screen -->
+  <div id="quizScreen" class="hide">
+    <header>
+      <div>Question <span id="qNo">1</span>/110</div>
+      <div class="timer" id="timer">10</div>
+    </header>
+
+    <div class="question" id="question"></div>
+    <div id="options"></div>
+
+    <button onclick="nextQuestion()">Next</button>
+  </div>
+
+  <!-- Result Screen -->
+  <div id="resultScreen" class="hide result">
+    <h2>Your Score</h2>
+    <h1 id="score"></h1>
+    <button onclick="location.reload()">Play Again</button>
+  </div>
+
+</div>
+
+<script>
+const quizData = [
+
+
+  { "question": "अंधकार का विलोम शब्द क्या है?", "options": ["रात", "प्रकाश", "छाया", "दीपक"], "answer": 1 },
+  { "question": "सुख का विलोम शब्द क्या है?", "options": ["दुख", "हर्ष", "आनंद", "प्रसन्नता"], "answer": 0 },
+  { "question": "लाभ का विलोम शब्द क्या है?", "options": ["हानि", "धन", "वृद्धि", "संपत्ति"], "answer": 0 },
+  { "question": "जीवन का विलोम शब्द क्या है?", "options": ["अमरता", "मृत्यु", "जन्म", "शरीर"], "answer": 1 },
+  { "question": "सत्य का विलोम शब्द क्या है?", "options": ["ज्ञान", "न्याय", "असत्य", "धर्म"], "answer": 2 },
+  { "question": "उन्नति का विलोम शब्द क्या है?", "options": ["विकास", "अवनति", "प्रगति", "सफलता"], "answer": 1 },
+  { "question": "आशा का विलोम शब्द क्या है?", "options": ["विश्वास", "साहस", "निराशा", "प्रतीक्षा"], "answer": 2 },
+  { "question": "मित्र का विलोम शब्द क्या है?", "options": ["शत्रु", "साथी", "बंधु", "सहयोगी"], "answer": 0 },
+  { "question": "नया का विलोम शब्द क्या है?", "options": ["ताज़ा", "आधुनिक", "पुराना", "युवा"], "answer": 2 },
+  { "question": "दिन का विलोम शब्द क्या है?", "options": ["सुबह", "दोपहर", "संध्या", "रात"], "answer": 3 },
+
+  { "question": "छोटा का विलोम शब्द क्या है?", "options": ["बड़ा", "कम", "सूक्ष्म", "लघु"], "answer": 0 },
+  { "question": "ऊँचा का विलोम शब्द क्या है?", "options": ["लंबा", "विशाल", "नीचा", "चौड़ा"], "answer": 2 },
+  { "question": "कठिन का विलोम शब्द क्या है?", "options": ["सरल", "जटिल", "दुर्गम", "कड़ा"], "answer": 0 },
+  { "question": "अमीर का विलोम शब्द क्या है?", "options": ["संपन्न", "धनी", "गरीब", "साहूकार"], "answer": 2 },
+  { "question": "तेज़ का विलोम शब्द क्या है?", "options": ["धीमा", "त्वरित", "चालाक", "फुर्तीला"], "answer": 0 },
+  { "question": "खुला का विलोम शब्द क्या है?", "options": ["विस्तृत", "बंद", "फैला", "उजागर"], "answer": 1 },
+  { "question": "गर्म का विलोम शब्द क्या है?", "options": ["ठंडा", "उष्ण", "तप्त", "गरमाहट"], "answer": 0 },
+  { "question": "मीठा का विलोम शब्द क्या है?", "options": ["रसदार", "खट्टा", "कड़वा", "स्वादिष्ट"], "answer": 2 },
+  { "question": "शुभ का विलोम शब्द क्या है?", "options": ["अशुभ", "मंगल", "सौभाग्य", "कल्याण"], "answer": 0 },
+  { "question": "पाप का विलोम शब्द क्या है?", "options": ["पुण्य", "धर्म", "कर्म", "यज्ञ"], "answer": 0 },
+
+  { "question": "आदि का विलोम शब्द क्या है?", "options": ["आरंभ", "प्रारंभ", "अंत", "शुरुआत"], "answer": 2 },
+  { "question": "आगमन का विलोम शब्द क्या है?", "options": ["प्रवेश", "गमन", "आना", "पहुँचना"], "answer": 1 },
+  { "question": "उदय का विलोम शब्द क्या है?", "options": ["उत्थान", "प्रकाश", "अस्त", "चमक"], "answer": 2 },
+  { "question": "जय का विलोम शब्द क्या है?", "options": ["हार", "विजय", "सफलता", "प्रशंसा"], "answer": 0 },
+  { "question": "उचित का विलोम शब्द क्या है?", "options": ["अनुचित", "सही", "युक्त", "उपयुक्त"], "answer": 0 },
+  { "question": "उदार का विलोम शब्द क्या है?", "options": ["दयालु", "कृपालु", "कंजूस", "सज्जन"], "answer": 2 },
+  { "question": "कायर का विलोम शब्द क्या है?", "options": ["वीर", "डरपोक", "भयभीत", "कमज़ोर"], "answer": 0 },
+  { "question": "क्रय का विलोम शब्द क्या है?", "options": ["मूल्य", "विक्रय", "खरीद", "व्यापार"], "answer": 1 },
+  { "question": "निंदा का विलोम शब्द क्या है?", "options": ["अपमान", "आलोचना", "प्रशंसा", "दोष"], "answer": 2 },
+  { "question": "धैर्य का विलोम शब्द क्या है?", "options": ["शांति", "अधैर्य", "सहनशीलता", "स्थिरता"], "answer": 1 },
+
+  { "question": "स्वदेश का विलोम शब्द क्या है?", "options": ["देश", "प्रदेश", "विदेश", "राज्य"], "answer": 2 },
+  { "question": "स्वतंत्र का विलोम शब्द क्या है?", "options": ["आजाद", "परतंत्र", "मुक्त", "निर्बंध"], "answer": 1 },
+  { "question": "ज्ञान का विलोम शब्द क्या है?", "options": ["शिक्षा", "विद्या", "अज्ञान", "बुद्धि"], "answer": 2 },
+  { "question": "प्रेम का विलोम शब्द क्या है?", "options": ["स्नेह", "घृणा", "मोह", "अनुराग"], "answer": 1 },
+  { "question": "हर्ष का विलोम शब्द क्या है?", "options": ["उत्साह", "आनंद", "विषाद", "मुस्कान"], "answer": 2 },
+  { "question": "सुंदर का विलोम शब्द क्या है?", "options": ["कुरूप", "आकर्षक", "मनोहर", "रमणीय"], "answer": 0 },
+  { "question": "बलवान का विलोम शब्द क्या है?", "options": ["ताकतवर", "निर्बल", "शक्तिशाली", "सुदृढ़"], "answer": 1 },
+  { "question": "बहादुर का विलोम शब्द क्या है?", "options": ["वीर", "साहसी", "कायर", "निडर"], "answer": 2 },
+  { "question": "अधिक का विलोम शब्द क्या है?", "options": ["कम", "ज्यादा", "बहुत", "विशेष"], "answer": 0 },
+  { "question": "न्याय का विलोम शब्द क्या है?", "options": ["धर्म", "अन्याय", "सत्य", "नीति"], "answer": 1 },
+
+  { "question": "अंतरंग का विलोम शब्द क्या है?", "options": ["निकट", "बाह्य", "मित्र", "संबंधी"], "answer": 1 },
+  { "question": "अल्प का विलोम शब्द क्या है?", "options": ["कम", "न्यून", "अधिक", "थोड़ा"], "answer": 2 },
+  { "question": "अनुराग का विलोम शब्द क्या है?", "options": ["मोह", "घृणा", "प्रेम", "स्नेह"], "answer": 1 },
+  { "question": "अपमान का विलोम शब्द क्या है?", "options": ["तिरस्कार", "मान", "निंदा", "लज्जा"], "answer": 1 },
+  { "question": "अरुचि का विलोम शब्द क्या है?", "options": ["विरक्ति", "रुचि", "उदासीनता", "अनिच्छा"], "answer": 1 },
+  { "question": "अस्थिर का विलोम शब्द क्या है?", "options": ["चलायमान", "गतिशील", "स्थिर", "डगमग"], "answer": 2 },
+  { "question": "आकाश का विलोम शब्द क्या है?", "options": ["धरती", "बादल", "वायु", "गगन"], "answer": 0 },
+  { "question": "ईमानदार का विलोम शब्द क्या है?", "options": ["सच्चा", "कपटी", "विश्वसनीय", "निष्ठावान"], "answer": 1 },
+  { "question": "उजाला का विलोम शब्द क्या है?", "options": ["दीप्ति", "अंधेरा", "रोशनी", "प्रकाश"], "answer": 1 },
+  { "question": "उत्साह का विलोम शब्द क्या है?", "options": ["जोश", "उमंग", "निरुत्साह", "ऊर्जा"], "answer": 2 },
+
+  { "question": "एकता का विलोम शब्द क्या है?", "options": ["मेल", "संगठन", "अनेकता", "सहयोग"], "answer": 2 },
+  { "question": "कृत्रिम का विलोम शब्द क्या है?", "options": ["नकली", "प्राकृतिक", "बनावटी", "असली"], "answer": 1 },
+  { "question": "कोमल का विलोम शब्द क्या है?", "options": ["मुलायम", "कठोर", "नरम", "कोमलता"], "answer": 1 },
+  { "question": "गोपनीय का विलोम शब्द क्या है?", "options": ["गुप्त", "प्रकट", "रहस्यमय", "छिपा"], "answer": 1 },
+  { "question": "चतुर का विलोम शब्द क्या है?", "options": ["बुद्धिमान", "मूर्ख", "होशियार", "चालाक"], "answer": 1 },
+  { "question": "चर का विलोम शब्द क्या है?", "options": ["अचर", "चल", "गतिशील", "भ्रमणशील"], "answer": 0 },
+  { "question": "जीत का विलोम शब्द क्या है?", "options": ["सफलता", "विजय", "हार", "प्राप्ति"], "answer": 2 },
+  { "question": "तरल का विलोम शब्द क्या है?", "options": ["द्रव", "ठोस", "बहता", "पानी"], "answer": 1 },
+  { "question": "दानी का विलोम शब्द क्या है?", "options": ["उदार", "दाता", "कृपण", "सहायक"], "answer": 2 },
+  { "question": "दुर्लभ का विलोम शब्द क्या है?", "options": ["अल्प", "सामान्य", "सुलभ", "दुर्गम"], "answer": 2 },
+
+  { "question": "निरक्षर का विलोम शब्द क्या है?", "options": ["शिक्षित", "अनपढ़", "अज्ञानी", "मूर्ख"], "answer": 0 },
+  { "question": "निर्मल का विलोम शब्द क्या है?", "options": ["स्वच्छ", "पवित्र", "मलिन", "शुद्ध"], "answer": 2 },
+  { "question": "निरोग का विलोम शब्द क्या है?", "options": ["स्वस्थ", "रोगी", "तंदुरुस्त", "बलवान"], "answer": 1 },
+  { "question": "नैतिक का विलोम शब्द क्या है?", "options": ["अनैतिक", "धार्मिक", "सदाचारी", "उचित"], "answer": 0 },
+  { "question": "परोक्ष का विलोम शब्द क्या है?", "options": ["अप्रत्यक्ष", "प्रत्यक्ष", "गुप्त", "अदृश्य"], "answer": 1 },
+  { "question": "पवित्र का विलोम शब्द क्या है?", "options": ["शुद्ध", "मलिन", "पुण्य", "धार्मिक"], "answer": 1 },
+  { "question": "पूर्ण का विलोम शब्द क्या है?", "options": ["अधूरा", "सम्पूर्ण", "भरपूर", "संपन्न"], "answer": 0 },
+  { "question": "प्राचीन का विलोम शब्द क्या है?", "options": ["पुरातन", "आधुनिक", "पुराना", "ऐतिहासिक"], "answer": 1 },
+  { "question": "प्रकट का विलोम शब्द क्या है?", "options": ["स्पष्ट", "ज्ञात", "गुप्त", "उजागर"], "answer": 2 },
+  { "question": "फायदा का विलोम शब्द क्या है?", "options": ["लाभ", "हानि", "वृद्धि", "कमाई"], "answer": 1 },
+
+  { "question": "बंधन का विलोम शब्द क्या है?", "options": ["कैद", "बंधन", "मुक्ति", "रोक"], "answer": 2 },
+  { "question": "भारी का विलोम शब्द क्या है?", "options": ["वजनदार", "हल्का", "विशाल", "मोटा"], "answer": 1 },
+  { "question": "मौन का विलोम शब्द क्या है?", "options": ["शांत", "वाचाल", "चुप", "स्थिर"], "answer": 1 },
+  { "question": "यश का विलोम शब्द क्या है?", "options": ["कीर्ति", "प्रसिद्धि", "अपयश", "मान"], "answer": 2 },
+  { "question": "राग का विलोम शब्द क्या है?", "options": ["संगीत", "विराग", "प्रेम", "स्वर"], "answer": 1 },
+  { "question": "रात्रि का विलोम शब्द क्या है?", "options": ["संध्या", "दिन", "अंधेरा", "नींद"], "answer": 1 },
+  { "question": "विक्रय का विलोम शब्द क्या है?", "options": ["क्रय", "व्यापार", "मूल्य", "बिक्री"], "answer": 0 },
+  { "question": "विशाल का विलोम शब्द क्या है?", "options": ["बड़ा", "लघु", "विस्तृत", "महान"], "answer": 1 },
+  { "question": "विष का विलोम शब्द क्या है?", "options": ["जहर", "विषाक्त", "अमृत", "दंश"], "answer": 2 },
+  { "question": "शत्रु का विलोम शब्द क्या है?", "options": ["दुश्मन", "मित्र", "विरोधी", "प्रतिद्वंद्वी"], "answer": 1 },
+
+  { "question": "शीत का विलोम शब्द क्या है?", "options": ["उष्ण", "ठंड", "हिम", "सर्दी"], "answer": 0 },
+  { "question": "शोक का विलोम शब्द क्या है?", "options": ["दुख", "आनंद", "विषाद", "पीड़ा"], "answer": 1 },
+  { "question": "सबल का विलोम शब्द क्या है?", "options": ["बलवान", "शक्तिशाली", "निर्बल", "सुदृढ़"], "answer": 2 },
+  { "question": "सरस का विलोम शब्द क्या है?", "options": ["रसयुक्त", "नीरस", "मधुर", "रोचक"], "answer": 1 },
+  { "question": "सजीव का विलोम शब्द क्या है?", "options": ["जीवित", "निर्जीव", "प्राणवान", "सक्रिय"], "answer": 1 },
+  { "question": "सफल का विलोम शब्द क्या है?", "options": ["विजयी", "सार्थक", "असफल", "उत्तीर्ण"], "answer": 2 },
+  { "question": "सस्ता का विलोम शब्द क्या है?", "options": ["महंगा", "कम मूल्य", "सुलभ", "साधारण"], "answer": 0 },
+  { "question": "स्थूल का विलोम शब्द क्या है?", "options": ["मोटा", "सूक्ष्म", "भारी", "विशाल"], "answer": 1 },
+  { "question": "स्वर्ग का विलोम शब्द क्या है?", "options": ["नर्क", "लोक", "देवलोक", "आकाश"], "answer": 0 },
+  { "question": "हँसना का विलोम शब्द क्या है?", "options": ["मुस्कुराना", "रोना", "खिलखिलाना", "प्रसन्न होना"], "answer": 1 },
+
+  { "question": "अग्रज का विलोम शब्द क्या है?", "options": ["ज्येष्ठ", "अनुज", "भाई", "वरिष्ठ"], "answer": 1 },
+  { "question": "अनुकूल का विलोम शब्द क्या है?", "options": ["हितकारी", "विपरीत", "सहायक", "उपयुक्त"], "answer": 1 },
+  { "question": "अल्पायु का विलोम शब्द क्या है?", "options": ["कम आयु", "दीर्घायु", "बालक", "युवा"], "answer": 1 },
+  { "question": "आस्तिक का विलोम शब्द क्या है?", "options": ["धार्मिक", "नास्तिक", "विश्वासी", "भक्त"], "answer": 1 },
+  { "question": "उत्कर्ष का विलोम शब्द क्या है?", "options": ["उन्नति", "अवनति", "विकास", "सफलता"], "answer": 1 },
+  { "question": "कच्चा का विलोम शब्द क्या है?", "options": ["अधपका", "कठोर", "पक्का", "नरम"], "answer": 2 },
+  { "question": "काला का विलोम शब्द क्या है?", "options": ["गहरा", "श्वेत", "नीला", "भूरा"], "answer": 1 },
+  { "question": "गुण का विलोम शब्द क्या है?", "options": ["दोष", "विशेषता", "योग्यता", "श्रेष्ठता"], "answer": 0 },
+  { "question": "जागरण का विलोम शब्द क्या है?", "options": ["उठना", "निद्रा", "सतर्कता", "चेतना"], "answer": 1 },
+  { "question": "लोकप्रिय का विलोम शब्द क्या है?", "options": ["प्रसिद्ध", "अलोकप्रिय", "चर्चित", "प्रिय"], "answer": 1 },
+  
+
+  { "question": "लंबा का विलोम शब्द क्या है?", "options": ["ऊँचा", "छोटा", "विशाल", "चौड़ा"], "answer": 1 },
+  { "question": "मधुर का विलोम शब्द क्या है?", "options": ["मीठा", "कर्णप्रिय", "कटु", "सरस"], "answer": 2 },
+  { "question": "मिलन का विलोम शब्द क्या है?", "options": ["भेंट", "वियोग", "संपर्क", "संगम"], "answer": 1 },
+  { "question": "युवा का विलोम शब्द क्या है?", "options": ["बालक", "वृद्ध", "किशोर", "नवयुवक"], "answer": 1 },
+  { "question": "रक्षक का विलोम शब्द क्या है?", "options": ["संरक्षक", "भक्षक", "सहायक", "मित्र"], "answer": 1 },
+  { "question": "विनम्र का विलोम शब्द क्या है?", "options": ["नम्र", "शिष्ट", "अहंकारी", "सज्जन"], "answer": 2 },
+  { "question": "शुद्ध का विलोम शब्द क्या है?", "options": ["निर्मल", "पवित्र", "अशुद्ध", "स्वच्छ"], "answer": 2 },
+  { "question": "सकारात्मक का विलोम शब्द क्या है?", "options": ["उपयोगी", "नकारात्मक", "आशावादी", "श्रेष्ठ"], "answer": 1 },
+  { "question": "सुगंध का विलोम शब्द क्या है?", "options": ["खुशबू", "सौरभ", "दुर्गंध", "महक"], "answer": 2 },
+  { "question": "हित का विलोम शब्द क्या है?", "options": ["लाभ", "कल्याण", "अहित", "सहायता"], "answer": 2 }
+
+];
+
+
+let index = 0;
+let score = 0;
+let timer;
+let timeLeft = 10;
+
+function startQuiz() {
+  document.getElementById("startScreen").classList.add("hide");
+  document.getElementById("quizScreen").classList.remove("hide");
+  loadQuestion();
+}
+
+function loadQuestion() {
+  resetTimer();
+  let q = quizData[index];
+  document.getElementById("question").innerText = q.question;
+  document.getElementById("qNo").innerText = index + 1;
+
+  let optionsHTML = "";
+  q.options.forEach((opt, i) => {
+    optionsHTML += `<div class="option" onclick="selectOption(${i})">${opt}</div>`;
+  });
+
+  document.getElementById("options").innerHTML = optionsHTML;
+}
+
+function selectOption(selected) {
+  let correct = quizData[index].answer;
+  let options = document.querySelectorAll(".option");
+
+  options.forEach((opt, i) => {
+    if (i === correct) opt.classList.add("correct");
+    else if (i === selected) opt.classList.add("wrong");
+
+    opt.style.pointerEvents = "none";
+  });
+
+  if (selected === correct) score++;
+}
+
+function nextQuestion() {
+  index++;
+  if (index < quizData.length) {
+    loadQuestion();
+  } else {
+    showResult();
+  }
+}
+
+  function showResult() {
+  document.getElementById("quizScreen").classList.add("hide");
+  document.getElementById("resultScreen").classList.remove("hide");
+  document.getElementById("score").innerText = score + " / " + quizData.length;
+}
+
+function resetTimer() {
+  clearInterval(timer);
+  timeLeft = 10;
+  document.getElementById("timer").innerText = timeLeft;
+
+  timer = setInterval(() => {
+    timeLeft--;
+    document.getElementById("timer").innerText = timeLeft;
+
+    if (timeLeft === 0) {
+      nextQuestion();
+    }
+  }, 1000);
+}
+
+</script>
+
+</body>
+</html>

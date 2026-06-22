@@ -1,0 +1,1044 @@
+<!DOCTYPE html>
+<html>
+<head>
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-KN4DRRWZ17"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-KN4DRRWZ17');
+</script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title> Voice Quiz</title>
+
+<style>
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: Arial;
+}
+
+body {
+  background: #f5f5f5;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+}
+
+/* Container */
+.app {
+  width: 95%;
+  max-width: 500px;
+  background: white;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+}
+
+/* Header */
+header {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 20px;
+}
+
+.timer {
+  background: #2196F3;
+  color: white;
+  padding: 5px 10px;
+  border-radius: 5px;
+}
+
+/* Question */
+.question {
+  font-size: 20px;
+  margin-bottom: 15px;
+}
+
+/* Options */
+.option {
+  background: #eee;
+  padding: 10px;
+  margin: 8px 0;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.option:hover {
+  background: #ddd;
+}
+
+.correct {
+  background: #4CAF50 !important;
+  color: white;
+}
+
+.wrong {
+  background: #f44336 !important;
+  color: white;
+}
+
+/* Button */
+button {
+  margin-top: 15px;
+  padding: 10px;
+  width: 100%;
+  border: none;
+ background:linear-gradient(135deg,#0a2dbcf3,#779af583);
+  color: white;
+  font-size: 16px;
+  cursor: pointer;
+  border-radius: 5px;
+}
+
+/* Hidden */
+.hide {
+  display: none;
+}
+
+/* Result */
+.result {
+  text-align: center;
+}
+
+/* Responsive */
+@media (max-width: 600px) {
+  .question {
+    font-size: 18px;
+  }
+}
+</style>
+
+</head>
+<body>
+
+<div class="app">
+
+  <!-- Start Screen -->
+  <div id="startScreen">
+    <h2>Quiz App</h2>
+    <button onclick="startQuiz()">Start Quiz</button>
+  </div>
+
+  <!-- Quiz Screen -->
+  <div id="quizScreen" class="hide">
+    <header>
+      <div>Question <span id="qNo">1</span>/100</div>
+      <div class="timer" id="timer">10</div>
+    </header>
+
+    <div class="question" id="question"></div>
+    <div id="options"></div>
+
+    <button onclick="nextQuestion()">Next</button>
+  </div>
+
+  <!-- Result Screen -->
+  <div id="resultScreen" class="hide result">
+    <h2>Your Score</h2>
+    <h1 id="score"></h1>
+    <button onclick="location.reload()">Play Again</button>
+  </div>
+
+</div>
+
+<script>
+const quizData = [
+  {
+    "question": "Identify the voice: 'The teacher teaches English.'",
+    "options": ["Active Voice", "Passive Voice", "Indirect Voice", "Reported Voice"],
+    "answer": 0
+  },
+  {
+    "question": "Identify the voice: 'English is taught by the teacher.'",
+    "options": ["Active Voice", "Passive Voice", "Direct Speech", "Indirect Speech"],
+    "answer": 1
+  },
+  {
+    "question": "Change into Passive Voice: 'Ravi writes a letter.'",
+    "options": [
+      "A letter writes Ravi.",
+      "A letter is written by Ravi.",
+      "A letter was written by Ravi.",
+      "A letter has written by Ravi."
+    ],
+    "answer": 1
+  },
+  {
+    "question": "Change into Passive Voice: 'She sings a song.'",
+    "options": [
+      "A song is sung by her.",
+      "A song sings her.",
+      "A song was sung by her.",
+      "A song has sung by her."
+    ],
+    "answer": 0
+  },
+  {
+    "question": "Identify the voice: 'The cake was baked by Riya.'",
+    "options": ["Active Voice", "Passive Voice", "Direct Speech", "Indirect Speech"],
+    "answer": 1
+  },
+  {
+    "question": "Change into Active Voice: 'The ball was kicked by the boy.'",
+    "options": [
+      "The boy kicked the ball.",
+      "The boy kicks the ball.",
+      "The ball kicked the boy.",
+      "The ball is kicked by the boy."
+    ],
+    "answer": 0
+  },
+  {
+    "question": "Identify the voice: 'The students completed the project.'",
+    "options": ["Active Voice", "Passive Voice", "Direct Speech", "Indirect Speech"],
+    "answer": 0
+  },
+  {
+    "question": "Change into Passive Voice: 'They play cricket.'",
+    "options": [
+      "Cricket is played by them.",
+      "Cricket was played by them.",
+      "Cricket plays them.",
+      "Cricket has played by them."
+    ],
+    "answer": 0
+  },
+  {
+    "question": "Identify the voice: 'The work has been finished by him.'",
+    "options": ["Active Voice", "Passive Voice", "Direct Speech", "Indirect Speech"],
+    "answer": 1
+  },
+  {
+    "question": "Change into Active Voice: 'The book was read by the girl.'",
+    "options": [
+      "The girl read the book.",
+      "The girl reads the book.",
+      "The girl is reading the book.",
+      "The book read the girl."
+    ],
+    "answer": 0
+  },
+  {
+    "question": "Change into Passive Voice: 'The police arrested the thief.'",
+    "options": [
+      "The thief was arrested by the police.",
+      "The thief is arrested by the police.",
+      "The thief arrests the police.",
+      "The thief has arrested by the police."
+    ],
+    "answer": 0
+  },
+  {
+    "question": "Identify the voice: 'The room is cleaned every day.'",
+    "options": ["Active Voice", "Passive Voice", "Direct Speech", "Indirect Speech"],
+    "answer": 1
+  },
+  {
+    "question": "Change into Passive Voice: 'He opens the door.'",
+    "options": [
+      "The door is opened by him.",
+      "The door was opened by him.",
+      "The door opens him.",
+      "The door has opened by him."
+    ],
+    "answer": 0
+  },
+  {
+    "question": "Change into Active Voice: 'The letter was written by Sita.'",
+    "options": [
+      "Sita wrote the letter.",
+      "Sita writes the letter.",
+      "Sita is writing the letter.",
+      "Sita has written the letter."
+    ],
+    "answer": 0
+  },
+  {
+    "question": "Identify the voice: 'The children are watching a movie.'",
+    "options": ["Active Voice", "Passive Voice", "Indirect Speech", "Reported Speech"],
+    "answer": 0
+  },
+  {
+    "question": "Change into Passive Voice: 'The mechanic repaired the bike.'",
+    "options": [
+      "The bike was repaired by the mechanic.",
+      "The bike repairs the mechanic.",
+      "The bike is repaired by the mechanic.",
+      "The bike has repaired by the mechanic."
+    ],
+    "answer": 0
+  },
+  {
+    "question": "Identify the voice: 'A prize was won by the team.'",
+    "options": ["Active Voice", "Passive Voice", "Direct Speech", "Indirect Speech"],
+    "answer": 1
+  },
+  {
+    "question": "Change into Active Voice: 'The song was sung by Lata.'",
+    "options": [
+      "Lata sang the song.",
+      "Lata sings the song.",
+      "Lata sung the song.",
+      "Lata is singing the song."
+    ],
+    "answer": 0
+  },
+  {
+    "question": "Change into Passive Voice: 'She completed the assignment.'",
+    "options": [
+      "The assignment was completed by her.",
+      "The assignment is completed by her.",
+      "The assignment completes her.",
+      "The assignment has completed by her."
+    ],
+    "answer": 0
+  },
+  {
+    "question": "Identify the voice: 'The car is driven by Rahul.'",
+    "options": ["Active Voice", "Passive Voice", "Direct Speech", "Indirect Speech"],
+    "answer": 1
+  },
+  {
+    "question": "Change into Passive Voice: 'The chef cooks food.'",
+    "options": [
+      "Food is cooked by the chef.",
+      "Food was cooked by the chef.",
+      "Food cooks the chef.",
+      "Food has cooked by the chef."
+    ],
+    "answer": 0
+  },
+  {
+    "question": "Change into Active Voice: 'The match was won by our team.'",
+    "options": [
+      "Our team won the match.",
+      "Our team wins the match.",
+      "Our team is winning the match.",
+      "The match won our team."
+    ],
+    "answer": 0
+  },
+  {
+    "question": "Identify the voice: 'The gardener waters the plants.'",
+    "options": ["Active Voice", "Passive Voice", "Indirect Speech", "Reported Speech"],
+    "answer": 0
+  },
+  {
+    "question": "Change into Passive Voice: 'He painted a picture.'",
+    "options": [
+      "A picture was painted by him.",
+      "A picture is painted by him.",
+      "A picture paints him.",
+      "A picture has painted by him."
+    ],
+    "answer": 0
+  },
+  {
+    "question": "Identify the voice: 'The lesson was explained by the teacher.'",
+    "options": ["Active Voice", "Passive Voice", "Direct Speech", "Indirect Speech"],
+    "answer": 1
+  },
+  {
+    "question": "Change into Active Voice: 'The food was prepared by mother.'",
+    "options": [
+      "Mother prepared the food.",
+      "Mother prepares the food.",
+      "Mother is preparing the food.",
+      "Food prepared mother."
+    ],
+    "answer": 0
+  },
+  {
+    "question": "Change into Passive Voice: 'The students answered the questions.'",
+    "options": [
+      "The questions were answered by the students.",
+      "The questions answer the students.",
+      "The questions are answered by the students.",
+      "The questions have answered by the students."
+    ],
+    "answer": 0
+  },
+  {
+    "question": "Identify the voice: 'The letter has been sent by him.'",
+    "options": ["Active Voice", "Passive Voice", "Direct Speech", "Indirect Speech"],
+    "answer": 1
+  },
+  {
+    "question": "Change into Active Voice: 'The window was broken by the boy.'",
+    "options": [
+      "The boy broke the window.",
+      "The boy breaks the window.",
+      "The boy is breaking the window.",
+      "The window broke the boy."
+    ],
+    "answer": 0
+  },
+  {
+    "question": "Identify the voice: 'The teacher praised the student.'",
+    "options": ["Active Voice", "Passive Voice", "Direct Speech", "Indirect Speech"],
+    "answer": 0
+  },
+  {
+    "question": "Change into Passive Voice: 'The doctor treated the patient.'",
+    "options": [
+      "The patient was treated by the doctor.",
+      "The patient is treated by the doctor.",
+      "The patient treated the doctor.",
+      "The patient has treated by the doctor."
+    ],
+    "answer": 0
+  },
+  {
+    "question": "Identify the voice: 'The homework was completed by the students.'",
+    "options": ["Active Voice", "Passive Voice", "Direct Speech", "Indirect Speech"],
+    "answer": 1
+  },
+  {
+    "question": "Change into Active Voice: 'The prize was awarded by the principal.'",
+    "options": [
+      "The principal awarded the prize.",
+      "The principal awards the prize.",
+      "The principal is awarding the prize.",
+      "The prize awarded the principal."
+    ],
+    "answer": 0
+  },
+  {
+    "question": "Change into Passive Voice: 'She writes poems.'",
+    "options": [
+      "Poems are written by her.",
+      "Poems were written by her.",
+      "Poems write her.",
+      "Poems have written by her."
+    ],
+    "answer": 0
+  },
+  {
+    "question": "Identify the voice: 'The bridge was built by engineers.'",
+    "options": ["Active Voice", "Passive Voice", "Direct Speech", "Indirect Speech"],
+    "answer": 1
+  },
+  {
+    "question": "Change into Active Voice: 'The message was delivered by the postman.'",
+    "options": [
+      "The postman delivered the message.",
+      "The postman delivers the message.",
+      "The postman is delivering the message.",
+      "The message delivered the postman."
+    ],
+    "answer": 0
+  },
+  {
+    "question": "Change into Passive Voice: 'They clean the classroom daily.'",
+    "options": [
+      "The classroom is cleaned daily by them.",
+      "The classroom was cleaned daily by them.",
+      "The classroom cleans them.",
+      "The classroom has cleaned by them."
+    ],
+    "answer": 0
+  },
+  {
+    "question": "Identify the voice: 'A new road is being constructed.'",
+    "options": ["Active Voice", "Passive Voice", "Direct Speech", "Indirect Speech"],
+    "answer": 1
+  },
+  {
+    "question": "Change into Active Voice: 'The novel was written by the author.'",
+    "options": [
+      "The author wrote the novel.",
+      "The author writes the novel.",
+      "The author is writing the novel.",
+      "The novel wrote the author."
+    ],
+    "answer": 0
+  },
+  {
+    "question": "Change into Passive Voice: 'The company launched a new product.'",
+    "options": [
+      "A new product was launched by the company.",
+      "A new product is launched by the company.",
+      "A new product launches the company.",
+      "A new product has launched by the company."
+    ],
+    "answer": 0
+  },
+  {
+    "question": "Identify the voice: 'The song is sung by the choir.'",
+    "options": ["Active Voice", "Passive Voice", "Direct Speech", "Indirect Speech"],
+    "answer": 1
+  },
+  {
+    "question": "Change into Active Voice: 'The cake was baked by my sister.'",
+    "options": [
+      "My sister baked the cake.",
+      "My sister bakes the cake.",
+      "My sister is baking the cake.",
+      "The cake baked my sister."
+    ],
+    "answer": 0
+  },
+  {
+    "question": "Change into Passive Voice: 'The teacher checks the notebooks.'",
+    "options": [
+      "The notebooks are checked by the teacher.",
+      "The notebooks were checked by the teacher.",
+      "The notebooks check the teacher.",
+      "The notebooks have checked by the teacher."
+    ],
+    "answer": 0
+  },
+  {
+    "question": "Identify the voice: 'The project has been completed.'",
+    "options": ["Active Voice", "Passive Voice", "Direct Speech", "Indirect Speech"],
+    "answer": 1
+  },
+  {
+    "question": "Change into Active Voice: 'The thief was caught by the police.'",
+    "options": [
+      "The police caught the thief.",
+      "The police catches the thief.",
+      "The police are catching the thief.",
+      "The thief caught the police."
+    ],
+    "answer": 0
+  },
+  {
+    "question": "Change into Passive Voice: 'Ravi solved the problem.'",
+    "options": [
+      "The problem was solved by Ravi.",
+      "The problem is solved by Ravi.",
+      "The problem solves Ravi.",
+      "The problem has solved by Ravi."
+    ],
+    "answer": 0
+  },
+  {
+    "question": "Identify the voice: 'The hall was decorated beautifully.'",
+    "options": ["Active Voice", "Passive Voice", "Direct Speech", "Indirect Speech"],
+    "answer": 1
+  },
+  {
+    "question": "Change into Active Voice: 'The trophy was won by the captain.'",
+    "options": [
+      "The captain won the trophy.",
+      "The captain wins the trophy.",
+      "The captain is winning the trophy.",
+      "The trophy won the captain."
+    ],
+    "answer": 0
+  },
+  {
+    "question": "Change into Passive Voice: 'She answered all the questions.'",
+    "options": [
+      "All the questions were answered by her.",
+      "All the questions are answered by her.",
+      "All the questions answer her.",
+      "All the questions have answered by her."
+    ],
+    "answer": 0
+  },
+  {
+    "question": "Identify the voice: 'The report was submitted yesterday.'",
+    "options": ["Active Voice", "Passive Voice", "Direct Speech", "Indirect Speech"],
+    "answer": 1
+  },
+  {
+    "question": "Change into Active Voice: 'The room was cleaned by the maid.'",
+    "options": [
+      "The maid cleaned the room.",
+      "The maid cleans the room.",
+      "The maid is cleaning the room.",
+      "The room cleaned the maid."
+    ],
+    "answer": 0
+  },
+  {
+    "question": "Change into Passive Voice: 'The boy kicked the football.'",
+    "options": [
+      "The football was kicked by the boy.",
+      "The football is kicked by the boy.",
+      "The football kicks the boy.",
+      "The football has kicked by the boy."
+    ],
+    "answer": 0
+  },
+  {
+    "question": "Identify the voice: 'The letters were posted by him.'",
+    "options": ["Active Voice", "Passive Voice", "Direct Speech", "Indirect Speech"],
+    "answer": 1
+  },
+  {
+    "question": "Change into Active Voice: 'The decision was made by the committee.'",
+    "options": [
+      "The committee made the decision.",
+      "The committee makes the decision.",
+      "The committee is making the decision.",
+      "The decision made the committee."
+    ],
+    "answer": 0
+  },
+  {
+    "question": "Change into Passive Voice: 'They invited many guests.'",
+    "options": [
+      "Many guests were invited by them.",
+      "Many guests are invited by them.",
+      "Many guests invite them.",
+      "Many guests have invited by them."
+    ],
+    "answer": 0
+  },
+  {
+    "question": "Identify the voice: 'The match was watched by thousands.'",
+    "options": ["Active Voice", "Passive Voice", "Direct Speech", "Indirect Speech"],
+    "answer": 1
+  },
+  {
+    "question": "Change into Active Voice: 'The plants were watered by the gardener.'",
+    "options": [
+      "The gardener watered the plants.",
+      "The gardener waters the plants.",
+      "The gardener is watering the plants.",
+      "The plants watered the gardener."
+    ],
+    "answer": 0
+  },
+  {
+    "question": "Change into Passive Voice: 'The manager approved the request.'",
+    "options": [
+      "The request was approved by the manager.",
+      "The request is approved by the manager.",
+      "The request approves the manager.",
+      "The request has approved by the manager."
+    ],
+    "answer": 0
+  },
+  {
+    "question": "Identify the voice: 'The building was painted last week.'",
+    "options": ["Active Voice", "Passive Voice", "Direct Speech", "Indirect Speech"],
+    "answer": 1
+  },
+  {
+    "question": "Change into Active Voice: 'The speech was delivered by the minister.'",
+    "options": [
+      "The minister delivered the speech.",
+      "The minister delivers the speech.",
+      "The minister is delivering the speech.",
+      "The speech delivered the minister."
+    ],
+    "answer": 0
+  },
+  {
+    "question": "Change into Passive Voice: 'The students organized the event.'",
+    "options": [
+      "The event was organized by the students.",
+      "The event is organized by the students.",
+      "The event organizes the students.",
+      "The event has organized by the students."
+    ],
+    "answer": 0
+  },
+  {
+    "question": "Identify the voice: 'The book was published in 2020.'",
+    "options": ["Active Voice", "Passive Voice", "Direct Speech", "Indirect Speech"],
+    "answer": 1
+  },
+  {
+    "question": "Change into Active Voice: 'The work was completed by the team.'",
+    "options": [
+      "The team completed the work.",
+      "The team completes the work.",
+      "The team is completing the work.",
+      "The work completed the team."
+    ],
+    "answer": 0
+  },
+  {
+    "question": "Change into Passive Voice: 'She drew a beautiful picture.'",
+    "options": [
+      "A beautiful picture was drawn by her.",
+      "A beautiful picture is drawn by her.",
+      "A beautiful picture draws her.",
+      "A beautiful picture has drawn by her."
+    ],
+    "answer": 0
+  },
+  {
+    "question": "Identify the voice: 'The house was built by skilled workers.'",
+    "options": ["Active Voice", "Passive Voice", "Direct Speech", "Indirect Speech"],
+    "answer": 1
+  },
+  {
+    "question": "Change into Active Voice: 'The email was sent by Rahul.'",
+    "options": [
+      "Rahul sent the email.",
+      "Rahul sends the email.",
+      "Rahul is sending the email.",
+      "The email sent Rahul."
+    ],
+    "answer": 0
+  },
+  {
+    "question": "Change into Passive Voice: 'The teacher explained the lesson.'",
+    "options": [
+      "The lesson was explained by the teacher.",
+      "The lesson is explained by the teacher.",
+      "The lesson explains the teacher.",
+      "The lesson has explained by the teacher."
+    ],
+    "answer": 0
+  },
+  {
+    "question": "Identify the voice: 'The stadium was filled with spectators.'",
+    "options": ["Active Voice", "Passive Voice", "Direct Speech", "Indirect Speech"],
+    "answer": 1
+  },
+  {
+    "question": "Change into Active Voice: 'The song was performed by the singer.'",
+    "options": [
+      "The singer performed the song.",
+      "The singer performs the song.",
+      "The singer is performing the song.",
+      "The song performed the singer."
+    ],
+    "answer": 0
+  },
+  {
+    "question": "Change into Passive Voice: 'They built a new bridge.'",
+    "options": [
+      "A new bridge was built by them.",
+      "A new bridge is built by them.",
+      "A new bridge builds them.",
+      "A new bridge has built by them."
+    ],
+    "answer": 0
+  },
+  {
+    "question": "Identify the voice: 'The award was received by the actor.'",
+    "options": ["Active Voice", "Passive Voice", "Direct Speech", "Indirect Speech"],
+    "answer": 1
+  },
+  {
+    "question": "Change into Active Voice: 'The match was organized by the committee.'",
+    "options": [
+      "The committee organized the match.",
+      "The committee organizes the match.",
+      "The committee is organizing the match.",
+      "The match organized the committee."
+    ],
+    "answer": 0
+  },
+  {
+    "question": "Change into Passive Voice: 'The company hired new employees.'",
+    "options": [
+      "New employees were hired by the company.",
+      "New employees are hired by the company.",
+      "New employees hire the company.",
+      "New employees have hired by the company."
+    ],
+    "answer": 0
+  },
+  {
+    "question": "Identify the voice: 'The road was repaired recently.'",
+    "options": ["Active Voice", "Passive Voice", "Direct Speech", "Indirect Speech"],
+    "answer": 1
+  },
+  {
+    "question": "Change into Active Voice: 'The bicycle was fixed by the mechanic.'",
+    "options": [
+      "The mechanic fixed the bicycle.",
+      "The mechanic fixes the bicycle.",
+      "The mechanic is fixing the bicycle.",
+      "The bicycle fixed the mechanic."
+    ],
+    "answer": 0
+  },
+  {
+    "question": "Change into Passive Voice: 'The children decorated the classroom.'",
+    "options": [
+      "The classroom was decorated by the children.",
+      "The classroom is decorated by the children.",
+      "The classroom decorates the children.",
+      "The classroom has decorated by the children."
+    ],
+    "answer": 0
+  },
+  {
+    "question": "Identify the voice: 'The documents were signed yesterday.'",
+    "options": ["Active Voice", "Passive Voice", "Direct Speech", "Indirect Speech"],
+    "answer": 1
+  },
+  {
+    "question": "Change into Active Voice: 'The project was managed by Anita.'",
+    "options": [
+      "Anita managed the project.",
+      "Anita manages the project.",
+      "Anita is managing the project.",
+      "The project managed Anita."
+    ],
+    "answer": 0
+  },
+  {
+    "question": "Change into Passive Voice: 'The scientist discovered a cure.'",
+    "options": [
+      "A cure was discovered by the scientist.",
+      "A cure is discovered by the scientist.",
+      "A cure discovers the scientist.",
+      "A cure has discovered by the scientist."
+    ],
+    "answer": 0
+  },
+  {
+    "question": "Identify the voice: 'The decision was announced today.'",
+    "options": ["Active Voice", "Passive Voice", "Direct Speech", "Indirect Speech"],
+    "answer": 1
+  },
+  {
+    "question": "Change into Active Voice: 'The invitation was accepted by the guest.'",
+    "options": [
+      "The guest accepted the invitation.",
+      "The guest accepts the invitation.",
+      "The guest is accepting the invitation.",
+      "The invitation accepted the guest."
+    ],
+    "answer": 0
+  },
+  {
+    "question": "Change into Passive Voice: 'The player scored a goal.'",
+    "options": [
+      "A goal was scored by the player.",
+      "A goal is scored by the player.",
+      "A goal scores the player.",
+      "A goal has scored by the player."
+    ],
+    "answer": 0
+  },
+  {
+    "question": "Identify the voice: 'The letter was delivered on time.'",
+    "options": ["Active Voice", "Passive Voice", "Direct Speech", "Indirect Speech"],
+    "answer": 1
+  },
+  {
+    "question": "Change into Active Voice: 'The report was prepared by the officer.'",
+    "options": [
+      "The officer prepared the report.",
+      "The officer prepares the report.",
+      "The officer is preparing the report.",
+      "The report prepared the officer."
+    ],
+    "answer": 0
+  },
+  {
+    "question": "Change into Passive Voice: 'The nurse cared for the patient.'",
+    "options": [
+      "The patient was cared for by the nurse.",
+      "The patient is cared for by the nurse.",
+      "The patient cares for the nurse.",
+      "The patient has cared for by the nurse."
+    ],
+    "answer": 0
+  },
+  {
+    "question": "Identify the voice: 'The tickets were sold quickly.'",
+    "options": ["Active Voice", "Passive Voice", "Direct Speech", "Indirect Speech"],
+    "answer": 1
+  },
+  {
+    "question": "Change into Active Voice: 'The painting was admired by everyone.'",
+    "options": [
+      "Everyone admired the painting.",
+      "Everyone admires the painting.",
+      "Everyone is admiring the painting.",
+      "The painting admired everyone."
+    ],
+    "answer": 0
+  },
+  {
+    "question": "Change into Passive Voice: 'The judge announced the result.'",
+    "options": [
+      "The result was announced by the judge.",
+      "The result is announced by the judge.",
+      "The result announces the judge.",
+      "The result has announced by the judge."
+    ],
+    "answer": 0
+  },
+  {
+    "question": "Identify the voice: 'The meal was served hot.'",
+    "options": ["Active Voice", "Passive Voice", "Direct Speech", "Indirect Speech"],
+    "answer": 1
+  },
+  {
+    "question": "Change into Active Voice: 'The medal was won by the athlete.'",
+    "options": [
+      "The athlete won the medal.",
+      "The athlete wins the medal.",
+      "The athlete is winning the medal.",
+      "The medal won the athlete."
+    ],
+    "answer": 0
+  },
+  {
+    "question": "Change into Passive Voice: 'The author wrote the novel.'",
+    "options": [
+      "The novel was written by the author.",
+      "The novel is written by the author.",
+      "The novel writes the author.",
+      "The novel has written by the author."
+    ],
+    "answer": 0
+  },
+  {
+    "question": "Identify the voice: 'The building was inaugurated by the mayor.'",
+    "options": ["Active Voice", "Passive Voice", "Direct Speech", "Indirect Speech"],
+    "answer": 1
+  },
+  {
+    "question": "Change into Active Voice: 'The food was cooked by the chef.'",
+    "options": [
+      "The chef cooked the food.",
+      "The chef cooks the food.",
+      "The chef is cooking the food.",
+      "The food cooked the chef."
+    ],
+    "answer": 0
+  },
+  {
+    "question": "Change into Passive Voice: 'The students solved the puzzle.'",
+    "options": [
+      "The puzzle was solved by the students.",
+      "The puzzle is solved by the students.",
+      "The puzzle solves the students.",
+      "The puzzle has solved by the students."
+    ],
+    "answer": 0
+  },
+  {
+    "question": "Identify the voice: 'The message was displayed on the screen.'",
+    "options": ["Active Voice", "Passive Voice", "Direct Speech", "Indirect Speech"],
+    "answer": 1
+  },
+  {
+    "question": "Change into Active Voice: 'The championship was won by the team.'",
+    "options": [
+      "The team won the championship.",
+      "The team wins the championship.",
+      "The team is winning the championship.",
+      "The championship won the team."
+    ],
+    "answer": 0
+  },
+  {
+    "question": "Change into Passive Voice: 'The carpenter made a table.'",
+    "options": [
+      "A table was made by the carpenter.",
+      "A table is made by the carpenter.",
+      "A table makes the carpenter.",
+      "A table has made by the carpenter."
+    ],
+    "answer": 0
+  },
+  {
+    "question": "Identify the voice: 'The package was received safely.'",
+    "options": ["Active Voice", "Passive Voice", "Direct Speech", "Indirect Speech"],
+    "answer": 1
+  },
+  {
+    "question": "Change into Active Voice: 'The speech was given by the president.'",
+    "options": [
+      "The president gave the speech.",
+      "The president gives the speech.",
+      "The president is giving the speech.",
+      "The speech gave the president."
+    ],
+    "answer": 0
+  },
+  {
+    "question": "Identify the voice: 'The teacher corrected the mistakes.'",
+    "options": ["Active Voice", "Passive Voice", "Direct Speech", "Indirect Speech"],
+    "answer": 0
+  }
+
+];
+
+
+let index = 0;
+let score = 0;
+let timer;
+let timeLeft = 10;
+
+function startQuiz() {
+  document.getElementById("startScreen").classList.add("hide");
+  document.getElementById("quizScreen").classList.remove("hide");
+  loadQuestion();
+}
+
+function loadQuestion() {
+  resetTimer();
+  let q = quizData[index];
+  document.getElementById("question").innerText = q.question;
+  document.getElementById("qNo").innerText = index + 1;
+
+  let optionsHTML = "";
+  q.options.forEach((opt, i) => {
+    optionsHTML += `<div class="option" onclick="selectOption(${i})">${opt}</div>`;
+  });
+
+  document.getElementById("options").innerHTML = optionsHTML;
+}
+
+function selectOption(selected) {
+  let correct = quizData[index].answer;
+  let options = document.querySelectorAll(".option");
+
+  options.forEach((opt, i) => {
+    if (i === correct) opt.classList.add("correct");
+    else if (i === selected) opt.classList.add("wrong");
+
+    opt.style.pointerEvents = "none";
+  });
+
+  if (selected === correct) score++;
+}
+
+function nextQuestion() {
+  index++;
+  if (index < quizData.length) {
+    loadQuestion();
+  } else {
+    showResult();
+  }
+}
+
+  function showResult() {
+  document.getElementById("quizScreen").classList.add("hide");
+  document.getElementById("resultScreen").classList.remove("hide");
+  document.getElementById("score").innerText = score + " / " + quizData.length;
+}
+
+function resetTimer() {
+  clearInterval(timer);
+  timeLeft = 10;
+  document.getElementById("timer").innerText = timeLeft;
+
+  timer = setInterval(() => {
+    timeLeft--;
+    document.getElementById("timer").innerText = timeLeft;
+
+    if (timeLeft === 0) {
+      nextQuestion();
+    }
+  }, 1000);
+}
+
+</script>
+
+</body>
+</html>

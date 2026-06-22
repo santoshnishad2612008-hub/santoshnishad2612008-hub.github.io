@@ -1,0 +1,347 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-KN4DRRWZ17"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-KN4DRRWZ17');
+</script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sports Current Affairs Quiz</title>
+
+<style>
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: Arial;
+}
+
+body {
+  background: #f5f5f5;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+}
+
+/* Container */
+.app {
+  width: 95%;
+  max-width: 500px;
+  background: white;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+}
+
+/* Header */
+header {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 20px;
+}
+
+.timer {
+  background: #2196F3;
+  color: white;
+  padding: 5px 10px;
+  border-radius: 5px;
+}
+
+/* Question */
+.question {
+  font-size: 20px;
+  margin-bottom: 15px;
+}
+
+/* Options */
+.option {
+  background: #eee;
+  padding: 10px;
+  margin: 8px 0;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.option:hover {
+  background: #ddd;
+}
+
+.correct {
+  background: #4CAF50 !important;
+  color: white;
+}
+
+.wrong {
+  background: #f44336 !important;
+  color: white;
+}
+
+/* Button */
+button {
+  margin-top: 15px;
+  padding: 10px;
+  width: 100%;
+  border: none;
+ background:linear-gradient(135deg,#0a2dbcf3,#779af583);
+  color: white;
+  font-size: 16px;
+  cursor: pointer;
+  border-radius: 5px;
+}
+
+/* Hidden */
+.hide {
+  display: none;
+}
+
+/* Result */
+.result {
+  text-align: center;
+}
+
+/* Responsive */
+@media (max-width: 600px) {
+  .question {
+    font-size: 18px;
+  }
+}
+</style>
+
+</head>
+<body>
+
+<div class="app">
+
+  <!-- Start Screen -->
+  <div id="startScreen">
+    <h2>Quiz App</h2>
+    <button onclick="startQuiz()">Start Quiz</button>
+  </div>
+
+  <!-- Quiz Screen -->
+  <div id="quizScreen" class="hide">
+    <header>
+      <div>Question <span id="qNo">1</span>/100</div>
+      <div class="timer" id="timer">10</div>
+    </header>
+
+    <div class="question" id="question"></div>
+    <div id="options"></div>
+
+    <button onclick="nextQuestion()">Next</button>
+  </div>
+
+  <!-- Result Screen -->
+  <div id="resultScreen" class="hide result">
+    <h2>Your Score</h2>
+    <h1 id="score"></h1>
+    <button onclick="location.reload()">Play Again</button>
+  </div>
+
+</div>
+
+<script>
+const quizData = [
+
+{ question:"2024 ICC T20 विश्व कप किसने जीता?", options:["भारत","ऑस्ट्रेलिया","इंग्लैंड","न्यूजीलैंड"], answer:0 },
+{ question:"2024 T20 विश्व कप का फाइनल किसके बीच हुआ?", options:["भारत vs ऑस्ट्रेलिया","भारत vs साउथ अफ्रीका","इंग्लैंड vs भारत","पाकिस्तान vs भारत"], answer:1 },
+{ question:"IPL 2024 का विजेता कौन था?", options:["CSK","MI","KKR","RCB"], answer:2 },
+{ question:"IPL 2024 फाइनल में किस टीम ने SRH को हराया?", options:["CSK","KKR","MI","GT"], answer:1 },
+{ question:"Paris Olympics 2024 में पुरुष जेवलिन गोल्ड मेडल किसने जीता?", options:["नीरज चोपड़ा","जूलियन वेबर","अरशद नदीम","जैकब वाडलेच"], answer:2 },
+{ question:"Paris Olympics 2024 में नीरज चोपड़ा को कौन सा मेडल मिला?", options:["गोल्ड","सिल्वर","ब्रॉन्ज","कोई नहीं"], answer:1 },
+{ question:"Paris Olympics 2024 कहाँ आयोजित हुए?", options:["टोक्यो","पेरिस","लंदन","रियो"], answer:1 },
+{ question:"ICC ODI World Cup 2023 किसने जीता?", options:["भारत","ऑस्ट्रेलिया","इंग्लैंड","न्यूजीलैंड"], answer:1 },
+{ question:"ODI World Cup 2023 फाइनल में भारत का सामना किससे हुआ?", options:["इंग्लैंड","ऑस्ट्रेलिया","पाकिस्तान","न्यूजीलैंड"], answer:1 },
+{ question:"2023 एशियन गेम्स में भारत ने लगभग कितने मेडल जीते?", options:["50","75","107","150"], answer:2 },
+
+{ question:"Asian Games 2022 (2023 में आयोजित) कहाँ हुए?", options:["जापान","चीन","भारत","कोरिया"], answer:1 },
+{ question:"Chess World Champion 2024 कौन बना?", options:["मैग्नस कार्लसन","डी. गुकेश","प्रज्ञानंद","कारुआना"], answer:1 },
+{ question:"FIFA World Cup 2022 किसने जीता?", options:["फ्रांस","ब्राजील","अर्जेंटीना","जर्मनी"], answer:2 },
+{ question:"2024 में NBA चैंपियन कौन बना?", options:["Lakers","Celtics","Nuggets","Heat"], answer:2 },
+{ question:"2024 Australian Open Men Singles किसने जीता?", options:["नोवाक जोकोविच","सिनर","नडाल","अलकाराज"], answer:1 },
+
+{ question:"Wimbledon 2024 Men Singles विजेता कौन था?", options:["अलकाराज","जोकोविच","रुने","सिनर"], answer:0 },
+{ question:"US Open 2024 Men Singles किसने जीता?", options:["जोकोविच","सिनर","अलकाराज","ज्वेरेव"], answer:1 },
+{ question:"2024 में ICC पुरुष टेस्ट रैंकिंग में नंबर 1 टीम कौन थी?", options:["भारत","ऑस्ट्रेलिया","इंग्लैंड","पाकिस्तान"], answer:1 },
+{ question:"IPL 2023 का विजेता कौन था?", options:["CSK","GT","MI","KKR"], answer:0 },
+{ question:"IPL 2023 फाइनल कहाँ हुआ था?", options:["मुंबई","अहमदाबाद","चेन्नई","दिल्ली"], answer:1 },
+
+{ question:"2023 क्रिकेट वर्ल्ड कप में सबसे ज्यादा रन किसने बनाए?", options:["रोहित शर्मा","विराट कोहली","डेविड वॉर्नर","क्विंटन डिकॉक"], answer:1 },
+{ question:"2023 वर्ल्ड कप में सबसे ज्यादा विकेट किसने लिए?", options:["मोहम्मद शमी","बुमराह","स्टार्क","रबाडा"], answer:0 },
+{ question:"Commonwealth Games 2022 कहाँ हुए?", options:["बर्मिंघम","दिल्ली","सिडनी","टोक्यो"], answer:0 },
+{ question:"2022 CWG में भारत का स्थान क्या था?", options:["1st","2nd","4th","7th"], answer:2 },
+{ question:"Neeraj Chopra का खेल कौन सा है?", options:["भाला फेंक","दौड़","कुश्ती","बॉक्सिंग"], answer:0 },
+
+{ question:"2024 में Champions Trophy किस देश ने जीती?", options:["भारत","ऑस्ट्रेलिया","इंग्लैंड","न्यूजीलैंड"], answer:0 },
+{ question:"IPL टीम KKR का पूरा नाम क्या है?", options:["Kolkata Knight Riders","Kerala Knights","Karnataka Riders","Kings Knight Royals"], answer:0 },
+{ question:"CSK टीम का कप्तान 2024 में कौन था?", options:["धोनी","रुतुराज गायकवाड़","जडेजा","रैना"], answer:1 },
+{ question:"RCB किस शहर की टीम है?", options:["दिल्ली","बैंगलोर","मुंबई","चेन्नई"], answer:1 },
+{ question:"IPL में सबसे ज्यादा खिताब किस टीम के हैं?", options:["CSK","MI","KKR","RR"], answer:1 },
+
+{ question:"2024 T20 WC में भारत का कप्तान कौन था?", options:["रोहित शर्मा","विराट कोहली","हार्दिक पांड्या","केएल राहुल"], answer:0 },
+{ question:"2024 T20 WC फाइनल कहाँ खेला गया?", options:["लॉर्ड्स","बारबाडोस","दुबई","मुंबई"], answer:1 },
+{ question:"ICC का मुख्यालय कहाँ है?", options:["दुबई","लंदन","मुंबई","सिडनी"], answer:0 },
+{ question:"FIFA का मुख्यालय कहाँ है?", options:["पेरिस","ज्यूरिख","लंदन","रोम"], answer:1 },
+{ question:"Olympics कितने साल में होते हैं?", options:["2","3","4","5"], answer:2 },
+
+{ question:"2024 Olympics में भारत का कुल मेडल लगभग कितना था?", options:["3","6","10","15"], answer:1 },
+{ question:"2024 में भारत ने किस खेल में सबसे ज्यादा सफलता पाई?", options:["क्रिकेट","हॉकी","एथलेटिक्स","बैडमिंटन"], answer:1 },
+{ question:"Hockey का राष्ट्रीय खेल किस देश में ज्यादा लोकप्रिय है?", options:["भारत","ऑस्ट्रेलिया","पाकिस्तान","नीदरलैंड"], answer:1 },
+{ question:"Virat Kohli किस खेल से जुड़े हैं?", options:["क्रिकेट","फुटबॉल","हॉकी","टेनिस"], answer:0 },
+{ question:"Lionel Messi किस देश से हैं?", options:["ब्राजील","अर्जेंटीना","स्पेन","फ्रांस"], answer:1 },
+
+{ question:"Cristiano Ronaldo किस देश से हैं?", options:["पुर्तगाल","स्पेन","ब्राजील","इटली"], answer:0 },
+{ question:"2022 FIFA World Cup फाइनल कहाँ हुआ?", options:["कतर","रूस","ब्राजील","अमेरिका"], answer:0 },
+{ question:"MS Dhoni किस टीम के पूर्व कप्तान हैं?", options:["भारत","ऑस्ट्रेलिया","इंग्लैंड","न्यूजीलैंड"], answer:0 },
+{ question:"Hardik Pandya किस खेल से जुड़े हैं?", options:["क्रिकेट","हॉकी","फुटबॉल","टेनिस"], answer:0 },
+{ question:"BCCI का पूरा नाम क्या है?", options:["Board of Control for Cricket in India","British Cricket Council","Bangladesh Cricket Club","None"], answer:0 },
+
+{ question:"IPL 2024 में Orange Cap किसने जीता?", options:["विराट कोहली","सूर्यकुमार यादव","शुभमन गिल","रोहित शर्मा"], answer:2 },
+{ question:"IPL 2024 में Purple Cap किसने जीता?", options:["मोहम्मद सिराज","हर्षल पटेल","युजवेंद्र चहल","मिचेल स्टार्क"], answer:3 },
+{ question:"2024 में ICC Awards में Player of the Year कौन था?", options:["विराट कोहली","बाबर आजम","जो रूट","रोहित शर्मा"], answer:1 },
+{ question:"Indian Super League किस खेल से जुड़ा है?", options:["क्रिकेट","फुटबॉल","हॉकी","बैडमिंटन"], answer:1 },
+{ question:"ISL का पूरा नाम क्या है?", options:["Indian Super League","International Sports League","India Sports League","None"], answer:0 },
+
+{ question:"WTC 2023 फाइनल किसने जीता?", options:["भारत","ऑस्ट्रेलिया","इंग्लैंड","पाकिस्तान"], answer:1 },
+{ question:"World Test Championship 2023 फाइनल कहाँ हुआ?", options:["लॉर्ड्स","ओवल","मेलबर्न","सिडनी"], answer:1 },
+{ question:"2024 में सबसे तेज 100 रन किस खिलाड़ी ने बनाए थे (T20 WC)?", options:["रोहित शर्मा","डेविड मिलर","ट्रैविस हेड","सूर्यकुमार यादव"], answer:3 },
+{ question:"T20 क्रिकेट में एक ओवर में कितनी गेंदें होती हैं?", options:["5","6","7","8"], answer:1 },
+{ question:"क्रिकेट में LBW का मतलब क्या है?", options:["Leg Before Wicket","Long Ball Wide","Left Bat Win","None"], answer:0 },
+
+{ question:"F1 का पूरा नाम क्या है?", options:["Formula One","Fast One","Final One","None"], answer:0 },
+{ question:"Olympics का पहला आयोजन कहाँ हुआ था?", options:["एथेंस","पेरिस","लंदन","रोम"], answer:0 },
+{ question:"2024 में सबसे लोकप्रिय खेल कौन सा रहा?", options:["क्रिकेट","फुटबॉल","हॉकी","टेनिस"], answer:1 },
+{ question:"India का राष्ट्रीय खेल कौन सा माना जाता है?", options:["क्रिकेट","हॉकी","फुटबॉल","कबड्डी"], answer:1 },
+{ question:"PV Sindhu किस खेल से जुड़ी हैं?", options:["बैडमिंटन","क्रिकेट","टेनिस","हॉकी"], answer:0 },
+
+{ question:"Neeraj Chopra ने ओलंपिक में कौन सा खेल खेला?", options:["जैवलिन थ्रो","दौड़","कुश्ती","शॉटपुट"], answer:0 },
+{ question:"2024 में भारत की महिला क्रिकेट कप्तान कौन थी?", options:["हरमनप्रीत कौर","स्मृति मंधाना","दीप्ति शर्मा","मिताली राज"], answer:0 },
+{ question:"ICC का फुल फॉर्म क्या है?", options:["International Cricket Council","Indian Cricket Committee","International Championship Club","None"], answer:0 },
+{ question:"T20 क्रिकेट में कितने ओवर होते हैं?", options:["20","50","10","40"], answer:0 },
+{ question:"ODI क्रिकेट में कितने ओवर होते हैं?", options:["20","50","60","40"], answer:1 },
+
+{ question:"2024 Olympics में सबसे ज्यादा मेडल किस देश ने जीते?", options:["USA","China","India","Russia"], answer:0 },
+{ question:"FIFA का सबसे बड़ा टूर्नामेंट कौन सा है?", options:["World Cup","Champions League","Copa America","Euro Cup"], answer:0 },
+{ question:"IPL किस देश में खेला जाता है?", options:["भारत","ऑस्ट्रेलिया","इंग्लैंड","पाकिस्तान"], answer:0 },
+{ question:"Virat Kohli का बैटिंग स्टाइल क्या है?", options:["राइट हैंड","लेफ्ट हैंड","दोनों","नहीं पता"], answer:0 },
+{ question:"Rohit Sharma किस टीम के खिलाड़ी हैं?", options:["भारत","ऑस्ट्रेलिया","इंग्लैंड","न्यूजीलैंड"], answer:0 },
+
+{ question:"2024 में फुटबॉल का सबसे बड़ा टूर्नामेंट कौन सा था?", options:["Euro","IPL","Ashes","WTC"], answer:0 },
+{ question:"Ashes किस खेल से जुड़ा है?", options:["क्रिकेट","फुटबॉल","हॉकी","टेनिस"], answer:0 },
+{ question:"India में IPL कब शुरू हुआ था?", options:["2008","2010","2005","2012"], answer:0 },
+{ question:"2024 में भारत ने किस खेल में गोल्ड जीता था?", options:["हॉकी","क्रिकेट","फुटबॉल","टेनिस"], answer:0 },
+{ question:"Sports Current Affairs में 'WC' का मतलब क्या है?", options:["World Cup","World Club","Wide Cup","Win Cup"], answer:0 },
+
+{ question:"Olympics का प्रतीक क्या है?", options:["5 रिंग्स","3 स्टार","2 ग्लोब","1 फ्लैग"], answer:0 },
+{ question:"IPL में कुल कितनी टीमें हैं (2024)?", options:["8","10","12","14"], answer:1 },
+{ question:"2024 में भारत का सबसे बड़ा खेल आयोजन कौन सा था?", options:["IPL","Olympics","World Cup","Asian Games"], answer:0 },
+{ question:"Cricket में एक पारी को क्या कहते हैं?", options:["Innings","Game","Set","Match"], answer:0 },
+{ question:"Football में एक टीम में कितने खिलाड़ी होते हैं?", options:["9","10","11","12"], answer:2 },
+
+{ question:"2025 ICC Champions Trophy की मेजबानी कौन सा देश करेगा?", options:["भारत","पाकिस्तान","ऑस्ट्रेलिया","इंग्लैंड"], answer:1 },
+{ question:"2026 FIFA World Cup की मेजबानी कौन से देश करेंगे?", options:["भारत","अमेरिका, कनाडा, मैक्सिको","ब्राजील","स्पेन"], answer:1 },
+{ question:"2026 Winter Olympics कहाँ आयोजित होंगे?", options:["पेरिस","मिलान-कॉर्टिना","टोक्यो","लॉस एंजेलेस"], answer:1 },
+{ question:"2025 ICC Women's ODI World Cup कहाँ होगा?", options:["भारत","ऑस्ट्रेलिया","इंग्लैंड","दक्षिण अफ्रीका"], answer:0 },
+{ question:"2025 में सबसे बड़ा क्रिकेट टूर्नामेंट कौन सा है?", options:["T20 World Cup","ICC Champions Trophy","Asia Cup","World Test Championship Final"], answer:1 },
+
+{ question:"Olympics 2028 कहाँ आयोजित होंगे?", options:["पेरिस","लॉस एंजेलेस","टोक्यो","ब्रिस्बेन"], answer:1 },
+{ question:"2025 में भारत की पुरुष हॉकी टीम का मुख्य कोच कौन है?", options:["ग्राहम रीड","क्रेग फुल्टन","रिक चार्ल्सवर्थ","हरेंद्र सिंह"], answer:1 },
+{ question:"ICC का नया अध्यक्ष (2025 तक) कौन है?", options:["ग्रेग बार्कले","जय शाह","शशांक मनोहर","माइकल बेल"], answer:1 },
+{ question:"2025 में होने वाला Asia Cup किस फॉर्मेट में खेला जाएगा?", options:["ODI","T20","Test","100-ball"], answer:0 },
+{ question:"2025 में भारत का प्रमुख खेल आयोजन कौन सा रहा?", options:["IPL","Olympics","FIFA World Cup","Wimbledon"], answer:0 },
+
+{ question:"2026 FIFA World Cup में कुल कितनी टीमें भाग लेंगी?", options:["32","40","48","36"], answer:2 },
+{ question:"2026 Winter Olympics का आयोजन किस देश में होगा?", options:["इटली","जापान","कनाडा","USA"], answer:0 },
+{ question:"2025 में भारत ने किस खेल में लगातार अच्छा प्रदर्शन जारी रखा?", options:["क्रिकेट","फुटबॉल","बेसबॉल","रग्बी"], answer:0 },
+{ question:"ICC Test Championship 2025–27 का पहला चक्र किससे शुरू होता है?", options:["2023","2024","2025","2026"], answer:2 },
+{ question:"2025 में भारत का सबसे बड़ा क्रिकेट प्रतिद्वंदी कौन रहा?", options:["ऑस्ट्रेलिया","पाकिस्तान","इंग्लैंड","न्यूजीलैंड"], answer:0 },
+
+{ question:"2026 FIFA World Cup में पहला मैच किस देश में होगा?", options:["USA","कनाडा","मैक्सिको","ब्राजील"], answer:2 },
+{ question:"2025 में भारत का प्रमुख बैडमिंटन टूर्नामेंट कौन सा रहा?", options:["All England Open","IPL","WTC Final","Euro Cup"], answer:0 },
+{ question:"Olympic Games कितने साल में होते हैं?", options:["2 साल","3 साल","4 साल","5 साल"], answer:2 },
+{ question:"2025 में भारत की महिला क्रिकेट टीम का बड़ा लक्ष्य क्या था?", options:["World Cup जीतना","Asia Cup जीतना","Olympics खेलना","IPL खेलना"], answer:0 },
+{ question:"2026 में होने वाला सबसे बड़ा फुटबॉल टूर्नामेंट कौन सा है?", options:["Euro Cup","FIFA World Cup","Copa America","Asian Games"], answer:1 }
+];
+
+
+let index = 0;
+let score = 0;
+let timer;
+let timeLeft = 10;
+
+function startQuiz() {
+  document.getElementById("startScreen").classList.add("hide");
+  document.getElementById("quizScreen").classList.remove("hide");
+  loadQuestion();
+}
+
+function loadQuestion() {
+  resetTimer();
+  let q = quizData[index];
+  document.getElementById("question").innerText = q.question;
+  document.getElementById("qNo").innerText = index + 1;
+
+  let optionsHTML = "";
+  q.options.forEach((opt, i) => {
+    optionsHTML += `<div class="option" onclick="selectOption(${i})">${opt}</div>`;
+  });
+
+  document.getElementById("options").innerHTML = optionsHTML;
+}
+
+function selectOption(selected) {
+  let correct = quizData[index].answer;
+  let options = document.querySelectorAll(".option");
+
+  options.forEach((opt, i) => {
+    if (i === correct) opt.classList.add("correct");
+    else if (i === selected) opt.classList.add("wrong");
+
+    opt.style.pointerEvents = "none";
+  });
+
+  if (selected === correct) score++;
+}
+
+function nextQuestion() {
+  index++;
+  if (index < quizData.length) {
+    loadQuestion();
+  } else {
+    showResult();
+  }
+}
+
+  function showResult() {
+  document.getElementById("quizScreen").classList.add("hide");
+  document.getElementById("resultScreen").classList.remove("hide");
+  document.getElementById("score").innerText = score + " / " + quizData.length;
+}
+
+function resetTimer() {
+  clearInterval(timer);
+  timeLeft = 10;
+  document.getElementById("timer").innerText = timeLeft;
+
+  timer = setInterval(() => {
+    timeLeft--;
+    document.getElementById("timer").innerText = timeLeft;
+
+    if (timeLeft === 0) {
+      nextQuestion();
+    }
+  }, 1000);
+}
+
+</script>
+
+</body>
+</html>

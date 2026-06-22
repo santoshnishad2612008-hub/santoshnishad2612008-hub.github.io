@@ -1,0 +1,733 @@
+<!DOCTYPE html>
+<html>
+<head>
+   <!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-KN4DRRWZ17"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-KN4DRRWZ17');
+</script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title> Grammer Quiz </title>
+
+<style>
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: Arial;
+}
+
+body {
+  background: #f5f5f5;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+}
+
+/* Container */
+.app {
+  width: 95%;
+  max-width: 500px;
+  background: white;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+}
+
+/* Header */
+header {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 20px;
+}
+
+.timer {
+  background: #2196F3;
+  color: white;
+  padding: 5px 10px;
+  border-radius: 5px;
+}
+
+/* Question */
+.question {
+  font-size: 20px;
+  margin-bottom: 15px;
+}
+
+/* Options */
+.option {
+  background: #eee;
+  padding: 10px;
+  margin: 8px 0;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.option:hover {
+  background: #ddd;
+}
+
+.correct {
+  background: #4CAF50 !important;
+  color: white;
+}
+
+.wrong {
+  background: #f44336 !important;
+  color: white;
+}
+
+/* Button */
+button {
+  margin-top: 15px;
+  padding: 10px;
+  width: 100%;
+  border: none;
+ background:linear-gradient(135deg,#0a2dbcf3,#779af583);
+  color: white;
+  font-size: 16px;
+  cursor: pointer;
+  border-radius: 5px;
+}
+
+/* Hidden */
+.hide {
+  display: none;
+}
+
+/* Result */
+.result {
+  text-align: center;
+}
+
+/* Responsive */
+@media (max-width: 600px) {
+  .question {
+    font-size: 18px;
+  }
+}
+</style>
+
+</head>
+<body>
+
+<div class="app">
+
+  <!-- Start Screen -->
+  <div id="startScreen">
+    <h2>Quiz App</h2>
+    <button onclick="startQuiz()">Start Quiz</button>
+  </div>
+
+  <!-- Quiz Screen -->
+  <div id="quizScreen" class="hide">
+    <header>
+      <div>Question <span id="qNo">1</span>/100</div>
+      <div class="timer" id="timer">10</div>
+    </header>
+
+    <div class="question" id="question"></div>
+    <div id="options"></div>
+
+    <button onclick="nextQuestion()">Next</button>
+  </div>
+
+  <!-- Result Screen -->
+  <div id="resultScreen" class="hide result">
+    <h2>Your Score</h2>
+    <h1 id="score"></h1>
+    <button onclick="location.reload()">Play Again</button>
+  </div>
+
+</div>
+
+<script>
+const quizData = [
+
+
+  {
+    "question": "Choose the correct article: ___ apple a day keeps the doctor away.",
+    "options": ["A", "An", "The", "No article"],
+    "answer": 1
+  },
+  {
+    "question": "Choose the correct pronoun: Rahul is absent because ___ is ill.",
+    "options": ["he", "she", "it", "they"],
+    "answer": 0
+  },
+  {
+    "question": "Identify the noun in the sentence: 'The boy is playing.'",
+    "options": ["The", "boy", "is", "playing"],
+    "answer": 1
+  },
+  {
+    "question": "Choose the correct plural form of 'child'.",
+    "options": ["childs", "childes", "children", "childrens"],
+    "answer": 2
+  },
+  {
+    "question": "Choose the correct verb: She ___ to school every day.",
+    "options": ["go", "goes", "going", "gone"],
+    "answer": 1
+  },
+  {
+    "question": "Choose the adjective in the sentence: 'It is a beautiful flower.'",
+    "options": ["It", "is", "beautiful", "flower"],
+    "answer": 2
+  },
+  {
+    "question": "Choose the adverb: He runs ___.",
+    "options": ["quick", "quickly", "quicker", "quickness"],
+    "answer": 1
+  },
+  {
+    "question": "Choose the correct preposition: The book is ___ the table.",
+    "options": ["on", "at", "to", "for"],
+    "answer": 0
+  },
+  {
+    "question": "Choose the conjunction: Ram and Shyam are friends.",
+    "options": ["Ram", "and", "Shyam", "friends"],
+    "answer": 1
+  },
+  {
+    "question": "Choose the correct tense: I ___ my homework yesterday.",
+    "options": ["do", "did", "done", "doing"],
+    "answer": 1
+  },
+  {
+    "question": "Choose the synonym of 'Happy'.",
+    "options": ["Sad", "Joyful", "Angry", "Weak"],
+    "answer": 1
+  },
+  {
+    "question": "Choose the antonym of 'Hot'.",
+    "options": ["Warm", "Cold", "Heat", "Boil"],
+    "answer": 1
+  },
+  {
+    "question": "Choose the correct spelling.",
+    "options": ["Beautifull", "Beautiful", "Beautifool", "Beutiful"],
+    "answer": 1
+  },
+  {
+    "question": "Identify the verb: 'Birds fly in the sky.'",
+    "options": ["Birds", "fly", "sky", "the"],
+    "answer": 1
+  },
+  {
+    "question": "Choose the correct sentence.",
+    "options": ["He go to school.", "He goes to school.", "He going to school.", "He gone to school."],
+    "answer": 1
+  },
+  {
+    "question": "Choose the correct article: ___ elephant is a large animal.",
+    "options": ["A", "An", "The", "No article"],
+    "answer": 1
+  },
+  {
+    "question": "Choose the correct pronoun: This pen is ___.",
+    "options": ["my", "mine", "me", "I"],
+    "answer": 1
+  },
+  {
+    "question": "Choose the opposite of 'Rich'.",
+    "options": ["Strong", "Poor", "Wise", "Tall"],
+    "answer": 1
+  },
+  {
+    "question": "Choose the correct form: They ___ football every Sunday.",
+    "options": ["plays", "play", "playing", "played"],
+    "answer": 1
+  },
+  {
+    "question": "Choose the correct preposition: She arrived ___ 6 PM.",
+    "options": ["in", "on", "at", "to"],
+    "answer": 2
+  },
+  {
+    "question": "Choose the correct tense: We ___ watching TV now.",
+    "options": ["is", "am", "are", "was"],
+    "answer": 2
+  },
+  {
+    "question": "Identify the adjective: 'He is an honest man.'",
+    "options": ["He", "is", "honest", "man"],
+    "answer": 2
+  },
+  {
+    "question": "Choose the correct plural form of 'mouse'.",
+    "options": ["mouses", "mice", "mousees", "mices"],
+    "answer": 1
+  },
+  {
+    "question": "Choose the correct conjunction: I was tired, ___ I slept early.",
+    "options": ["but", "or", "so", "because"],
+    "answer": 2
+  },
+  {
+    "question": "Choose the correct sentence.",
+    "options": ["She don't like tea.", "She doesn't like tea.", "She not like tea.", "She isn't like tea."],
+    "answer": 1
+  },
+  {
+    "question": "Choose the noun in: 'Honesty is the best policy.'",
+    "options": ["Honesty", "best", "is", "policy"],
+    "answer": 0
+  },
+  {
+    "question": "Choose the correct article: ___ sun rises in the east.",
+    "options": ["A", "An", "The", "No article"],
+    "answer": 2
+  },
+  {
+    "question": "Choose the correct pronoun: ___ are my friends.",
+    "options": ["This", "That", "These", "It"],
+    "answer": 2
+  },
+  {
+    "question": "Choose the correct tense: She ___ a letter now.",
+    "options": ["write", "writes", "is writing", "wrote"],
+    "answer": 2
+  },
+  {
+    "question": "Choose the adverb in the sentence: 'She sings sweetly.'",
+    "options": ["She", "sings", "sweetly", "song"],
+    "answer": 2
+  },
+  
+  {
+    "question": "Choose the correct form: He ___ finished his work.",
+    "options": ["have", "has", "had", "having"],
+    "answer": 1
+  },
+  {
+    "question": "Choose the correct preposition: We walked ___ the river.",
+    "options": ["along", "under", "between", "during"],
+    "answer": 0
+  },
+  {
+    "question": "Choose the synonym of 'Big'.",
+    "options": ["Tiny", "Large", "Short", "Weak"],
+    "answer": 1
+  },
+  {
+    "question": "Choose the antonym of 'Early'.",
+    "options": ["Fast", "Late", "Soon", "Quick"],
+    "answer": 1
+  },
+  {
+    "question": "Identify the pronoun: 'They are playing cricket.'",
+    "options": ["They", "are", "playing", "cricket"],
+    "answer": 0
+  },
+  {
+    "question": "Choose the correct sentence.",
+    "options": ["I has a car.", "I have a car.", "I having a car.", "I hading a car."],
+    "answer": 1
+  },
+  {
+    "question": "Choose the comparative form of 'good'.",
+    "options": ["gooder", "better", "best", "more good"],
+    "answer": 1
+  },
+  {
+    "question": "Choose the superlative form of 'high'.",
+    "options": ["higher", "highest", "most high", "higherest"],
+    "answer": 1
+  },
+  {
+    "question": "Choose the correct modal verb: You ___ obey your parents.",
+    "options": ["should", "might", "could", "would"],
+    "answer": 0
+  },
+  {
+    "question": "Choose the correct article: I saw ___ owl in the tree.",
+    "options": ["a", "an", "the", "no article"],
+    "answer": 1
+  },
+  {
+    "question": "Choose the correct tense: They ___ in Delhi since 2020.",
+    "options": ["live", "lived", "have lived", "living"],
+    "answer": 2
+  },
+  {
+    "question": "Identify the adjective: 'The red car is mine.'",
+    "options": ["red", "car", "mine", "is"],
+    "answer": 0
+  },
+  {
+    "question": "Choose the correct plural form of 'tooth'.",
+    "options": ["tooths", "teeth", "toothes", "teeths"],
+    "answer": 1
+  },
+  {
+    "question": "Choose the correct conjunction: Study hard ___ you will fail.",
+    "options": ["or", "and", "but", "because"],
+    "answer": 0
+  },
+  {
+    "question": "Choose the correct sentence.",
+    "options": ["We was happy.", "We were happy.", "We is happy.", "We be happy."],
+    "answer": 1
+  },
+  {
+    "question": "Choose the antonym of 'Clean'.",
+    "options": ["Dirty", "Neat", "Fresh", "Pure"],
+    "answer": 0
+  },
+  {
+    "question": "Choose the synonym of 'Smart'.",
+    "options": ["Intelligent", "Lazy", "Weak", "Slow"],
+    "answer": 0
+  },
+  {
+    "question": "Choose the correct preposition: He is good ___ Mathematics.",
+    "options": ["at", "on", "for", "with"],
+    "answer": 0
+  },
+  {
+    "question": "Choose the correct pronoun: ___ is knocking at the door.",
+    "options": ["Who", "Whom", "Whose", "Which"],
+    "answer": 0
+  },
+  {
+    "question": "Choose the correct verb: Neither Ram nor Shyam ___ present.",
+    "options": ["are", "is", "were", "have"],
+    "answer": 1
+  },
+  {
+    "question": "Choose the correct sentence.",
+    "options": ["She can sings.", "She can sing.", "She can singing.", "She can sung."],
+    "answer": 1
+  },
+  {
+    "question": "Choose the correct article: ___ Ganga is a holy river.",
+    "options": ["A", "An", "The", "No article"],
+    "answer": 2
+  },
+  {
+    "question": "Choose the correct tense: I ___ my lunch before he arrived.",
+    "options": ["eat", "eaten", "had eaten", "have eaten"],
+    "answer": 2
+  },
+  {
+    "question": "Identify the adverb: 'He spoke politely.'",
+    "options": ["He", "spoke", "politely", "speech"],
+    "answer": 2
+  },
+  {
+    "question": "Choose the correct form: If I were rich, I ___ help the poor.",
+    "options": ["will", "would", "can", "shall"],
+    "answer": 1
+  },
+  {
+    "question": "Choose the correct plural form of 'woman'.",
+    "options": ["womans", "women", "womanes", "womens"],
+    "answer": 1
+  },
+  {
+    "question": "Choose the correct preposition: The cat is ___ the chair.",
+    "options": ["under", "during", "beside", "through"],
+    "answer": 0
+  },
+  {
+    "question": "Choose the synonym of 'Brave'.",
+    "options": ["Coward", "Fearful", "Courageous", "Weak"],
+    "answer": 2
+  },
+  {
+    "question": "Choose the antonym of 'Victory'.",
+    "options": ["Success", "Win", "Defeat", "Prize"],
+    "answer": 2
+  },
+  {
+    "question": "Choose the correct sentence.",
+    "options": ["There are many books on the table.", "There is many books on the table.", "There was many books on the table.", "There be many books on the table."],
+    "answer": 0
+  },
+  
+  {
+    "question": "Choose the correct article: ___ honest man is respected by all.",
+    "options": ["A", "An", "The", "No article"],
+    "answer": 1
+  },
+  {
+    "question": "Choose the correct tense: She ___ a book when I called her.",
+    "options": ["read", "was reading", "reads", "has read"],
+    "answer": 1
+  },
+  {
+    "question": "Choose the synonym of 'Begin'.",
+    "options": ["End", "Start", "Close", "Finish"],
+    "answer": 1
+  },
+  {
+    "question": "Choose the antonym of 'Strong'.",
+    "options": ["Powerful", "Healthy", "Weak", "Brave"],
+    "answer": 2
+  },
+  {
+    "question": "Identify the noun: 'The teacher praised the student.'",
+    "options": ["teacher", "praised", "the", "praised the"],
+    "answer": 0
+  },
+  {
+    "question": "Choose the correct pronoun: This book belongs to Rahul. It is ___.",
+    "options": ["his", "him", "he", "himself"],
+    "answer": 0
+  },
+  {
+    "question": "Choose the correct form of verb: They ___ dinner before the guests arrived.",
+    "options": ["have eaten", "had eaten", "eat", "eating"],
+    "answer": 1
+  },
+  {
+    "question": "Choose the comparative form of 'bad'.",
+    "options": ["badder", "worse", "worst", "more bad"],
+    "answer": 1
+  },
+  {
+    "question": "Choose the superlative form of 'good'.",
+    "options": ["better", "goodest", "best", "most good"],
+    "answer": 2
+  },
+  {
+    "question": "Choose the correct preposition: He divided the cake ___ four children.",
+    "options": ["among", "between", "with", "for"],
+    "answer": 0
+  },
+  {
+    "question": "Choose the correct modal: You ___ wear a helmet while riding.",
+    "options": ["must", "might", "could", "would"],
+    "answer": 0
+  },
+  {
+    "question": "Choose the correct sentence.",
+    "options": ["Each of the boys have a pen.", "Each of the boys has a pen.", "Each of the boys having a pen.", "Each of the boys are a pen."],
+    "answer": 1
+  },
+  {
+    "question": "Choose the plural form of 'foot'.",
+    "options": ["foots", "feet", "footes", "feets"],
+    "answer": 1
+  },
+  {
+    "question": "Identify the adjective: 'She wore a blue dress.'",
+    "options": ["wore", "blue", "dress", "she"],
+    "answer": 1
+  },
+  {
+    "question": "Choose the correct conjunction: I stayed at home ___ it was raining.",
+    "options": ["because", "but", "or", "so"],
+    "answer": 0
+  },
+  {
+    "question": "Choose the synonym of 'Quick'.",
+    "options": ["Slow", "Rapid", "Weak", "Late"],
+    "answer": 1
+  },
+  {
+    "question": "Choose the antonym of 'Ancient'.",
+    "options": ["Old", "Historic", "Modern", "Traditional"],
+    "answer": 2
+  },
+  {
+    "question": "Choose the correct tense: By next year, I ___ my degree.",
+    "options": ["complete", "completed", "will have completed", "am completing"],
+    "answer": 2
+  },
+  {
+    "question": "Choose the correct preposition: She is interested ___ music.",
+    "options": ["on", "at", "in", "with"],
+    "answer": 2
+  },
+  {
+    "question": "Choose the correct pronoun: ___ of the two girls is your sister?",
+    "options": ["Who", "Whom", "Which", "Whose"],
+    "answer": 2
+  },
+  {
+    "question": "Choose the correct sentence.",
+    "options": ["Neither of them are ready.", "Neither of them is ready.", "Neither of them were ready.", "Neither of them be ready."],
+    "answer": 1
+  },
+  {
+    "question": "Choose the correct verb: The news ___ surprising.",
+    "options": ["are", "were", "is", "have"],
+    "answer": 2
+  },
+  {
+    "question": "Choose the correct article: ___ Himalayas are in India.",
+    "options": ["A", "An", "The", "No article"],
+    "answer": 2
+  },
+  {
+    "question": "Choose the correct adverb: She completed the work ___.",
+    "options": ["careful", "carefully", "care", "caring"],
+    "answer": 1
+  },
+  {
+    "question": "Choose the synonym of 'Beautiful'.",
+    "options": ["Pretty", "Ugly", "Dirty", "Weak"],
+    "answer": 0
+  },
+  {
+    "question": "Choose the antonym of 'Accept'.",
+    "options": ["Receive", "Approve", "Reject", "Allow"],
+    "answer": 2
+  },
+  {
+    "question": "Choose the correct sentence.",
+    "options": ["She enjoys to read books.", "She enjoys reading books.", "She enjoy reading books.", "She enjoying books."],
+    "answer": 1
+  },
+  {
+    "question": "Choose the correct preposition: The train passed ___ the tunnel.",
+    "options": ["through", "under", "between", "beside"],
+    "answer": 0
+  },
+  {
+    "question": "Choose the plural form of 'person'.",
+    "options": ["persons", "people", "persones", "peoples"],
+    "answer": 1
+  },
+  {
+    "question": "Choose the correct tense: They ___ for two hours before the bus arrived.",
+    "options": ["wait", "waited", "had been waiting", "have waited"],
+    "answer": 2
+  },
+  {
+    "question": "Choose the correct modal: ___ I borrow your pen?",
+    "options": ["Must", "May", "Should", "Need"],
+    "answer": 1
+  },
+  {
+    "question": "Identify the pronoun: 'Someone is waiting outside.'",
+    "options": ["Someone", "waiting", "outside", "is"],
+    "answer": 0
+  },
+  {
+    "question": "Choose the correct sentence.",
+    "options": ["Mathematics are difficult.", "Mathematics is difficult.", "Mathematics were difficult.", "Mathematics have difficult."],
+    "answer": 1
+  },
+  {
+    "question": "Choose the synonym of 'Silent'.",
+    "options": ["Noisy", "Quiet", "Loud", "Talkative"],
+    "answer": 1
+  },
+  {
+    "question": "Choose the antonym of 'Generous'.",
+    "options": ["Kind", "Helpful", "Selfish", "Friendly"],
+    "answer": 2
+  },
+  {
+    "question": "Choose the correct preposition: He suffers ___ asthma.",
+    "options": ["from", "with", "at", "on"],
+    "answer": 0
+  },
+  {
+    "question": "Choose the correct tense: I ___ this movie three times.",
+    "options": ["see", "saw", "have seen", "seeing"],
+    "answer": 2
+  },
+  {
+    "question": "Choose the correct article: She wants to become ___ engineer.",
+    "options": ["a", "an", "the", "no article"],
+    "answer": 1
+  },
+  {
+    "question": "Choose the correct conjunction: Work hard, ___ you will succeed.",
+    "options": ["and", "but", "or", "because"],
+    "answer": 0
+  },
+  {
+    "question": "Choose the correct sentence.",
+    "options": ["Everybody have arrived.", "Everybody has arrived.", "Everybody are arrived.", "Everybody arriving."],
+    "answer": 1
+  }
+
+];
+
+
+let index = 0;
+let score = 0;
+let timer;
+let timeLeft = 10;
+
+function startQuiz() {
+  document.getElementById("startScreen").classList.add("hide");
+  document.getElementById("quizScreen").classList.remove("hide");
+  loadQuestion();
+}
+
+function loadQuestion() {
+  resetTimer();
+  let q = quizData[index];
+  document.getElementById("question").innerText = q.question;
+  document.getElementById("qNo").innerText = index + 1;
+
+  let optionsHTML = "";
+  q.options.forEach((opt, i) => {
+    optionsHTML += `<div class="option" onclick="selectOption(${i})">${opt}</div>`;
+  });
+
+  document.getElementById("options").innerHTML = optionsHTML;
+}
+
+function selectOption(selected) {
+  let correct = quizData[index].answer;
+  let options = document.querySelectorAll(".option");
+
+  options.forEach((opt, i) => {
+    if (i === correct) opt.classList.add("correct");
+    else if (i === selected) opt.classList.add("wrong");
+
+    opt.style.pointerEvents = "none";
+  });
+
+  if (selected === correct) score++;
+}
+
+function nextQuestion() {
+  index++;
+  if (index < quizData.length) {
+    loadQuestion();
+  } else {
+    showResult();
+  }
+}
+
+  function showResult() {
+  document.getElementById("quizScreen").classList.add("hide");
+  document.getElementById("resultScreen").classList.remove("hide");
+  document.getElementById("score").innerText = score + " / " + quizData.length;
+}
+
+function resetTimer() {
+  clearInterval(timer);
+  timeLeft = 10;
+  document.getElementById("timer").innerText = timeLeft;
+
+  timer = setInterval(() => {
+    timeLeft--;
+    document.getElementById("timer").innerText = timeLeft;
+
+    if (timeLeft === 0) {
+      nextQuestion();
+    }
+  }, 1000);
+}
+
+</script>
+
+</body>
+</html>

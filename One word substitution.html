@@ -1,0 +1,732 @@
+<!DOCTYPE html>
+<html>
+<head>
+      <!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-KN4DRRWZ17"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-KN4DRRWZ17');
+</script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title> One word substitution Quiz </title>
+
+<style>
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: Arial;
+}
+
+body {
+  background: #f5f5f5;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+}
+
+/* Container */
+.app {
+  width: 95%;
+  max-width: 500px;
+  background: white;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+}
+
+/* Header */
+header {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 20px;
+}
+
+.timer {
+  background: #2196F3;
+  color: white;
+  padding: 5px 10px;
+  border-radius: 5px;
+}
+
+/* Question */
+.question {
+  font-size: 20px;
+  margin-bottom: 15px;
+}
+
+/* Options */
+.option {
+  background: #eee;
+  padding: 10px;
+  margin: 8px 0;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.option:hover {
+  background: #ddd;
+}
+
+.correct {
+  background: #4CAF50 !important;
+  color: white;
+}
+
+.wrong {
+  background: #f44336 !important;
+  color: white;
+}
+
+/* Button */
+button {
+  margin-top: 15px;
+  padding: 10px;
+  width: 100%;
+  border: none;
+ background:linear-gradient(135deg,#0a2dbcf3,#779af583);
+  color: white;
+  font-size: 16px;
+  cursor: pointer;
+  border-radius: 5px;
+}
+
+/* Hidden */
+.hide {
+  display: none;
+}
+
+/* Result */
+.result {
+  text-align: center;
+}
+
+/* Responsive */
+@media (max-width: 600px) {
+  .question {
+    font-size: 18px;
+  }
+}
+</style>
+
+</head>
+<body>
+
+<div class="app">
+
+  <!-- Start Screen -->
+  <div id="startScreen">
+    <h2>Quiz App</h2>
+    <button onclick="startQuiz()">Start Quiz</button>
+  </div>
+
+  <!-- Quiz Screen -->
+  <div id="quizScreen" class="hide">
+    <header>
+      <div>Question <span id="qNo">1</span>/100</div>
+      <div class="timer" id="timer">10</div>
+    </header>
+
+    <div class="question" id="question"></div>
+    <div id="options"></div>
+
+    <button onclick="nextQuestion()">Next</button>
+  </div>
+
+  <!-- Result Screen -->
+  <div id="resultScreen" class="hide result">
+    <h2>Your Score</h2>
+    <h1 id="score"></h1>
+    <button onclick="location.reload()">Play Again</button>
+  </div>
+
+</div>
+
+<script>
+const quizData = [
+
+
+  {
+    "question": "One word for 'A person who writes books' is:",
+    "options": ["Author", "Actor", "Editor", "Painter"],
+    "answer": 0
+  },
+  {
+    "question": "One word for 'A person who treats patients' is:",
+    "options": ["Teacher", "Doctor", "Lawyer", "Farmer"],
+    "answer": 1
+  },
+  {
+    "question": "One word for 'A place where books are kept' is:",
+    "options": ["Library", "Market", "School", "Hospital"],
+    "answer": 0
+  },
+  {
+    "question": "One word for 'A person who cannot read or write' is:",
+    "options": ["Literate", "Illiterate", "Educated", "Expert"],
+    "answer": 1
+  },
+  {
+    "question": "One word for 'A person who speaks many languages' is:",
+    "options": ["Monolingual", "Bilingual", "Polyglot", "Singer"],
+    "answer": 2
+  },
+  {
+    "question": "One word for 'A person who steals' is:",
+    "options": ["Thief", "Guard", "Police", "Judge"],
+    "answer": 0
+  },
+  {
+    "question": "One word for 'A person who composes music' is:",
+    "options": ["Composer", "Driver", "Painter", "Actor"],
+    "answer": 0
+  },
+  {
+    "question": "One word for 'A place where animals are kept' is:",
+    "options": ["Zoo", "School", "Bank", "Office"],
+    "answer": 0
+  },
+  {
+    "question": "One word for 'A person who works in a field' is:",
+    "options": ["Farmer", "Doctor", "Teacher", "Pilot"],
+    "answer": 0
+  },
+  {
+    "question": "One word for 'A person who drives a plane' is:",
+    "options": ["Driver", "Pilot", "Sailor", "Conductor"],
+    "answer": 1
+  },
+  {
+    "question": "One word for 'A speech delivered without preparation' is:",
+    "options": ["Lecture", "Debate", "Extempore", "Story"],
+    "answer": 2
+  },
+  {
+    "question": "One word for 'A person who studies stars' is:",
+    "options": ["Astronomer", "Geologist", "Biologist", "Chemist"],
+    "answer": 0
+  },
+  {
+    "question": "One word for 'A person who repairs shoes' is:",
+    "options": ["Tailor", "Cobbler", "Plumber", "Driver"],
+    "answer": 1
+  },
+  {
+    "question": "One word for 'A person who makes laws' is:",
+    "options": ["Doctor", "Lawyer", "Legislator", "Teacher"],
+    "answer": 2
+  },
+  {
+    "question": "One word for 'A person who fights for country' is:",
+    "options": ["Soldier", "Teacher", "Doctor", "Farmer"],
+    "answer": 0
+  },
+  {
+    "question": "One word for 'A place where money is kept' is:",
+    "options": ["Bank", "School", "Office", "Shop"],
+    "answer": 0
+  },
+  {
+    "question": "One word for 'A person who works in a bank' is:",
+    "options": ["Banker", "Teacher", "Driver", "Farmer"],
+    "answer": 0
+  },
+  {
+    "question": "One word for 'A written record of daily events' is:",
+    "options": ["Diary", "Book", "Letter", "Essay"],
+    "answer": 0
+  },
+  {
+    "question": "One word for 'A person who loves books' is:",
+    "options": ["Bibliophile", "Photographer", "Editor", "Painter"],
+    "answer": 0
+  },
+  {
+    "question": "One word for 'A person who cannot hear' is:",
+    "options": ["Blind", "Deaf", "Mute", "Dumb"],
+    "answer": 1
+  },
+  {
+    "question": "One word for 'A person who cannot see' is:",
+    "options": ["Blind", "Deaf", "Mute", "Lame"],
+    "answer": 0
+  },
+  {
+    "question": "One word for 'A place where sick people are treated' is:",
+    "options": ["Hospital", "School", "Bank", "Temple"],
+    "answer": 0
+  },
+  {
+    "question": "One word for 'A person who sells medicines' is:",
+    "options": ["Doctor", "Chemist", "Teacher", "Farmer"],
+    "answer": 1
+  },
+  {
+    "question": "One word for 'A person who teaches' is:",
+    "options": ["Teacher", "Doctor", "Pilot", "Driver"],
+    "answer": 0
+  },
+  {
+    "question": "One word for 'A person who paints pictures' is:",
+    "options": ["Painter", "Singer", "Writer", "Dancer"],
+    "answer": 0
+  },
+  {
+    "question": "One word for 'A person who writes poems' is:",
+    "options": ["Poet", "Author", "Editor", "Actor"],
+    "answer": 0
+  },
+  {
+    "question": "One word for 'A place where animals are treated' is:",
+    "options": ["Hospital", "Zoo", "Veterinary clinic", "School"],
+    "answer": 2
+  },
+  {
+    "question": "One word for 'A person who studies animals' is:",
+    "options": ["Zoologist", "Botanist", "Chemist", "Physicist"],
+    "answer": 0
+  },
+  {
+    "question": "One word for 'A person who studies plants' is:",
+    "options": ["Botanist", "Zoologist", "Doctor", "Teacher"],
+    "answer": 0
+  },
+  {
+    "question": "One word for 'A person who sells goods' is:",
+    "options": ["Customer", "Shopkeeper", "Buyer", "Doctor"],
+    "answer": 1
+  },
+  {
+    "question": "One word for 'A person who flies an aircraft' is:",
+    "options": ["Pilot", "Driver", "Sailor", "Guard"],
+    "answer": 0
+  },
+  {
+    "question": "One word for 'A person who guards a building' is:",
+    "options": ["Guard", "Teacher", "Doctor", "Farmer"],
+    "answer": 0
+  },
+  {
+    "question": "One word for 'A person who studies human mind' is:",
+    "options": ["Psychologist", "Scientist", "Doctor", "Teacher"],
+    "answer": 0
+  },
+  {
+    "question": "One word for 'A person who breaks laws' is:",
+    "options": ["Criminal", "Police", "Judge", "Lawyer"],
+    "answer": 0
+  },
+  {
+    "question": "One word for 'A person who defends in court' is:",
+    "options": ["Judge", "Lawyer", "Doctor", "Teacher"],
+    "answer": 1
+  },
+  {
+    "question": "One word for 'A person who judges cases' is:",
+    "options": ["Judge", "Lawyer", "Doctor", "Clerk"],
+    "answer": 0
+  },
+  {
+    "question": "One word for 'A place where letters are sent' is:",
+    "options": ["Post office", "Bank", "School", "Market"],
+    "answer": 0
+  },
+  {
+    "question": "One word for 'A person who delivers letters' is:",
+    "options": ["Postman", "Teacher", "Driver", "Doctor"],
+    "answer": 0
+  },
+  {
+    "question": "One word for 'A person who builds houses' is:",
+    "options": ["Carpenter", "Builder", "Doctor", "Teacher"],
+    "answer": 1
+  },
+  {
+    "question": "One word for 'A person who works with wood' is:",
+    "options": ["Carpenter", "Painter", "Driver", "Farmer"],
+    "answer": 0
+  },
+  {
+    "question": "One word for 'A person who repairs pipes' is:",
+    "options": ["Plumber", "Electrician", "Driver", "Teacher"],
+    "answer": 0
+  },
+  {
+    "question": "One word for 'A person who works with electricity' is:",
+    "options": ["Plumber", "Electrician", "Carpenter", "Doctor"],
+    "answer": 1
+  },
+  {
+    "question": "One word for 'A person who acts in films' is:",
+    "options": ["Actor", "Singer", "Writer", "Painter"],
+    "answer": 0
+  },
+  {
+    "question": "One word for 'A person who sings songs' is:",
+    "options": ["Singer", "Dancer", "Actor", "Writer"],
+    "answer": 0
+  },
+  {
+    "question": "One word for 'A person who dances' is:",
+    "options": ["Dancer", "Singer", "Painter", "Teacher"],
+    "answer": 0
+  },
+  {
+    "question": "One word for 'A person who studies history' is:",
+    "options": ["Historian", "Scientist", "Doctor", "Teacher"],
+    "answer": 0
+  },
+  {
+    "question": "One word for 'A person who studies earth' is:",
+    "options": ["Geologist", "Biologist", "Chemist", "Physicist"],
+    "answer": 0
+  },
+  {
+    "question": "One word for 'A person who studies life' is:",
+    "options": ["Biologist", "Geologist", "Doctor", "Teacher"],
+    "answer": 0
+  },
+  {
+    "question": "One word for 'A person who studies chemicals' is:",
+    "options": ["Chemist", "Physicist", "Biologist", "Teacher"],
+    "answer": 0
+  },
+  {
+    "question": "One word for 'A person who studies matter and energy' is:",
+    "options": ["Physicist", "Chemist", "Biologist", "Doctor"],
+    "answer": 0
+  },
+  {
+    "question": "One word for 'A person who travels in space' is:",
+    "options": ["Astronaut", "Pilot", "Driver", "Sailor"],
+    "answer": 0
+  },
+  {
+    "question": "One word for 'A person who works in space science' is:",
+    "options": ["Astronomer", "Astronaut", "Scientist", "Teacher"],
+    "answer": 1
+  },
+  {
+    "question": "One word for 'A person who sells vegetables' is:",
+    "options": ["Vegetable seller", "Farmer", "Doctor", "Teacher"],
+    "answer": 0
+  },
+  {
+    "question": "One word for 'A person who cannot speak' is:",
+    "options": ["Deaf", "Mute", "Blind", "Dumb"],
+    "answer": 1
+  },
+  {
+    "question": "One word for 'A person who collects taxes' is:",
+    "options": ["Teacher", "Tax collector", "Doctor", "Farmer"],
+    "answer": 1
+  },
+  {
+    "question": "One word for 'A person who studies birds' is:",
+    "options": ["Ornithologist", "Zoologist", "Botanist", "Geologist"],
+    "answer": 0
+  },
+  {
+    "question": "One word for 'A person who fears water' is:",
+    "options": ["Aquaphobia", "Hydrophobic", "Claustrophobic", "Acrophobic"],
+    "answer": 1
+  },
+  {
+    "question": "One word for 'A place where dead bodies are kept' is:",
+    "options": ["Hospital", "Mortuary", "Library", "Temple"],
+    "answer": 1
+  },
+  {
+    "question": "One word for 'A person who hates mankind' is:",
+    "options": ["Misanthrope", "Philanthropist", "Humanist", "Doctor"],
+    "answer": 0
+  },
+  {
+    "question": "One word for 'A person who loves mankind' is:",
+    "options": ["Misanthrope", "Philanthropist", "Criminal", "Judge"],
+    "answer": 1
+  },
+  {
+    "question": "One word for 'A speech made without preparation' is:",
+    "options": ["Lecture", "Extempore", "Debate", "Essay"],
+    "answer": 1
+  },
+  {
+    "question": "One word for 'A person who writes dictionary' is:",
+    "options": ["Lexicographer", "Author", "Editor", "Teacher"],
+    "answer": 0
+  },
+  {
+    "question": "One word for 'A person who studies weather' is:",
+    "options": ["Meteorologist", "Biologist", "Geologist", "Astronomer"],
+    "answer": 0
+  },
+  {
+    "question": "One word for 'A person who loves books' is:",
+    "options": ["Bibliophile", "Photographer", "Writer", "Editor"],
+    "answer": 0
+  },
+  {
+    "question": "One word for 'A person who is very talkative' is:",
+    "options": ["Taciturn", "Loquacious", "Silent", "Calm"],
+    "answer": 1
+  },
+  {
+    "question": "One word for 'A person who does not believe in God' is:",
+    "options": ["Atheist", "Theist", "Believer", "Saint"],
+    "answer": 0
+  },
+  {
+    "question": "One word for 'A person who believes in God' is:",
+    "options": ["Atheist", "Theist", "Criminal", "Doctor"],
+    "answer": 1
+  },
+  {
+    "question": "One word for 'A place where animals are slaughtered' is:",
+    "options": ["Abattoir", "Zoo", "Farm", "Shelter"],
+    "answer": 0
+  },
+  {
+    "question": "One word for 'A person who works for free' is:",
+    "options": ["Volunteer", "Employee", "Worker", "Manager"],
+    "answer": 0
+  },
+  {
+    "question": "One word for 'A person who speaks two languages' is:",
+    "options": ["Monolingual", "Bilingual", "Polyglot", "Native"],
+    "answer": 1
+  },
+  {
+    "question": "One word for 'A person who speaks many languages' is:",
+    "options": ["Monolingual", "Bilingual", "Polyglot", "Dumb"],
+    "answer": 2
+  },
+  {
+    "question": "One word for 'A person who writes plays' is:",
+    "options": ["Playwright", "Poet", "Author", "Editor"],
+    "answer": 0
+  },
+  {
+    "question": "One word for 'A place where coins are made' is:",
+    "options": ["Mint", "Bank", "Factory", "Office"],
+    "answer": 0
+  },
+  {
+    "question": "One word for 'A person who loves himself' is:",
+    "options": ["Altruist", "Egoist", "Humanist", "Philanthropist"],
+    "answer": 1
+  },
+  {
+    "question": "One word for 'A person who studies society' is:",
+    "options": ["Sociologist", "Biologist", "Geologist", "Chemist"],
+    "answer": 0
+  },
+  {
+    "question": "One word for 'A person who studies human body' is:",
+    "options": ["Anatomist", "Botanist", "Physicist", "Astronomer"],
+    "answer": 0
+  },
+  {
+    "question": "One word for 'A person who lives alone' is:",
+    "options": ["Social", "Recluse", "Friendly", "Public"],
+    "answer": 1
+  },
+  {
+    "question": "One word for 'A person who hates women' is:",
+    "options": ["Misogynist", "Misanthrope", "Feminist", "Humanist"],
+    "answer": 0
+  },
+  {
+    "question": "One word for 'A person who hates men' is:",
+    "options": ["Misandrist", "Misanthrope", "Humanist", "Doctor"],
+    "answer": 0
+  },
+  {
+    "question": "One word for 'A person who speaks in court' is:",
+    "options": ["Advocate", "Judge", "Doctor", "Teacher"],
+    "answer": 0
+  },
+  {
+    "question": "One word for 'A person who runs away from society' is:",
+    "options": ["Recluse", "Citizen", "Leader", "Worker"],
+    "answer": 0
+  },
+  {
+    "question": "One word for 'A place where animals live freely' is:",
+    "options": ["Zoo", "Wildlife sanctuary", "Farm", "Market"],
+    "answer": 1
+  },
+  {
+    "question": "One word for 'A person who cannot hear' is:",
+    "options": ["Deaf", "Mute", "Blind", "Dumb"],
+    "answer": 0
+  },
+  {
+    "question": "One word for 'A person who is unable to pay debts' is:",
+    "options": ["Bankrupt", "Rich", "Creditor", "Investor"],
+    "answer": 0
+  },
+  {
+    "question": "One word for 'A person who loves books' is:",
+    "options": ["Bibliophile", "Editor", "Writer", "Printer"],
+    "answer": 0
+  },
+  {
+    "question": "One word for 'A person who hates mankind' is:",
+    "options": ["Misanthrope", "Philanthropist", "Humanist", "Doctor"],
+    "answer": 0
+  },
+  {
+    "question": "One word for 'A person who loves mankind' is:",
+    "options": ["Misanthrope", "Philanthropist", "Criminal", "Judge"],
+    "answer": 1
+  },
+  {
+    "question": "One word for 'A place where dead bodies are kept' is:",
+    "options": ["Mortuary", "Hospital", "Temple", "School"],
+    "answer": 0
+  },
+  {
+    "question": "One word for 'A person who speaks many languages' is:",
+    "options": ["Polyglot", "Monolingual", "Bilingual", "Native"],
+    "answer": 0
+  },
+  {
+    "question": "One word for 'A person who works for free' is:",
+    "options": ["Volunteer", "Employee", "Manager", "Leader"],
+    "answer": 0
+  },
+  {
+    "question": "One word for 'A speech without preparation' is:",
+    "options": ["Extempore", "Lecture", "Essay", "Debate"],
+    "answer": 0
+  },
+  {
+    "question": "One word for 'A person who writes plays' is:",
+    "options": ["Playwright", "Poet", "Author", "Editor"],
+    "answer": 0
+  },
+  {
+    "question": "One word for 'A person who studies society' is:",
+    "options": ["Sociologist", "Biologist", "Chemist", "Geologist"],
+    "answer": 0
+  },
+  {
+    "question": "One word for 'A person who studies weather' is:",
+    "options": ["Meteorologist", "Astronomer", "Botanist", "Doctor"],
+    "answer": 0
+  },
+  {
+    "question": "One word for 'A person who studies human mind' is:",
+    "options": ["Psychologist", "Scientist", "Doctor", "Teacher"],
+    "answer": 0
+  },
+  {
+    "question": "One word for 'A person who cannot speak' is:",
+    "options": ["Mute", "Deaf", "Blind", "Dumb"],
+    "answer": 0
+  },
+  {
+    "question": "One word for 'A person who cannot hear' is:",
+    "options": ["Deaf", "Mute", "Blind", "Dumb"],
+    "answer": 0
+  },
+  {
+    "question": "One word for 'A person who cannot see' is:",
+    "options": ["Blind", "Deaf", "Mute", "Dumb"],
+    "answer": 0
+  },
+  {
+    "question": "One word for 'A place where books are kept' is:",
+    "options": ["Library", "Bank", "School", "Market"],
+    "answer": 0
+  },
+  {
+    "question": "One word for 'A place where coins are made' is:",
+    "options": ["Mint", "Bank", "Office", "Factory"],
+    "answer": 0
+  }
+
+
+];
+
+
+let index = 0;
+let score = 0;
+let timer;
+let timeLeft = 10;
+
+function startQuiz() {
+  document.getElementById("startScreen").classList.add("hide");
+  document.getElementById("quizScreen").classList.remove("hide");
+  loadQuestion();
+}
+
+function loadQuestion() {
+  resetTimer();
+  let q = quizData[index];
+  document.getElementById("question").innerText = q.question;
+  document.getElementById("qNo").innerText = index + 1;
+
+  let optionsHTML = "";
+  q.options.forEach((opt, i) => {
+    optionsHTML += `<div class="option" onclick="selectOption(${i})">${opt}</div>`;
+  });
+
+  document.getElementById("options").innerHTML = optionsHTML;
+}
+
+function selectOption(selected) {
+  let correct = quizData[index].answer;
+  let options = document.querySelectorAll(".option");
+
+  options.forEach((opt, i) => {
+    if (i === correct) opt.classList.add("correct");
+    else if (i === selected) opt.classList.add("wrong");
+
+    opt.style.pointerEvents = "none";
+  });
+
+  if (selected === correct) score++;
+}
+
+function nextQuestion() {
+  index++;
+  if (index < quizData.length) {
+    loadQuestion();
+  } else {
+    showResult();
+  }
+}
+
+  function showResult() {
+  document.getElementById("quizScreen").classList.add("hide");
+  document.getElementById("resultScreen").classList.remove("hide");
+  document.getElementById("score").innerText = score + " / " + quizData.length;
+}
+
+function resetTimer() {
+  clearInterval(timer);
+  timeLeft = 10;
+  document.getElementById("timer").innerText = timeLeft;
+
+  timer = setInterval(() => {
+    timeLeft--;
+    document.getElementById("timer").innerText = timeLeft;
+
+    if (timeLeft === 0) {
+      nextQuestion();
+    }
+  }, 1000);
+}
+
+</script>
+
+</body>
+</html>

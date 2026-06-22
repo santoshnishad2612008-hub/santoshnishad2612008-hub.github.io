@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html>
+<head>
+     <!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-KN4DRRWZ17"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-KN4DRRWZ17');
+</script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ms office Quiz</title>
+
+<style>
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: Arial;
+}
+
+body {
+  background: #f5f5f5;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+}
+
+/* Container */
+.app {
+  width: 95%;
+  max-width: 500px;
+  background: white;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+}
+
+/* Header */
+header {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 20px;
+}
+
+.timer {
+  background: #2196F3;
+  color: white;
+  padding: 5px 10px;
+  border-radius: 5px;
+}
+
+/* Question */
+.question {
+  font-size: 20px;
+  margin-bottom: 15px;
+}
+
+/* Options */
+.option {
+  background: #eee;
+  padding: 10px;
+  margin: 8px 0;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.option:hover {
+  background: #ddd;
+}
+
+.correct {
+  background: #4CAF50 !important;
+  color: white;
+}
+
+.wrong {
+  background: #f44336 !important;
+  color: white;
+}
+
+/* Button */
+button {
+  margin-top: 15px;
+  padding: 10px;
+  width: 100%;
+  border: none;
+ background:linear-gradient(135deg,#0a2dbcf3,#779af583);
+  color: white;
+  font-size: 16px;
+  cursor: pointer;
+  border-radius: 5px;
+}
+
+/* Hidden */
+.hide {
+  display: none;
+}
+
+/* Result */
+.result {
+  text-align: center;
+}
+
+/* Responsive */
+@media (max-width: 600px) {
+  .question {
+    font-size: 18px;
+  }
+}
+</style>
+
+</head>
+<body>
+
+<div class="app">
+
+  <!-- Start Screen -->
+  <div id="startScreen">
+    <h2>Quiz App</h2>
+    <button onclick="startQuiz()">Start Quiz</button>
+  </div>
+
+  <!-- Quiz Screen -->
+  <div id="quizScreen" class="hide">
+    <header>
+      <div>Question <span id="qNo">1</span>/100</div>
+      <div class="timer" id="timer">10</div>
+    </header>
+
+    <div class="question" id="question"></div>
+    <div id="options"></div>
+
+    <button onclick="nextQuestion()">Next</button>
+  </div>
+
+  <!-- Result Screen -->
+  <div id="resultScreen" class="hide result">
+    <h2>Your Score</h2>
+    <h1 id="score"></h1>
+    <button onclick="location.reload()">Play Again</button>
+  </div>
+
+</div>
+
+<script>
+const quizData = [
+
+{ question:"MS Word का मुख्य उपयोग क्या है?", options:["टाइपिंग","गेम खेलना","फोटो एडिट","कोडिंग"], answer:0 },
+{ question:"MS Excel किसके लिए उपयोग होता है?", options:["स्प्रेडशीट","वीडियो एडिट","ब्राउज़िंग","ड्राइंग"], answer:0 },
+{ question:"PowerPoint का उपयोग किस लिए होता है?", options:["प्रेजेंटेशन","टाइपिंग","गणना","डिजाइनिंग"], answer:0 },
+{ question:"MS Word की फाइल का extension क्या है?", options:[".docx",".xlsx",".pptx",".txt"], answer:0 },
+{ question:"Excel फाइल का extension क्या है?", options:[".docx",".xlsx",".pptx",".mp3"], answer:1 },
+{ question:"PowerPoint फाइल का extension क्या है?", options:[".pptx",".docx",".xlsx",".pdf"], answer:0 },
+{ question:"Word में spell check कौन करता है?", options:["Grammar tool","Paint","Calculator","Media player"], answer:0 },
+{ question:"Excel में rows और columns का मिलन क्या कहलाता है?", options:["Cell","Table","Sheet","Box"], answer:0 },
+{ question:"PowerPoint में slides क्या होती हैं?", options:["Pages","Videos","Images","Songs"], answer:0 },
+{ question:"MS Office एक क्या है?", options:["Software suite","Hardware","Virus","Game"], answer:0 },
+
+{ question:"Excel में formula शुरू किससे होता है?", options:["=","+","@","#"], answer:0 },
+{ question:"Word में bold shortcut क्या है?", options:["Ctrl+B","Ctrl+V","Ctrl+C","Ctrl+P"], answer:0 },
+{ question:"Italic shortcut क्या है?", options:["Ctrl+I","Ctrl+U","Ctrl+O","Ctrl+T"], answer:0 },
+{ question:"Underline shortcut क्या है?", options:["Ctrl+U","Ctrl+B","Ctrl+K","Ctrl+S"], answer:0 },
+{ question:"MS Word में नया document क्या कहलाता है?", options:["Document","Sheet","Slide","Page Setup"], answer:0 },
+{ question:"Excel में file को क्या कहते हैं?", options:["Workbook","Document","Slide","Project"], answer:0 },
+{ question:"Excel sheet में maximum rows कितनी होती हैं?", options:["1048576","1000","500","9999"], answer:0 },
+{ question:"Excel में columns कितने होते हैं?", options:["16384","1000","256","5000"], answer:0 },
+{ question:"PowerPoint में default view क्या है?", options:["Normal view","Slide show","Print","Design"], answer:0 },
+{ question:"MS Word में margins कहाँ सेट होते हैं?", options:["Page Layout","Insert","View","Review"], answer:0 },
+
+{ question:"MS Excel में SUM function क्या करता है?", options:["जोड़","घटाना","गुणा","भाग"], answer:0 },
+{ question:"AVERAGE function क्या करता है?", options:["औसत निकालता है","जोड़ता है","घटाता है","गुणा करता है"], answer:0 },
+{ question:"Excel में chart किसके लिए होता है?", options:["Data visualization","Typing","Printing","Saving"], answer:0 },
+{ question:"Filter का उपयोग क्या है?", options:["Data छांटना","Print करना","Delete करना","Save करना"], answer:0 },
+{ question:"Excel में cell address का उदाहरण?", options:["A1","1A","AA","11"], answer:0 },
+{ question:"Excel में worksheet क्या है?", options:["Sheet","Video","Image","File"], answer:0 },
+{ question:"MS Excel में कौन सा tool sorting करता है?", options:["Sort","Paint","Zoom","Pen"], answer:0 },
+{ question:"Excel में IF function क्या करता है?", options:["Condition check","Sum","Average","Multiply"], answer:0 },
+{ question:"Excel में MAX function क्या करता है?", options:["सबसे बड़ा मान","सबसे छोटा","औसत","जोड़"], answer:0 },
+{ question:"Excel में MIN function क्या करता है?", options:["सबसे छोटा मान","सबसे बड़ा","जोड़","गुणा"], answer:0 },
+
+{ question:"PowerPoint में slide show शुरू करने की key?", options:["F5","F1","F2","F12"], answer:0 },
+{ question:"PowerPoint में animation क्या है?", options:["Movement effects","Text","Table","Formula"], answer:0 },
+{ question:"Transition का उपयोग कहाँ होता है?", options:["Slides के बीच","Excel","Word","Paint"], answer:0 },
+{ question:"PowerPoint में design किसके लिए होता है?", options:["Look सुधारना","Calculation","Coding","Printing"], answer:0 },
+{ question:"Slide layout क्या है?", options:["Content structure","Game","File","Tool"], answer:0 },
+{ question:"PowerPoint में speaker notes कहाँ होते हैं?", options:["Slides के नीचे","Excel","Word","Header"], answer:0 },
+{ question:"Insert tab का उपयोग?", options:["Objects जोड़ना","Delete","Save","Close"], answer:0 },
+{ question:"Slide master का उपयोग?", options:["All slides design control","Print","Audio","Video"], answer:0 },
+{ question:"PowerPoint file extension?", options:[".pptx",".docx",".xlsx",".exe"], answer:0 },
+{ question:"Slide show mode क्या करता है?", options:["Presentation दिखाता है","Edit","Save","Cut"], answer:0 },
+
+{ question:"MS Outlook किसके लिए है?", options:["Email","Game","Design","Coding"], answer:0 },
+{ question:"Email भेजने के लिए कौन सा software?", options:["Outlook","Excel","Word","Paint"], answer:0 },
+{ question:"Access किसके लिए उपयोग होता है?", options:["Database","Presentation","Typing","Drawing"], answer:0 },
+{ question:"Database क्या होता है?", options:["Data collection","Game","Image","Video"], answer:0 },
+{ question:"MS Office में OneDrive क्या है?", options:["Cloud storage","Game","Editor","Browser"], answer:0 },
+{ question:"Ctrl+S का उपयोग?", options:["Save","Cut","Copy","Paste"], answer:0 },
+{ question:"Ctrl+C क्या करता है?", options:["Copy","Paste","Delete","Save"], answer:0 },
+{ question:"Ctrl+V क्या करता है?", options:["Paste","Copy","Cut","Undo"], answer:0 },
+{ question:"Ctrl+Z क्या करता है?", options:["Undo","Redo","Save","Close"], answer:0 },
+{ question:"Ctrl+Y क्या करता है?", options:["Redo","Undo","Copy","Paste"], answer:0 },
+
+{ question:"Find command का shortcut?", options:["Ctrl+F","Ctrl+G","Ctrl+H","Ctrl+P"], answer:0 },
+{ question:"Replace command?", options:["Ctrl+H","Ctrl+F","Ctrl+R","Ctrl+T"], answer:0 },
+{ question:"Print shortcut?", options:["Ctrl+P","Ctrl+S","Ctrl+O","Ctrl+N"], answer:0 },
+{ question:"New document shortcut?", options:["Ctrl+N","Ctrl+M","Ctrl+D","Ctrl+L"], answer:0 },
+{ question:"Open file shortcut?", options:["Ctrl+O","Ctrl+P","Ctrl+S","Ctrl+Q"], answer:0 },
+{ question:"Font size बढ़ाने का shortcut?", options:["Ctrl+Shift+>","Ctrl+<","Ctrl+Z","Ctrl+X"], answer:0 },
+{ question:"Font size घटाने का shortcut?", options:["Ctrl+Shift+<","Ctrl+P","Ctrl+S","Ctrl+B"], answer:0 },
+{ question:"MS Office suite किस कंपनी का है?", options:["Microsoft","Google","Apple","IBM"], answer:0 },
+{ question:"Excel में AutoFill क्या करता है?", options:["Data auto fill","Delete","Print","Save"], answer:0 },
+{ question:"Word में header कहाँ होता है?", options:["Page top","Bottom","Middle","Side"], answer:0 },
+
+{ question:"Footer कहाँ होता है?", options:["Page bottom","Top","Middle","Left"], answer:0 },
+{ question:"MS Word में alignment कितने प्रकार के होते हैं?", options:["4","2","6","8"], answer:0 },
+{ question:"Left alignment shortcut?", options:["Ctrl+L","Ctrl+R","Ctrl+E","Ctrl+J"], answer:0 },
+{ question:"Center alignment?", options:["Ctrl+E","Ctrl+L","Ctrl+R","Ctrl+J"], answer:0 },
+{ question:"Right alignment?", options:["Ctrl+R","Ctrl+L","Ctrl+E","Ctrl+S"], answer:0 },
+{ question:"Justify alignment?", options:["Ctrl+J","Ctrl+L","Ctrl+R","Ctrl+E"], answer:0 },
+{ question:"MS Word में table क्या है?", options:["Rows-columns grid","Image","Video","Sound"], answer:0 },
+{ question:"Excel में cell merge क्या करता है?", options:["Cells जोड़ता है","Delete","Copy","Cut"], answer:0 },
+{ question:"Zoom in/out किसके लिए?", options:["View size","Delete","Save","Print"], answer:0 },
+{ question:"MS Office किस प्रकार का software है?", options:["Application suite","Game","Virus","Driver"], answer:0 },
+
+{ question:"MS Word में watermark का उपयोग क्या है?", options:["Background text","Image edit","Print","Save"], answer:0 },
+{ question:"MS Excel में cell range का उदाहरण क्या है?", options:["A1:B10","A-1","Row1","ColA"], answer:0 },
+{ question:"Excel में CONCATENATE function क्या करता है?", options:["Text जोड़ता है","Sum करता है","Divide करता है","Sort करता है"], answer:0 },
+{ question:"MS Word में clipboard का उपयोग क्या है?", options:["Cut/Copy data रखना","Print करना","Save करना","Design करना"], answer:0 },
+{ question:"MS PowerPoint में background किससे बदलते हैं?", options:["Design tab","Insert tab","View tab","Home tab"], answer:0 },
+{ question:"MS Excel में AutoSum का shortcut क्या है?", options:["Alt + =","Ctrl + S","Ctrl + A","Shift + ="], answer:0 },
+{ question:"MS Word में page break का उपयोग क्या है?", options:["New page शुरू करना","Delete text","Save file","Insert image"], answer:0 },
+{ question:"MS Excel में chart types कितने होते हैं?", options:["Multiple","1","2","3"], answer:0 },
+{ question:"MS Word में mail merge का उपयोग क्या है?", options:["Bulk letters भेजना","Typing","Drawing","Coding"], answer:0 },
+{ question:"MS PowerPoint में custom animation कहाँ होता है?", options:["Animations tab","Insert tab","View tab","File tab"], answer:0 },
+
+{ question:"MS Excel में pivot table क्या है?", options:["Data summary tool","Image tool","Chart tool","Print tool"], answer:0 },
+{ question:"MS Word में spelling error किससे दिखता है?", options:["Red underline","Blue line","Green box","Yellow mark"], answer:0 },
+{ question:"MS Excel में formula bar कहाँ होता है?", options:["Top","Bottom","Left","Right"], answer:0 },
+{ question:"MS Word में text highlight का उपयोग क्या है?", options:["Text को highlight करना","Delete","Save","Print"], answer:0 },
+{ question:"MS PowerPoint में slide delete कैसे करते हैं?", options:["Right click delete","Copy","Paste","Insert"], answer:0 },
+{ question:"MS Excel में absolute reference किससे बनता है?", options:["$A$1","A1","A-1","1A"], answer:0 },
+{ question:"MS Word में ruler का उपयोग क्या है?", options:["Margin set करना","Print","Save","Insert"], answer:0 },
+{ question:"MS Excel में cell formatting क्या है?", options:["Cell design बदलना","Delete","Save","Print"], answer:0 },
+{ question:"MS PowerPoint में slide number कहाँ दिखता है?", options:["Footer","Header","Left side","Top menu"], answer:0 },
+{ question:"MS Word में page orientation कितने प्रकार की होती है?", options:["2","1","3","4"], answer:0 },
+
+{ question:"Portrait orientation क्या होती है?", options:["Vertical page","Horizontal page","Square page","Round page"], answer:0 },
+{ question:"Landscape orientation क्या होती है?", options:["Horizontal page","Vertical page","Diagonal page","Circle page"], answer:0 },
+{ question:"MS Excel में data validation का उपयोग क्या है?", options:["Data control","Delete","Print","Save"], answer:0 },
+{ question:"MS Word में thesaurus क्या करता है?", options:["Synonyms देता है","Delete करता है","Save करता है","Print करता है"], answer:0 },
+{ question:"MS PowerPoint में slide duplicate कैसे करते हैं?", options:["Copy slide","Delete slide","Insert image","Save file"], answer:0 },
+{ question:"MS Excel में freeze panes का उपयोग क्या है?", options:["Row/column lock","Delete","Print","Save"], answer:0 },
+{ question:"MS Word में track changes क्या करता है?", options:["Editing track करता है","Delete file","Save file","Print file"], answer:0 },
+{ question:"MS Excel में VLOOKUP क्या करता है?", options:["Data search","Sum","Average","Multiply"], answer:0 },
+{ question:"MS Word में smart art का उपयोग क्या है?", options:["Graphics बनाना","Typing","Saving","Printing"], answer:0 },
+{ question:"MS PowerPoint में slideshow की shortcut key क्या है?", options:["F5","F2","F9","F10"], answer:0 }
+];
+
+
+let index = 0;
+let score = 0;
+let timer;
+let timeLeft = 10;
+
+function startQuiz() {
+  document.getElementById("startScreen").classList.add("hide");
+  document.getElementById("quizScreen").classList.remove("hide");
+  loadQuestion();
+}
+
+function loadQuestion() {
+  resetTimer();
+  let q = quizData[index];
+  document.getElementById("question").innerText = q.question;
+  document.getElementById("qNo").innerText = index + 1;
+
+  let optionsHTML = "";
+  q.options.forEach((opt, i) => {
+    optionsHTML += `<div class="option" onclick="selectOption(${i})">${opt}</div>`;
+  });
+
+  document.getElementById("options").innerHTML = optionsHTML;
+}
+
+function selectOption(selected) {
+  let correct = quizData[index].answer;
+  let options = document.querySelectorAll(".option");
+
+  options.forEach((opt, i) => {
+    if (i === correct) opt.classList.add("correct");
+    else if (i === selected) opt.classList.add("wrong");
+
+    opt.style.pointerEvents = "none";
+  });
+
+  if (selected === correct) score++;
+}
+
+function nextQuestion() {
+  index++;
+  if (index < quizData.length) {
+    loadQuestion();
+  } else {
+    showResult();
+  }
+}
+
+  function showResult() {
+  document.getElementById("quizScreen").classList.add("hide");
+  document.getElementById("resultScreen").classList.remove("hide");
+  document.getElementById("score").innerText = score + " / " + quizData.length;
+}
+
+function resetTimer() {
+  clearInterval(timer);
+  timeLeft = 10;
+  document.getElementById("timer").innerText = timeLeft;
+
+  timer = setInterval(() => {
+    timeLeft--;
+    document.getElementById("timer").innerText = timeLeft;
+
+    if (timeLeft === 0) {
+      nextQuestion();
+    }
+  }, 1000);
+}
+
+</script>
+
+</body>
+</html>

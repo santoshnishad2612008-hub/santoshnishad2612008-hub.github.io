@@ -1,0 +1,731 @@
+<!DOCTYPE html>
+<html>
+<head>
+      <!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-KN4DRRWZ17"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-KN4DRRWZ17');
+</script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Antoniyams Quiz</title>
+
+<style>
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: Arial;
+}
+
+body {
+  background: #f5f5f5;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+}
+
+/* Container */
+.app {
+  width: 95%;
+  max-width: 500px;
+  background: white;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+}
+
+/* Header */
+header {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 20px;
+}
+
+.timer {
+  background: #2196F3;
+  color: white;
+  padding: 5px 10px;
+  border-radius: 5px;
+}
+
+/* Question */
+.question {
+  font-size: 20px;
+  margin-bottom: 15px;
+}
+
+/* Options */
+.option {
+  background: #eee;
+  padding: 10px;
+  margin: 8px 0;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.option:hover {
+  background: #ddd;
+}
+
+.correct {
+  background: #4CAF50 !important;
+  color: white;
+}
+
+.wrong {
+  background: #f44336 !important;
+  color: white;
+}
+
+/* Button */
+button {
+  margin-top: 15px;
+  padding: 10px;
+  width: 100%;
+  border: none;
+ background:linear-gradient(135deg,#0a2dbcf3,#779af583);
+  color: white;
+  font-size: 16px;
+  cursor: pointer;
+  border-radius: 5px;
+}
+
+/* Hidden */
+.hide {
+  display: none;
+}
+
+/* Result */
+.result {
+  text-align: center;
+}
+
+/* Responsive */
+@media (max-width: 600px) {
+  .question {
+    font-size: 18px;
+  }
+}
+</style>
+
+</head>
+<body>
+
+<div class="app">
+
+  <!-- Start Screen -->
+  <div id="startScreen">
+    <h2>Quiz App</h2>
+    <button onclick="startQuiz()">Start Quiz</button>
+  </div>
+
+  <!-- Quiz Screen -->
+  <div id="quizScreen" class="hide">
+    <header>
+      <div>Question <span id="qNo">1</span>/100</div>
+      <div class="timer" id="timer">10</div>
+    </header>
+
+    <div class="question" id="question"></div>
+    <div id="options"></div>
+
+    <button onclick="nextQuestion()">Next</button>
+  </div>
+
+  <!-- Result Screen -->
+  <div id="resultScreen" class="hide result">
+    <h2>Your Score</h2>
+    <h1 id="score"></h1>
+    <button onclick="location.reload()">Play Again</button>
+  </div>
+
+</div>
+
+<script>
+const quizData = [
+
+
+  {
+    "question": "Antonym of 'Happy' is:",
+    "options": ["Joyful", "Sad", "Glad", "Excited"],
+    "answer": 1
+  },
+  {
+    "question": "Antonym of 'Big' is:",
+    "options": ["Large", "Huge", "Small", "Wide"],
+    "answer": 2
+  },
+  {
+    "question": "Antonym of 'Hot' is:",
+    "options": ["Warm", "Cold", "Boiling", "Spicy"],
+    "answer": 1
+  },
+  {
+    "question": "Antonym of 'Fast' is:",
+    "options": ["Quick", "Slow", "Rapid", "Swift"],
+    "answer": 1
+  },
+  {
+    "question": "Antonym of 'Old' is:",
+    "options": ["Ancient", "New", "Aged", "Used"],
+    "answer": 1
+  },
+  {
+    "question": "Antonym of 'Rich' is:",
+    "options": ["Wealthy", "Poor", "Strong", "Smart"],
+    "answer": 1
+  },
+  {
+    "question": "Antonym of 'Easy' is:",
+    "options": ["Simple", "Difficult", "Soft", "Light"],
+    "answer": 1
+  },
+  {
+    "question": "Antonym of 'Day' is:",
+    "options": ["Morning", "Night", "Evening", "Sun"],
+    "answer": 1
+  },
+  {
+    "question": "Antonym of 'Love' is:",
+    "options": ["Care", "Hate", "Like", "Affection"],
+    "answer": 1
+  },
+  {
+    "question": "Antonym of 'Light' is:",
+    "options": ["Bright", "Heavy", "Dark", "Shiny"],
+    "answer": 2
+  },
+  {
+    "question": "Antonym of 'Strong' is:",
+    "options": ["Powerful", "Weak", "Tough", "Hard"],
+    "answer": 1
+  },
+  {
+    "question": "Antonym of 'Early' is:",
+    "options": ["Soon", "Late", "Fast", "Quick"],
+    "answer": 1
+  },
+  {
+    "question": "Antonym of 'Full' is:",
+    "options": ["Empty", "Packed", "Heavy", "Large"],
+    "answer": 0
+  },
+  {
+    "question": "Antonym of 'Clean' is:",
+    "options": ["Pure", "Dirty", "Fresh", "Clear"],
+    "answer": 1
+  },
+  {
+    "question": "Antonym of 'Good' is:",
+    "options": ["Nice", "Bad", "Best", "Great"],
+    "answer": 1
+  },
+  {
+    "question": "Antonym of 'Right' is:",
+    "options": ["Correct", "Wrong", "True", "Exact"],
+    "answer": 1
+  },
+  {
+    "question": "Antonym of 'True' is:",
+    "options": ["Real", "False", "Exact", "Right"],
+    "answer": 1
+  },
+  {
+    "question": "Antonym of 'Open' is:",
+    "options": ["Close", "Start", "Begin", "Wide"],
+    "answer": 0
+  },
+  {
+    "question": "Antonym of 'Come' is:",
+    "options": ["Arrive", "Go", "Enter", "Reach"],
+    "answer": 1
+  },
+  {
+    "question": "Antonym of 'Buy' is:",
+    "options": ["Sell", "Take", "Give", "Pay"],
+    "answer": 0
+  },
+  {
+    "question": "Antonym of 'Young' is:",
+    "options": ["New", "Old", "Fresh", "Small"],
+    "answer": 1
+  },
+  {
+    "question": "Antonym of 'Hard' is:",
+    "options": ["Solid", "Soft", "Tough", "Strong"],
+    "answer": 1
+  },
+  {
+    "question": "Antonym of 'Happy Birthday' (Happy) is:",
+    "options": ["Sad", "Glad", "Joyful", "Nice"],
+    "answer": 0
+  },
+  {
+    "question": "Antonym of 'Night' is:",
+    "options": ["Dark", "Day", "Moon", "Sleep"],
+    "answer": 1
+  },
+  {
+    "question": "Antonym of 'Start' is:",
+    "options": ["Begin", "End", "Open", "Go"],
+    "answer": 1
+  },
+  {
+    "question": "Antonym of 'Beautiful' is:",
+    "options": ["Pretty", "Ugly", "Smart", "Clean"],
+    "answer": 1
+  },
+  {
+    "question": "Antonym of 'Brave' is:",
+    "options": ["Strong", "Coward", "Bold", "Hero"],
+    "answer": 1
+  },
+  {
+    "question": "Antonym of 'Honest' is:",
+    "options": ["True", "Loyal", "Dishonest", "Fair"],
+    "answer": 2
+  },
+  {
+    "question": "Antonym of 'Friend' is:",
+    "options": ["Enemy", "Brother", "Helper", "Mate"],
+    "answer": 0
+  },
+  {
+    "question": "Antonym of 'Deep' is:",
+    "options": ["Low", "Shallow", "High", "Wide"],
+    "answer": 1
+  },
+  {
+    "question": "Antonym of 'Thick' is:",
+    "options": ["Fat", "Thin", "Heavy", "Large"],
+    "answer": 1
+  },
+  {
+    "question": "Antonym of 'High' is:",
+    "options": ["Tall", "Low", "Big", "Wide"],
+    "answer": 1
+  },
+  {
+    "question": "Antonym of 'Near' is:",
+    "options": ["Close", "Far", "Next", "Short"],
+    "answer": 1
+  },
+  {
+    "question": "Antonym of 'Soft' is:",
+    "options": ["Hard", "Smooth", "Light", "Gentle"],
+    "answer": 0
+  },
+  {
+    "question": "Antonym of 'Dry' is:",
+    "options": ["Wet", "Hot", "Cold", "Fresh"],
+    "answer": 0
+  },
+  {
+    "question": "Antonym of 'Strong' is:",
+    "options": ["Powerful", "Weak", "Tough", "Solid"],
+    "answer": 1
+  },
+  {
+    "question": "Antonym of 'Bright' is:",
+    "options": ["Shiny", "Dark", "Light", "Clear"],
+    "answer": 1
+  },
+  {
+    "question": "Antonym of 'Happy' is:",
+    "options": ["Joyful", "Sad", "Glad", "Excited"],
+    "answer": 1
+  },
+  {
+    "question": "Antonym of 'Early' is:",
+    "options": ["Soon", "Late", "Fast", "Quick"],
+    "answer": 1
+  },
+  {
+    "question": "Antonym of 'Heavy' is:",
+    "options": ["Light", "Strong", "Big", "Thick"],
+    "answer": 0
+  },
+  {
+    "question": "Antonym of 'Easy' is:",
+    "options": ["Simple", "Difficult", "Soft", "Clear"],
+    "answer": 1
+  },
+  {
+    "question": "Antonym of 'Old' is:",
+    "options": ["Ancient", "New", "Aged", "Used"],
+    "answer": 1
+  },
+  {
+    "question": "Antonym of 'Hot' is:",
+    "options": ["Warm", "Cold", "Boiling", "Burning"],
+    "answer": 1
+  },
+  {
+    "question": "Antonym of 'Clean' is:",
+    "options": ["Pure", "Dirty", "Fresh", "Neat"],
+    "answer": 1
+  },
+  {
+    "question": "Antonym of 'Slow' is:",
+    "options": ["Fast", "Lazy", "Weak", "Late"],
+    "answer": 0
+  },
+  {
+    "question": "Antonym of 'Rich' is:",
+    "options": ["Poor", "Strong", "Smart", "Hard"],
+    "answer": 0
+  },
+  {
+    "question": "Antonym of 'Full' is:",
+    "options": ["Empty", "Packed", "Large", "Heavy"],
+    "answer": 0
+  },
+  {
+    "question": "Antonym of 'True' is:",
+    "options": ["Real", "False", "Right", "Exact"],
+    "answer": 1
+  },
+  {
+    "question": "Antonym of 'Open' is:",
+    "options": ["Close", "Start", "Wide", "Begin"],
+    "answer": 0
+  },
+  {
+    "question": "Antonym of 'Love' is:",
+    "options": ["Like", "Hate", "Care", "Friendship"],
+    "answer": 1
+  },
+  {
+    "question": "Antonym of 'Truth' is:",
+    "options": ["Fact", "Lie", "Reality", "Honesty"],
+    "answer": 1
+  },
+  {
+    "question": "Antonym of 'War' is:",
+    "options": ["Peace", "Fight", "Battle", "Attack"],
+    "answer": 0
+  },
+  {
+    "question": "Antonym of 'Victory' is:",
+    "options": ["Win", "Defeat", "Success", "Gain"],
+    "answer": 1
+  },
+  {
+    "question": "Antonym of 'Begin' is:",
+    "options": ["Start", "End", "Open", "Go"],
+    "answer": 1
+  },
+  {
+    "question": "Antonym of 'Arrive' is:",
+    "options": ["Come", "Go", "Reach", "Enter"],
+    "answer": 1
+  },
+  {
+    "question": "Antonym of 'Increase' is:",
+    "options": ["Grow", "Rise", "Decrease", "Add"],
+    "answer": 2
+  },
+  {
+    "question": "Antonym of 'Accept' is:",
+    "options": ["Take", "Refuse", "Allow", "Get"],
+    "answer": 1
+  },
+  {
+    "question": "Antonym of 'Build' is:",
+    "options": ["Make", "Construct", "Destroy", "Create"],
+    "answer": 2
+  },
+  {
+    "question": "Antonym of 'Give' is:",
+    "options": ["Offer", "Take", "Send", "Bring"],
+    "answer": 1
+  },
+  {
+    "question": "Antonym of 'Remember' is:",
+    "options": ["Forget", "Recall", "Think", "Know"],
+    "answer": 0
+  },
+  {
+    "question": "Antonym of 'Strongly' is:",
+    "options": ["Powerfully", "Weakly", "Hardly", "Brightly"],
+    "answer": 1
+  },
+  {
+    "question": "Antonym of 'Careful' is:",
+    "options": ["Alert", "Cautious", "Careless", "Wise"],
+    "answer": 2
+  },
+  {
+    "question": "Antonym of 'Beautifully' is:",
+    "options": ["Nicely", "Ugly", "Badly", "Clearly"],
+    "answer": 2
+  },
+  {
+    "question": "Antonym of 'Quickly' is:",
+    "options": ["Fast", "Slowly", "Rapidly", "Swiftly"],
+    "answer": 1
+  },
+  {
+    "question": "Antonym of 'Inside' is:",
+    "options": ["Within", "Outside", "Inner", "In"],
+    "answer": 1
+  },
+  {
+    "question": "Antonym of 'Above' is:",
+    "options": ["Over", "Below", "Up", "Top"],
+    "answer": 1
+  },
+  {
+    "question": "Antonym of 'Before' is:",
+    "options": ["After", "Soon", "Early", "First"],
+    "answer": 0
+  },
+  {
+    "question": "Antonym of 'Borrow' is:",
+    "options": ["Take", "Lend", "Give", "Buy"],
+    "answer": 1
+  },
+  {
+    "question": "Antonym of 'Cheap' is:",
+    "options": ["Low", "Expensive", "Small", "Easy"],
+    "answer": 1
+  },
+  {
+    "question": "Antonym of 'Ancient' is:",
+    "options": ["Old", "Modern", "Past", "Used"],
+    "answer": 1
+  },
+  {
+    "question": "Antonym of 'Brave' is:",
+    "options": ["Bold", "Cowardly", "Strong", "Heroic"],
+    "answer": 1
+  },
+  {
+    "question": "Antonym of 'Softly' is:",
+    "options": ["Gently", "Loudly", "Slowly", "Lightly"],
+    "answer": 1
+  },
+  {
+    "question": "Antonym of 'Dryness' is:",
+    "options": ["Wetness", "Heat", "Cold", "Freshness"],
+    "answer": 0
+  },
+  {
+    "question": "Antonym of 'Freedom' is:",
+    "options": ["Liberty", "Slavery", "Power", "Rights"],
+    "answer": 1
+  },
+  {
+    "question": "Antonym of 'Success' is:",
+    "options": ["Win", "Failure", "Gain", "Progress"],
+    "answer": 1
+  },
+  {
+    "question": "Antonym of 'Soft' is:",
+    "options": ["Gentle", "Hard", "Light", "Smooth"],
+    "answer": 1
+  },
+  {
+    "question": "Antonym of 'Darkness' is:",
+    "options": ["Light", "Night", "Shadow", "Black"],
+    "answer": 0
+  },
+  {
+    "question": "Antonym of 'Friendship' is:",
+    "options": ["Love", "Hatred", "Care", "Trust"],
+    "answer": 1
+  },
+  {
+    "question": "Antonym of 'Honesty' is:",
+    "options": ["Truth", "Dishonesty", "Faith", "Loyalty"],
+    "answer": 1
+  },
+  {
+    "question": "Antonym of 'Victory' is:",
+    "options": ["Win", "Defeat", "Gain", "Success"],
+    "answer": 1
+  },
+  {
+    "question": "Antonym of 'Increase' is:",
+    "options": ["Grow", "Decrease", "Rise", "Add"],
+    "answer": 1
+  },
+  {
+    "question": "Antonym of 'Bright' is:",
+    "options": ["Shiny", "Dark", "Clear", "White"],
+    "answer": 1
+  },
+  {
+    "question": "Antonym of 'Empty' is:",
+    "options": ["Full", "Blank", "Free", "Light"],
+    "answer": 0
+  },
+  {
+    "question": "Antonym of 'Laugh' is:",
+    "options": ["Smile", "Cry", "Shout", "Talk"],
+    "answer": 1
+  },
+  {
+    "question": "Antonym of 'Answer' is:",
+    "options": ["Reply", "Question", "Solve", "Speak"],
+    "answer": 1
+  },
+  {
+    "question": "Antonym of 'Daylight' is:",
+    "options": ["Sunlight", "Night", "Morning", "Evening"],
+    "answer": 1
+  },
+  {
+    "question": "Antonym of 'Front' is:",
+    "options": ["Back", "Top", "Side", "Face"],
+    "answer": 0
+  },
+  {
+    "question": "Antonym of 'Deeply' is:",
+    "options": ["Shallowly", "Highly", "Strongly", "Softly"],
+    "answer": 0
+  },
+  {
+    "question": "Antonym of 'Early Morning' is:",
+    "options": ["Night", "Late Night", "Evening", "Noon"],
+    "answer": 2
+  },
+  {
+    "question": "Antonym of 'Permanent' is:",
+    "options": ["Fixed", "Temporary", "Strong", "Stable"],
+    "answer": 1
+  },
+  {
+    "question": "Antonym of 'Wide' is:",
+    "options": ["Large", "Narrow", "Big", "Open"],
+    "answer": 1
+  },
+  {
+    "question": "Antonym of 'Victory' (again practice) is:",
+    "options": ["Defeat", "Win", "Success", "Gain"],
+    "answer": 0
+  },
+  {
+    "question": "Antonym of 'Accept' is:",
+    "options": ["Refuse", "Take", "Give", "Allow"],
+    "answer": 0
+  },
+  {
+    "question": "Antonym of 'Modern' is:",
+    "options": ["New", "Ancient", "Fresh", "Current"],
+    "answer": 1
+  },
+  {
+    "question": "Antonym of 'Peaceful' is:",
+    "options": ["Calm", "Violent", "Silent", "Soft"],
+    "answer": 1
+  },
+  {
+    "question": "Antonym of 'Success' is:",
+    "options": ["Win", "Failure", "Gain", "Progress"],
+    "answer": 1
+  },
+  {
+    "question": "Antonym of 'Brave' is:",
+    "options": ["Courageous", "Cowardly", "Bold", "Strong"],
+    "answer": 1
+  },
+  {
+    "question": "Antonym of 'High' is:",
+    "options": ["Tall", "Low", "Big", "Wide"],
+    "answer": 1
+  },
+  {
+    "question": "Antonym of 'Richness' is:",
+    "options": ["Wealth", "Poverty", "Money", "Gold"],
+    "answer": 1
+  },
+  {
+    "question": "Antonym of 'Start' is:",
+    "options": ["Begin", "End", "Go", "Open"],
+    "answer": 1
+  }
+
+];
+
+
+let index = 0;
+let score = 0;
+let timer;
+let timeLeft = 10;
+
+function startQuiz() {
+  document.getElementById("startScreen").classList.add("hide");
+  document.getElementById("quizScreen").classList.remove("hide");
+  loadQuestion();
+}
+
+function loadQuestion() {
+  resetTimer();
+  let q = quizData[index];
+  document.getElementById("question").innerText = q.question;
+  document.getElementById("qNo").innerText = index + 1;
+
+  let optionsHTML = "";
+  q.options.forEach((opt, i) => {
+    optionsHTML += `<div class="option" onclick="selectOption(${i})">${opt}</div>`;
+  });
+
+  document.getElementById("options").innerHTML = optionsHTML;
+}
+
+function selectOption(selected) {
+  let correct = quizData[index].answer;
+  let options = document.querySelectorAll(".option");
+
+  options.forEach((opt, i) => {
+    if (i === correct) opt.classList.add("correct");
+    else if (i === selected) opt.classList.add("wrong");
+
+    opt.style.pointerEvents = "none";
+  });
+
+  if (selected === correct) score++;
+}
+
+function nextQuestion() {
+  index++;
+  if (index < quizData.length) {
+    loadQuestion();
+  } else {
+    showResult();
+  }
+}
+
+  function showResult() {
+  document.getElementById("quizScreen").classList.add("hide");
+  document.getElementById("resultScreen").classList.remove("hide");
+  document.getElementById("score").innerText = score + " / " + quizData.length;
+}
+
+function resetTimer() {
+  clearInterval(timer);
+  timeLeft = 10;
+  document.getElementById("timer").innerText = timeLeft;
+
+  timer = setInterval(() => {
+    timeLeft--;
+    document.getElementById("timer").innerText = timeLeft;
+
+    if (timeLeft === 0) {
+      nextQuestion();
+    }
+  }, 1000);
+}
+
+</script>
+
+</body>
+</html>

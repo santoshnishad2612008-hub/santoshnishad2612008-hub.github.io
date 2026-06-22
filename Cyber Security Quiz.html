@@ -1,0 +1,345 @@
+<!DOCTYPE html>
+<html>
+<head>
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-KN4DRRWZ17"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-KN4DRRWZ17');
+</script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cyber Security Quiz</title>
+
+<style>
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: Arial;
+}
+
+body {
+  background: #f5f5f5;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+}
+
+/* Container */
+.app {
+  width: 95%;
+  max-width: 500px;
+  background: white;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+}
+
+/* Header */
+header {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 20px;
+}
+
+.timer {
+  background: #2196F3;
+  color: white;
+  padding: 5px 10px;
+  border-radius: 5px;
+}
+
+/* Question */
+.question {
+  font-size: 20px;
+  margin-bottom: 15px;
+}
+
+/* Options */
+.option {
+  background: #eee;
+  padding: 10px;
+  margin: 8px 0;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.option:hover {
+  background: #ddd;
+}
+
+.correct {
+  background: #4CAF50 !important;
+  color: white;
+}
+
+.wrong {
+  background: #f44336 !important;
+  color: white;
+}
+
+/* Button */
+button {
+  margin-top: 15px;
+  padding: 10px;
+  width: 100%;
+  border: none;
+ background:linear-gradient(135deg,#0a2dbcf3,#779af583);
+  color: white;
+  font-size: 16px;
+  cursor: pointer;
+  border-radius: 5px;
+}
+
+/* Hidden */
+.hide {
+  display: none;
+}
+
+/* Result */
+.result {
+  text-align: center;
+}
+
+/* Responsive */
+@media (max-width: 600px) {
+  .question {
+    font-size: 18px;
+  }
+}
+</style>
+
+</head>
+<body>
+
+<div class="app">
+
+  <!-- Start Screen -->
+  <div id="startScreen">
+    <h2>Quiz App</h2>
+    <button onclick="startQuiz()">Start Quiz</button>
+  </div>
+
+  <!-- Quiz Screen -->
+  <div id="quizScreen" class="hide">
+    <header>
+      <div>Question <span id="qNo">1</span>/102</div>
+      <div class="timer" id="timer">10</div>
+    </header>
+
+    <div class="question" id="question"></div>
+    <div id="options"></div>
+
+    <button onclick="nextQuestion()">Next</button>
+  </div>
+
+  <!-- Result Screen -->
+  <div id="resultScreen" class="hide result">
+    <h2>Your Score</h2>
+    <h1 id="score"></h1>
+    <button onclick="location.reload()">Play Again</button>
+  </div>
+
+</div>
+
+<script>
+const quizData = [
+
+{ question:"फिशिंग (Phishing) क्या है?", options:["एक वायरस","धोखाधड़ी से जानकारी चुराना","नेटवर्क डिवाइस","सॉफ्टवेयर अपडेट"], answer:1 },
+{ question:"मैलवेयर (Malware) का क्या अर्थ है?", options:["सुरक्षित सॉफ्टवेयर","हानिकारक सॉफ्टवेयर","ब्राउज़र","एंटीवायरस"], answer:1 },
+{ question:"फायरवॉल का उपयोग किसके लिए होता है?", options:["गेमिंग","नेटवर्क सुरक्षा","फोटो एडिटिंग","टाइपिंग"], answer:1 },
+{ question:"VPN का पूरा नाम क्या है?", options:["Virtual Private Network","Very Private Network","Visual Protocol Network","Virtual Public Network"], answer:0 },
+{ question:"एंटीवायरस सॉफ्टवेयर क्या करता है?", options:["गेम चलाता है","वायरस हटाता है","वीडियो एडिट करता है","इंटरनेट बंद करता है"], answer:1 },
+{ question:"हैकिंग क्या है?", options:["डेटा को सुरक्षित करना","अनधिकृत एक्सेस","सॉफ्टवेयर अपडेट","नेटवर्क बनाना"], answer:1 },
+{ question:"Trojan क्या होता है?", options:["एक गेम","हानिकारक सॉफ्टवेयर जो छुपा रहता है","ब्राउज़र","फायरवॉल"], answer:1 },
+{ question:"स्पैम ईमेल क्या है?", options:["जरूरी मेल","अनचाहा मेल","सिस्टम अपडेट","कोडिंग मेल"], answer:1 },
+{ question:"Two Factor Authentication क्या है?", options:["एक पासवर्ड सिस्टम","दो चरण सुरक्षा प्रक्रिया","गेम लॉगिन","नेटवर्क"], answer:1 },
+{ question:"ब्रूट फोर्स अटैक क्या है?", options:["तेज इंटरनेट","सभी पासवर्ड ट्राय करना","डेटा बैकअप","सॉफ्टवेयर इंस्टॉल"], answer:1 },
+
+{ question:"रैनसमवेयर क्या करता है?", options:["डेटा सुरक्षित करता है","डेटा लॉक कर पैसे मांगता है","गेम चलाता है","ब्राउज़र सुधारता है"], answer:1 },
+{ question:"Encryption का मतलब क्या है?", options:["डेटा मिटाना","डेटा को कोड में बदलना","डेटा शेयर करना","डेटा कॉपी करना"], answer:1 },
+{ question:"Decryption क्या है?", options:["कोड को पढ़ने योग्य बनाना","डेटा मिटाना","नेटवर्क बंद करना","फाइल डिलीट करना"], answer:0 },
+{ question:"फिशिंग अटैक में क्या होता है?", options:["गेम खेलना","झूठे लिंक से जानकारी चुराना","सॉफ्टवेयर अपडेट","नेटवर्क बनाना"], answer:1 },
+{ question:"Spyware क्या करता है?", options:["डेटा सुरक्षित करता है","यूजर की जानकारी चुपके से चुराता है","गेम चलाता है","ब्राउज़र बनाता है"], answer:1 },
+{ question:"Adware क्या है?", options:["वायरस","विज्ञापन दिखाने वाला सॉफ्टवेयर","एंटीवायरस","VPN"], answer:1 },
+{ question:"Botnet क्या है?", options:["रोबोट नेटवर्क","हैक किए गए कंप्यूटरों का नेटवर्क","गेम सर्वर","सॉफ्टवेयर अपडेट"], answer:1 },
+{ question:"Firewall का मुख्य काम क्या है?", options:["डेटा चोरी","अनधिकृत एक्सेस रोकना","गेम खेलना","वीडियो देखना"], answer:1 },
+{ question:"Secure password कैसा होना चाहिए?", options:["123456","strong & complex","name123","password"], answer:1 },
+{ question:"Social Engineering क्या है?", options:["सोशल मीडिया गेम","धोखे से जानकारी निकालना","कोडिंग","नेटवर्क डिजाइन"], answer:1 },
+
+{ question:"IP Address क्या है?", options:["डिवाइस की पहचान नंबर","वायरस","एप्लीकेशन","गेम"], answer:0 },
+{ question:"HTTPS में S का मतलब क्या है?", options:["Secure","System","Server","Speed"], answer:0 },
+{ question:"HTTP क्या है?", options:["Secure protocol","Web communication protocol","Game engine","Software"], answer:1 },
+{ question:"Keylogger क्या करता है?", options:["कीबोर्ड इनपुट रिकॉर्ड करता है","गेम चलाता है","इंटरनेट बंद करता है","फाइल डिलीट करता है"], answer:0 },
+{ question:"Malware कितने प्रकार का होता है?", options:["1","कई प्रकार","0","सिर्फ 2"], answer:1 },
+{ question:"Phishing का उद्देश्य क्या है?", options:["गेम खेलना","डेटा चोरी करना","नेटवर्क बनाना","फोटो एडिट करना"], answer:1 },
+{ question:"Cyber Attack क्या है?", options:["सुरक्षा बढ़ाना","सिस्टम पर हमला","सॉफ्टवेयर अपडेट","ब्राउज़र खोलना"], answer:1 },
+{ question:"Digital Signature का उपयोग?", options:["फाइल हटाने","प्रमाणिकता सत्यापित करने","गेम खेलने","नेटवर्क बनाने"], answer:1 },
+{ question:"Backup का मतलब?", options:["डेटा डिलीट","डेटा कॉपी सुरक्षित रखना","वायरस फैलाना","इंटरनेट बंद करना"], answer:1 },
+{ question:"Hacker कितने प्रकार के होते हैं?", options:["1","3","5","10"], answer:1 },
+
+{ question:"White Hat Hacker कौन होता है?", options:["अपराधी हैकर","सुरक्षा के लिए काम करने वाला","गेमर","डेवलपर"], answer:1 },
+{ question:"Black Hat Hacker कौन होता है?", options:["सुरक्षित हैकर","अवैध काम करने वाला हैकर","एथिकल ट्रेनर","स्टूडेंट"], answer:1 },
+{ question:"Grey Hat Hacker क्या होता है?", options:["मिश्रित व्यवहार वाला हैकर","गेमर","डेवलपर","एंटीवायरस"], answer:0 },
+{ question:"Cookie क्या होती है?", options:["वायरस","वेबसाइट डेटा स्टोर","गेम फाइल","एंटीवायरस"], answer:1 },
+{ question:"Firewall किस लेयर पर काम करता है?", options:["नेटवर्क लेयर","फिजिकल लेयर","गेम लेयर","एप लेयर"], answer:0 },
+{ question:"Data Breach क्या है?", options:["डेटा बैकअप","डेटा चोरी या लीक होना","सॉफ्टवेयर अपडेट","नेटवर्क बनाना"], answer:1 },
+{ question:"USB से फैलने वाला वायरस?", options:["Worm","Firewall","VPN","Browser"], answer:0 },
+{ question:"Worm क्या करता है?", options:["नेटवर्क में फैलता है","डेटा सुरक्षित करता है","गेम चलाता है","सॉफ्टवेयर बनाता है"], answer:0 },
+{ question:"Cyber Security का मुख्य उद्देश्य?", options:["गेमिंग","डेटा सुरक्षा","सोशल मीडिया","वीडियो एडिटिंग"], answer:1 },
+{ question:"RAT (Remote Access Trojan) क्या करता है?", options:["रिमोट एक्सेस देता है","गेम चलाता है","नेटवर्क बंद करता है","ब्राउज़र खोलता है"], answer:0 },
+
+{ question:"SSL का उपयोग कहाँ होता है?", options:["सुरक्षित कनेक्शन में","गेम में","एप में","फोटो में"], answer:0 },
+{ question:"Cyber Law क्या है?", options:["गेम नियम","इंटरनेट से जुड़े कानून","कोडिंग भाषा","एप"], answer:1 },
+{ question:"Proxy Server क्या करता है?", options:["डेटा चोरी","बीच में मध्यस्थ बनता है","वायरस फैलाता है","गेम चलाता है"], answer:1 },
+{ question:"Dark Web क्या है?", options:["सर्च इंजन","गुप्त इंटरनेट हिस्सा","गेम नेटवर्क","एप स्टोर"], answer:1 },
+{ question:"Firewall किससे सुरक्षा देता है?", options:["वायरस और अटैक","गेम","वीडियो","फोटो"], answer:0 },
+{ question:"Cyber Security में CIA का मतलब?", options:["Confidentiality, Integrity, Availability","Central Intelligence Agency","Cyber Internet Access","Control Internet Access"], answer:0 },
+{ question:"Penetration Testing क्या है?", options:["गेम टेस्ट","सुरक्षा जांच","एप डेवलपमेंट","नेटवर्क बनाना"], answer:1 },
+{ question:"Social Media Hack कैसे होता है?", options:["फिशिंग और पासवर्ड चोरी","गेम से","वीडियो से","एप से"], answer:0 },
+{ question:"Strong password में क्या होना चाहिए?", options:["letters, numbers, symbols","सिर्फ नाम","सिर्फ नंबर","123456"], answer:0 },
+{ question:"Cyber Security में सबसे कमजोर कड़ी?", options:["फायरवॉल","इंसान (Human error)","VPN","एंटीवायरस"], answer:1 },
+
+{ question:"Trojan Horse नाम क्यों पड़ा?", options:["घोड़े जैसा वायरस","छुपा हुआ नुकसान","तेज वायरस","गेम"], answer:1 },
+{ question:"Firewall को कौन नियंत्रित करता है?", options:["सिक्योरिटी नियम","गेम","ब्राउज़र","वीडियो"], answer:0 },
+{ question:"Online Fraud क्या है?", options:["सही लेनदेन","इंटरनेट पर धोखाधड़ी","गेमिंग","कोडिंग"], answer:1 },
+{ question:"Cyber Security में सबसे जरूरी चीज?", options:["डेटा सुरक्षा","गेमिंग","वीडियो","एप"], answer:0 },
+{ question:"Antispyware क्या करता है?", options:["स्पायवेयर हटाता है","गेम चलाता है","नेटवर्क बनाता है","ब्राउज़र खोलता है"], answer:0 },
+
+{ question:"DNS का पूरा नाम?", options:["Domain Name System","Data Network System","Digital Number System","Domain Network Server"], answer:0 },
+{ question:"IP Spoofing क्या है?", options:["IP छुपाना या बदलना","गेम खेलना","नेटवर्क बनाना","सॉफ्टवेयर अपडेट"], answer:0 },
+{ question:"DoS Attack क्या है?", options:["सिस्टम को बंद करना","गेम खेलना","डेटा बैकअप","एप बनाना"], answer:0 },
+{ question:"DDoS में क्या होता है?", options:["एक से ज्यादा सिस्टम से हमला","गेम","एप","वीडियो"], answer:0 },
+{ question:"Cyber Security में Authentication क्या है?", options:["पहचान सत्यापन","डेटा हटाना","नेटवर्क बनाना","गेम"], answer:0 },
+{ question:"Authorization का मतलब?", options:["अनुमति देना","वायरस","गेम","एप"], answer:0 },
+{ question:"Hacking का ethical उपयोग?", options:["सिस्टम सुरक्षा सुधार","डेटा चोरी","फिशिंग","धोखाधड़ी"], answer:0 },
+{ question:"Firewall किसे रोकता है?", options:["अनधिकृत ट्रैफिक","गेम","वीडियो","फोटो"], answer:0 },
+{ question:"Cyber Threat क्या है?", options:["सुरक्षा जोखिम","गेम","एप","नेटवर्क"], answer:0 },
+{ question:"Malware से बचने का तरीका?", options:["एंटीवायरस","फिशिंग","हैकिंग","स्पैम"], answer:0 },
+
+{ question:"Public WiFi सुरक्षित है?", options:["हाँ","नहीं (अधिक जोखिम)","हमेशा","कभी नहीं"], answer:1 },
+{ question:"Secure browsing का मतलब?", options:["HTTPS उपयोग","HTTP उपयोग","गेम","एप"], answer:0 },
+{ question:"Identity Theft क्या है?", options:["पहचान चोरी","गेम","एप","नेटवर्क"], answer:0 },
+{ question:"Cyber Security का उपयोग कहाँ होता है?", options:["हर डिजिटल सिस्टम में","सिर्फ गेम में","सिर्फ मोबाइल में","सिर्फ कंप्यूटर में"], answer:0 },
+
+{ question:"Firewall किस प्रकार की सुरक्षा देता है?", options:["भौतिक सुरक्षा","नेटवर्क सुरक्षा","गेम सुरक्षा","फाइल सुरक्षा"], answer:1 },
+{ question:"Cyber Security का सबसे महत्वपूर्ण लक्ष्य क्या है?", options:["डेटा को बेचना","डेटा और सिस्टम की सुरक्षा","गेम बनाना","वीडियो एडिट करना"], answer:1 },
+{ question:"Hacker किसे कहा जाता है?", options:["जो सिस्टम बनाता है","जो बिना अनुमति सिस्टम एक्सेस करता है","जो गेम खेलता है","जो इंटरनेट चलाता है"], answer:1 },
+{ question:"Cyber Crime क्या है?", options:["ऑनलाइन अपराध","गेमिंग","सोशल मीडिया","कोडिंग"], answer:0 },
+{ question:"Password Sharing क्यों गलत है?", options:["सुरक्षा खतरा","तेज इंटरनेट","गेमिंग","कोडिंग"], answer:0 },
+{ question:"Strong password का उदाहरण क्या है?", options:["12345","Santosh@123","password","abcd"], answer:1 },
+{ question:"Data Encryption का फायदा क्या है?", options:["डेटा सुरक्षित रहता है","डेटा डिलीट हो जाता है","डेटा लीक होता है","डेटा शेयर होता है"], answer:0 },
+{ question:"Cyber Security में 'Integrity' का मतलब क्या है?", options:["डेटा में बदलाव न होना","डेटा चोरी","डेटा डिलीट","डेटा शेयर"], answer:0 },
+{ question:"Cyber Security में 'Availability' का मतलब?", options:["डेटा हमेशा उपलब्ध हो","डेटा गायब हो","डेटा चोरी","डेटा बदलना"], answer:0 },
+{ question:"Ransomware हमला क्या करता है?", options:["डेटा लॉक करता है","डेटा डिलीट करता है","गेम चलाता है","नेटवर्क बनाता है"], answer:0 },
+
+{ question:"Spyware किसे ट्रैक करता है?", options:["यूजर की गतिविधि","गेम","वीडियो","एप"], answer:0 },
+{ question:"Phishing email का उद्देश्य क्या है?", options:["जानकारी चुराना","गेम खेलना","एप बनाना","नेटवर्क सुधारना"], answer:0 },
+{ question:"Malware किसका उदाहरण है?", options:["हानिकारक सॉफ्टवेयर","गेम","एप","ब्राउज़र"], answer:0 },
+{ question:"Cyber Security में अपडेट क्यों जरूरी है?", options:["सुरक्षा कमजोरियों को ठीक करने के लिए","गेमिंग के लिए","फोटो के लिए","इंटरनेट बंद करने के लिए"], answer:0 },
+{ question:"Antivirus का मुख्य काम क्या है?", options:["वायरस हटाना","गेम चलाना","वीडियो देखना","नेटवर्क बनाना"], answer:0 },
+
+{ question:"Social Engineering में क्या उपयोग होता है?", options:["मानव धोखा","कोडिंग","गेम","एप"], answer:0 },
+{ question:"Secure website का संकेत क्या है?", options:["HTTPS","HTTP","WWW","FTP"], answer:0 },
+{ question:"Keylogger का खतरा क्या है?", options:["पासवर्ड चोरी","गेमिंग","वीडियो","एप"], answer:0 },
+{ question:"Cyber Attack से क्या नुकसान होता है?", options:["डेटा चोरी और सिस्टम नुकसान","गेमिंग","वीडियो","कोडिंग"], answer:0 },
+{ question:"Trojan Horse क्या करता है?", options:["छुपकर नुकसान करता है","सुरक्षा देता है","गेम चलाता है","नेटवर्क बनाता है"], answer:0 },
+
+{ question:"Botnet का उपयोग किस लिए होता है?", options:["साइबर अटैक","गेम","एप","वीडियो"], answer:0 },
+{ question:"VPN का उपयोग क्यों किया जाता है?", options:["सुरक्षित कनेक्शन","गेमिंग","वीडियो","फोटो"], answer:0 },
+{ question:"Cyber Security में Backup क्यों जरूरी है?", options:["डेटा सुरक्षित रखने के लिए","गेम के लिए","नेटवर्क के लिए","वीडियो के लिए"], answer:0 },
+{ question:"Worm किस प्रकार फैलता है?", options:["अपने आप नेटवर्क में","USB से नहीं","गेम से","वीडियो से"], answer:0 },
+{ question:"Cyber Security का उपयोग कहाँ होता है?", options:["हर डिजिटल सिस्टम में","सिर्फ मोबाइल","सिर्फ गेम","सिर्फ कंप्यूटर"], answer:0 },
+
+{ question:"Two-Factor Authentication क्यों जरूरी है?", options:["अतिरिक्त सुरक्षा के लिए","गेमिंग","वीडियो","नेटवर्क"], answer:0 },
+{ question:"Cyber Crime report कहाँ की जाती है?", options:["पुलिस साइबर सेल","गेम कंपनी","सोशल मीडिया","एप स्टोर"], answer:0 },
+{ question:"Dark Web का उपयोग किसके लिए होता है?", options:["छुपी गतिविधियाँ","गेम","एप","वीडियो"], answer:0 },
+{ question:"Digital Certificate का उपयोग क्या है?", options:["पहचान सत्यापन","गेम","वीडियो","नेटवर्क"], answer:0 },
+{ question:"Secure login का मतलब?", options:["सुरक्षित लॉगिन प्रक्रिया","गेम","वीडियो","एप"], answer:0 },
+
+{ question:"Firewall किसे ब्लॉक करता है?", options:["अनधिकृत ट्रैफिक","गेम","वीडियो","फोटो"], answer:0 },
+{ question:"Cyber Security का पहला नियम क्या है?", options:["Strong password रखना","गेम खेलना","वीडियो देखना","फोटो एडिट करना"], answer:0 },
+{ question:"Data Theft क्या है?", options:["डेटा चोरी","गेमिंग","एप बनाना","नेटवर्क"], answer:0 }
+
+];
+
+
+let index = 0;
+let score = 0;
+let timer;
+let timeLeft = 10;
+
+function startQuiz() {
+  document.getElementById("startScreen").classList.add("hide");
+  document.getElementById("quizScreen").classList.remove("hide");
+  loadQuestion();
+}
+
+function loadQuestion() {
+  resetTimer();
+  let q = quizData[index];
+  document.getElementById("question").innerText = q.question;
+  document.getElementById("qNo").innerText = index + 1;
+
+  let optionsHTML = "";
+  q.options.forEach((opt, i) => {
+    optionsHTML += `<div class="option" onclick="selectOption(${i})">${opt}</div>`;
+  });
+
+  document.getElementById("options").innerHTML = optionsHTML;
+}
+
+function selectOption(selected) {
+  let correct = quizData[index].answer;
+  let options = document.querySelectorAll(".option");
+
+  options.forEach((opt, i) => {
+    if (i === correct) opt.classList.add("correct");
+    else if (i === selected) opt.classList.add("wrong");
+
+    opt.style.pointerEvents = "none";
+  });
+
+  if (selected === correct) score++;
+}
+
+function nextQuestion() {
+  index++;
+  if (index < quizData.length) {
+    loadQuestion();
+  } else {
+    showResult();
+  }
+}
+
+  function showResult() {
+  document.getElementById("quizScreen").classList.add("hide");
+  document.getElementById("resultScreen").classList.remove("hide");
+  document.getElementById("score").innerText = score + " / " + quizData.length;
+}
+
+function resetTimer() {
+  clearInterval(timer);
+  timeLeft = 10;
+  document.getElementById("timer").innerText = timeLeft;
+
+  timer = setInterval(() => {
+    timeLeft--;
+    document.getElementById("timer").innerText = timeLeft;
+
+    if (timeLeft === 0) {
+      nextQuestion();
+    }
+  }, 1000);
+}
+
+</script>
+
+</body>
+</html>

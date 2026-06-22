@@ -1,0 +1,478 @@
+<!DOCTYPE html>
+<html>
+<head>
+   <!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-KN4DRRWZ17"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-KN4DRRWZ17');
+</script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Quiz App</title>
+
+<style>
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: Arial;
+}
+
+body {
+  background: #f5f5f5;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+}
+
+/* Container */
+.app {
+  width: 95%;
+  max-width: 500px;
+  background: white;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+}
+
+/* Header */
+header {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 20px;
+}
+
+.timer {
+  background: #2196F3;
+  color: white;
+  padding: 5px 10px;
+  border-radius: 5px;
+}
+
+/* Question */
+.question {
+  font-size: 20px;
+  margin-bottom: 15px;
+}
+
+/* Options */
+.option {
+  background: #eee;
+  padding: 10px;
+  margin: 8px 0;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.option:hover {
+  background: #ddd;
+}
+
+.correct {
+  background: #4CAF50 !important;
+  color: white;
+}
+
+.wrong {
+  background: #f44336 !important;
+  color: white;
+}
+
+/* Button */
+button {
+  margin-top: 15px;
+  padding: 10px;
+  width: 100%;
+  border: none;
+  background:linear-gradient(135deg,#0a2dbcf3,#779af583);
+  color: white;
+  font-size: 16px;
+  cursor: pointer;
+  border-radius: 5px;
+}
+
+/* Hidden */
+.hide {
+  display: none;
+}
+
+/* Result */
+.result {
+  text-align: center;
+}
+
+/* Responsive */
+@media (max-width: 600px) {
+  .question {
+    font-size: 18px;
+  }
+}
+</style>
+
+</head>
+<body>
+
+<div class="app">
+
+  <!-- Start Screen -->
+  <div id="startScreen">
+    <h2>Quiz App</h2>
+    <button onclick="startQuiz()">Start Quiz</button>
+  </div>
+
+  <!-- Quiz Screen -->
+  <div id="quizScreen" class="hide">
+    <header>
+      <div>Question <span id="qNo">1</span>/5</div>
+      <div class="timer" id="timer">10</div>
+    </header>
+
+    <div class="question" id="question"></div>
+    <div id="options"></div>
+
+    <button onclick="nextQuestion()">Next</button>
+  </div>
+
+  <!-- Result Screen -->
+  <div id="resultScreen" class="hide result">
+    <h2>Your Score</h2>
+    <h1 id="score"></h1>
+    <button onclick="location.reload()">Play Again</button>
+  </div>
+
+</div>
+
+<script>
+const quizData = [
+{
+question:"विश्व का सबसे ऊँचा पर्वत कौन सा है?",
+options:["K2","माउंट एवरेस्ट","कंचनजंगा","नंदा देवी"],
+answer:1
+},
+{
+question:"भारत की सबसे लंबी नदी कौन सी है?",
+options:["गंगा","यमुना","गोदावरी","नर्मदा"],
+answer:0
+},
+{
+question:"विश्व का सबसे बड़ा महासागर कौन सा है?",
+options:["हिंद महासागर","प्रशांत महासागर","अटलांटिक महासागर","आर्कटिक महासागर"],
+answer:1
+},
+{
+question:"राजस्थान की राजधानी क्या है?",
+options:["उदयपुर","जयपुर","जोधपुर","बीकानेर"],
+answer:1
+},
+{
+question:"भारत का सबसे बड़ा राज्य क्षेत्रफल की दृष्टि से कौन सा है?",
+options:["उत्तर प्रदेश","राजस्थान","मध्य प्रदेश","महाराष्ट्र"],
+answer:1
+},
+{
+question:"भारत का सबसे छोटा राज्य कौन सा है?",
+options:["गोवा","सिक्किम","त्रिपुरा","मणिपुर"],
+answer:0
+},
+{
+question:"भारत का सबसे बड़ा रेगिस्तान कौन सा है?",
+options:["सहारा","थार","गोबी","कालाहारी"],
+answer:1
+},
+{
+question:"पृथ्वी का सबसे बड़ा महाद्वीप कौन सा है?",
+options:["अफ्रीका","यूरोप","एशिया","ऑस्ट्रेलिया"],
+answer:2
+},
+{
+question:"पृथ्वी का सबसे छोटा महाद्वीप कौन सा है?",
+options:["यूरोप","ऑस्ट्रेलिया","अंटार्कटिका","दक्षिण अमेरिका"],
+answer:1
+},
+{
+question:"भारत की राजधानी कौन सी है?",
+options:["मुंबई","नई दिल्ली","कोलकाता","चेन्नई"],
+answer:1
+},
+{
+question:"गंगा नदी का उद्गम स्थल कौन सा है?",
+options:["यमुनोत्री","गंगोत्री","केदारनाथ","बद्रीनाथ"],
+answer:1
+},
+{
+question:"यमुना नदी का उद्गम स्थल कौन सा है?",
+options:["गंगोत्री","यमुनोत्री","अमरनाथ","मानसरोवर"],
+answer:1
+},
+{
+question:"भारत का सबसे ऊँचा जलप्रपात कौन सा है?",
+options:["जोग जलप्रपात","कुंचिकल जलप्रपात","दूधसागर","चित्रकोट"],
+answer:1
+},
+{
+question:"विश्व की सबसे लंबी नदी कौन सी है?",
+options:["अमेजन","नील","यांग्त्से","मिसिसिपी"],
+answer:1
+},
+{
+question:"विश्व की सबसे बड़ी झील कौन सी है?",
+options:["सुपीरियर","विक्टोरिया","कैस्पियन सागर","बैकाल"],
+answer:2
+},
+{
+question:"भारत का सबसे बड़ा राज्य जनसंख्या की दृष्टि से कौन सा है?",
+options:["बिहार","उत्तर प्रदेश","महाराष्ट्र","मध्य प्रदेश"],
+answer:1
+},
+{
+question:"भारत का सबसे दक्षिणी बिंदु कौन सा है?",
+options:["इंदिरा प्वाइंट","कन्याकुमारी","रामेश्वरम","कोच्चि"],
+answer:0
+},
+{
+question:"भारत का सबसे उत्तरी राज्य कौन सा है?",
+options:["हिमाचल प्रदेश","जम्मू-कश्मीर","लद्दाख","उत्तराखंड"],
+answer:2
+},
+{
+question:"कौन सा महासागर भारत के दक्षिण में स्थित है?",
+options:["अटलांटिक","प्रशांत","हिंद","आर्कटिक"],
+answer:2
+},
+{
+question:"भारत के पूर्व में कौन सा देश है?",
+options:["पाकिस्तान","नेपाल","बांग्लादेश","अफगानिस्तान"],
+answer:2
+},
+{
+question:"भारत के पश्चिम में कौन सा देश है?",
+options:["भूटान","नेपाल","पाकिस्तान","म्यांमार"],
+answer:2
+},
+{
+question:"सूर्योदय का देश किसे कहा जाता है?",
+options:["भारत","जापान","चीन","कोरिया"],
+answer:1
+},
+{
+question:"विश्व का सबसे बड़ा द्वीप कौन सा है?",
+options:["ग्रीनलैंड","मेडागास्कर","श्रीलंका","बोर्नियो"],
+answer:0
+},
+{
+question:"अंडमान और निकोबार द्वीप समूह किस सागर में स्थित हैं?",
+options:["अरब सागर","बंगाल की खाड़ी","हिंद महासागर","लाल सागर"],
+answer:1
+},
+{
+question:"लक्षद्वीप किस सागर में स्थित है?",
+options:["अरब सागर","बंगाल की खाड़ी","हिंद महासागर","भूमध्य सागर"],
+answer:0
+},
+{
+question:"भारत का सबसे लंबा समुद्र तट किस राज्य में है?",
+options:["केरल","गुजरात","तमिलनाडु","महाराष्ट्र"],
+answer:1
+},
+{
+question:"भारत का सबसे ऊँचा पर्वत शिखर कौन सा है?",
+options:["K2","कंचनजंगा","नंदा देवी","एवरेस्ट"],
+answer:1
+},
+{
+question:"कंचनजंगा किस राज्य में स्थित है?",
+options:["उत्तराखंड","सिक्किम","अरुणाचल प्रदेश","हिमाचल प्रदेश"],
+answer:1
+},
+{
+question:"विश्व का सबसे ठंडा महाद्वीप कौन सा है?",
+options:["यूरोप","अंटार्कटिका","एशिया","ऑस्ट्रेलिया"],
+answer:1
+},
+{
+question:"विश्व का सबसे गर्म मरुस्थल कौन सा है?",
+options:["थार","गोबी","सहारा","कालाहारी"],
+answer:2
+},
+{
+question:"भारत में कितने राज्य हैं?",
+options:["27","28","29","30"],
+answer:1
+},
+{
+question:"भारत में कितने केंद्र शासित प्रदेश हैं?",
+options:["6","7","8","9"],
+answer:2
+},
+{
+question:"ब्रह्मपुत्र नदी का उद्गम कहाँ है?",
+options:["तिब्बत","नेपाल","भूटान","भारत"],
+answer:0
+},
+{
+question:"नर्मदा नदी किस दिशा में बहती है?",
+options:["पूर्व","पश्चिम","उत्तर","दक्षिण"],
+answer:1
+},
+{
+question:"ताप्ती नदी किस सागर में गिरती है?",
+options:["बंगाल की खाड़ी","अरब सागर","हिंद महासागर","लाल सागर"],
+answer:1
+},
+{
+question:"भारत का सबसे बड़ा पठार कौन सा है?",
+options:["मालवा","दक्कन","छोटानागपुर","बुंदेलखंड"],
+answer:1
+},
+{
+question:"छोटानागपुर पठार किस खनिज के लिए प्रसिद्ध है?",
+options:["सोना","कोयला","चांदी","यूरेनियम"],
+answer:1
+},
+{
+question:"विश्व का सबसे बड़ा देश कौन सा है?",
+options:["चीन","अमेरिका","रूस","भारत"],
+answer:2
+},
+{
+question:"विश्व का सबसे अधिक जनसंख्या वाला देश कौन सा है?",
+options:["भारत","चीन","अमेरिका","रूस"],
+answer:0
+},
+{
+question:"अरब सागर और बंगाल की खाड़ी किस महासागर का भाग हैं?",
+options:["अटलांटिक","हिंद","प्रशांत","आर्कटिक"],
+answer:1
+},
+{
+question:"भारत की सबसे बड़ी मीठे पानी की झील कौन सी है?",
+options:["डल झील","वुलर झील","चिल्का झील","सांभर झील"],
+answer:1
+},
+{
+question:"चिल्का झील किस राज्य में स्थित है?",
+options:["पश्चिम बंगाल","ओडिशा","आंध्र प्रदेश","तमिलनाडु"],
+answer:1
+},
+{
+question:"सांभर झील किस राज्य में स्थित है?",
+options:["गुजरात","राजस्थान","मध्य प्रदेश","हरियाणा"],
+answer:1
+},
+{
+question:"भारत का सबसे वर्षा वाला स्थान कौन सा है?",
+options:["चेरापूंजी","मौसिनराम","शिलांग","गंगटोक"],
+answer:1
+},
+{
+question:"मौसिनराम किस राज्य में स्थित है?",
+options:["असम","मेघालय","नागालैंड","मणिपुर"],
+answer:1
+},
+{
+question:"कर्क रेखा भारत के कितने राज्यों से गुजरती है?",
+options:["6","7","8","9"],
+answer:2
+},
+{
+question:"भारत का मानक समय किस स्थान से लिया गया है?",
+options:["दिल्ली","इलाहाबाद (प्रयागराज)","मिर्जापुर","वाराणसी"],
+answer:2
+},
+{
+question:"पृथ्वी को नीला ग्रह क्यों कहा जाता है?",
+options:["आकाश के कारण","जल की अधिकता के कारण","बादलों के कारण","वनों के कारण"],
+answer:1
+},
+{
+question:"विश्व का सबसे बड़ा प्रायद्वीप कौन सा है?",
+options:["भारत","अरब","स्कैंडिनेविया","दक्कन"],
+answer:1
+},
+{
+question:"हिमालय पर्वत किस प्रकार का पर्वत है?",
+options:["ज्वालामुखीय","अवशिष्ट","वलित","खंड"],
+answer:2
+}
+];
+
+
+let index = 0;
+let score = 0;
+let timer;
+let timeLeft = 10;
+
+function startQuiz() {
+  document.getElementById("startScreen").classList.add("hide");
+  document.getElementById("quizScreen").classList.remove("hide");
+  loadQuestion();
+}
+
+function loadQuestion() {
+  resetTimer();
+  let q = quizData[index];
+  document.getElementById("question").innerText = q.question;
+  document.getElementById("qNo").innerText = index + 1;
+
+  let optionsHTML = "";
+  q.options.forEach((opt, i) => {
+    optionsHTML += `<div class="option" onclick="selectOption(${i})">${opt}</div>`;
+  });
+
+  document.getElementById("options").innerHTML = optionsHTML;
+}
+
+function selectOption(selected) {
+  let correct = quizData[index].answer;
+  let options = document.querySelectorAll(".option");
+
+  options.forEach((opt, i) => {
+    if (i === correct) opt.classList.add("correct");
+    else if (i === selected) opt.classList.add("wrong");
+
+    opt.style.pointerEvents = "none";
+  });
+
+  if (selected === correct) score++;
+}
+
+function nextQuestion() {
+  index++;
+  if (index < quizData.length) {
+    loadQuestion();
+  } else {
+    showResult();
+  }
+}
+
+function showResult() {
+  document.getElementById("quizScreen").classList.add("hide");
+  document.getElementById("resultScreen").classList.remove("hide");
+  document.getElementById("score").innerText = score + " / " + quizData.length;
+}
+
+function resetTimer() {
+  clearInterval(timer);
+  timeLeft = 10;
+  document.getElementById("timer").innerText = timeLeft;
+
+  timer = setInterval(() => {
+    timeLeft--;
+    document.getElementById("timer").innerText = timeLeft;
+
+    if (timeLeft === 0) {
+      nextQuestion();
+    }
+  }, 1000);
+}
+
+</script>
+
+</body>
+</html>

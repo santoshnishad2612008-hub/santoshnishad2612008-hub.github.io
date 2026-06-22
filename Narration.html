@@ -1,0 +1,1231 @@
+<!DOCTYPE html>
+<html>
+<head>
+     <!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-KN4DRRWZ17"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-KN4DRRWZ17');
+</script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title> narration Quiz</title>
+
+<style>
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: Arial;
+}
+
+body {
+  background: #f5f5f5;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+}
+
+/* Container */
+.app {
+  width: 95%;
+  max-width: 500px;
+  background: white;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+}
+
+/* Header */
+header {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 20px;
+}
+
+.timer {
+  background: #2196F3;
+  color: white;
+  padding: 5px 10px;
+  border-radius: 5px;
+}
+
+/* Question */
+.question {
+  font-size: 20px;
+  margin-bottom: 15px;
+}
+
+/* Options */
+.option {
+  background: #eee;
+  padding: 10px;
+  margin: 8px 0;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.option:hover {
+  background: #ddd;
+}
+
+.correct {
+  background: #4CAF50 !important;
+  color: white;
+}
+
+.wrong {
+  background: #f44336 !important;
+  color: white;
+}
+
+/* Button */
+button {
+  margin-top: 15px;
+  padding: 10px;
+  width: 100%;
+  border: none;
+ background:linear-gradient(135deg,#0a2dbcf3,#779af583);
+  color: white;
+  font-size: 16px;
+  cursor: pointer;
+  border-radius: 5px;
+}
+
+/* Hidden */
+.hide {
+  display: none;
+}
+
+/* Result */
+.result {
+  text-align: center;
+}
+
+/* Responsive */
+@media (max-width: 600px) {
+  .question {
+    font-size: 18px;
+  }
+}
+</style>
+
+</head>
+<body>
+
+<div class="app">
+
+  <!-- Start Screen -->
+  <div id="startScreen">
+    <h2>Quiz App</h2>
+    <button onclick="startQuiz()">Start Quiz</button>
+  </div>
+
+  <!-- Quiz Screen -->
+  <div id="quizScreen" class="hide">
+    <header>
+      <div>Question <span id="qNo">1</span>/100</div>
+      <div class="timer" id="timer">10</div>
+    </header>
+
+    <div class="question" id="question"></div>
+    <div id="options"></div>
+
+    <button onclick="nextQuestion()">Next</button>
+  </div>
+
+  <!-- Result Screen -->
+  <div id="resultScreen" class="hide result">
+    <h2>Your Score</h2>
+    <h1 id="score"></h1>
+    <button onclick="location.reload()">Play Again</button>
+  </div>
+
+</div>
+
+<script>
+const quizData = [
+
+  {
+    "question": "Change into indirect speech: He said, \"I am happy.\"",
+    "options": [
+      "He said that he was happy.",
+      "He said that he is happy.",
+      "He says that he was happy.",
+      "He told he was happy."
+    ],
+    "answer": 0
+  },
+  {
+    "question": "Change into indirect speech: She said, \"I have finished my work.\"",
+    "options": [
+      "She said that she finished her work.",
+      "She said that she had finished her work.",
+      "She says that she had finished her work.",
+      "She said that she has finished her work."
+    ],
+    "answer": 1
+  },
+  {
+    "question": "Change into indirect speech: Ram said, \"I will go tomorrow.\"",
+    "options": [
+      "Ram said that he would go the next day.",
+      "Ram said that he will go tomorrow.",
+      "Ram said that he would go tomorrow.",
+      "Ram says that he would go the next day."
+    ],
+    "answer": 0
+  },
+  {
+    "question": "Change into indirect speech: He said, \"I can swim.\"",
+    "options": [
+      "He said that he can swim.",
+      "He said that he could swim.",
+      "He said that he swims.",
+      "He says that he could swim."
+    ],
+    "answer": 1
+  },
+  {
+    "question": "Change into indirect speech: She said, \"I may come.\"",
+    "options": [
+      "She said that she might come.",
+      "She said that she may come.",
+      "She says that she might come.",
+      "She said she comes."
+    ],
+    "answer": 0
+  },
+  {
+    "question": "Change into indirect speech: He said, \"I was reading a book.\"",
+    "options": [
+      "He said that he had been reading a book.",
+      "He said that he was reading a book.",
+      "He said that he read a book.",
+      "He says that he had been reading a book."
+    ],
+    "answer": 0
+  },
+  {
+    "question": "Change into indirect speech: She said, \"I had seen the movie.\"",
+    "options": [
+      "She said that she had seen the movie.",
+      "She said that she saw the movie.",
+      "She says that she had seen the movie.",
+      "She said that she has seen the movie."
+    ],
+    "answer": 0
+  },
+  {
+    "question": "Change into indirect speech: He said to me, \"You are my friend.\"",
+    "options": [
+      "He told me that you were his friend.",
+      "He told me that I was his friend.",
+      "He said me that I was his friend.",
+      "He said that I am his friend."
+    ],
+    "answer": 1
+  },
+  {
+    "question": "Change into indirect speech: She said to him, \"I like your car.\"",
+    "options": [
+      "She told him that she liked his car.",
+      "She said that she likes his car.",
+      "She told him that she likes your car.",
+      "She says that she liked his car."
+    ],
+    "answer": 0
+  },
+  {
+    "question": "Change into indirect speech: He said, \"We are going to Delhi.\"",
+    "options": [
+      "He said that they were going to Delhi.",
+      "He said that we were going to Delhi.",
+      "He said that they are going to Delhi.",
+      "He says that they were going to Delhi."
+    ],
+    "answer": 0
+  },
+  {
+    "question": "Change into indirect speech: He said, \"Do you know the answer?\"",
+    "options": [
+      "He asked if I knew the answer.",
+      "He asked that I knew the answer.",
+      "He asked do I know the answer.",
+      "He said if I know the answer."
+    ],
+    "answer": 0
+  },
+  {
+    "question": "Change into indirect speech: She said to me, \"Are you busy?\"",
+    "options": [
+      "She asked me that I was busy.",
+      "She asked me if I was busy.",
+      "She told me if I was busy.",
+      "She asked me am I busy."
+    ],
+    "answer": 1
+  },
+  {
+    "question": "Change into indirect speech: He said, \"Where do you live?\"",
+    "options": [
+      "He asked where I lived.",
+      "He asked where do I live.",
+      "He said where I lived.",
+      "He asked that where I lived."
+    ],
+    "answer": 0
+  },
+  {
+    "question": "Change into indirect speech: She said, \"Why are you crying?\"",
+    "options": [
+      "She asked why I am crying.",
+      "She asked why was I crying.",
+      "She asked why I was crying.",
+      "She said why I was crying."
+    ],
+    "answer": 2
+  },
+  {
+    "question": "Change into indirect speech: He said, \"When will you come?\"",
+    "options": [
+      "He asked when I would come.",
+      "He asked when will I come.",
+      "He said when I would come.",
+      "He asked that when I would come."
+    ],
+    "answer": 0
+  },
+  {
+    "question": "Change into indirect speech: The teacher said, \"Open your books.\"",
+    "options": [
+      "The teacher said to open your books.",
+      "The teacher ordered to open books.",
+      "The teacher ordered the students to open their books.",
+      "The teacher told that open books."
+    ],
+    "answer": 2
+  },
+  {
+    "question": "Change into indirect speech: He said to me, \"Please help me.\"",
+    "options": [
+      "He requested me to help him.",
+      "He ordered me to help him.",
+      "He asked me help him.",
+      "He said please help him."
+    ],
+    "answer": 0
+  },
+  {
+    "question": "Change into indirect speech: Mother said, \"Do your homework.\"",
+    "options": [
+      "Mother advised me do my homework.",
+      "Mother ordered me to do my homework.",
+      "Mother said do your homework.",
+      "Mother told that I do homework."
+    ],
+    "answer": 1
+  },
+  {
+    "question": "Change into indirect speech: He said, \"Don't make noise.\"",
+    "options": [
+      "He advised not make noise.",
+      "He ordered to not make noise.",
+      "He ordered us not to make noise.",
+      "He said don't make noise."
+    ],
+    "answer": 2
+  },
+  {
+    "question": "Change into indirect speech: She said, \"Please sit down.\"",
+    "options": [
+      "She requested me to sit down.",
+      "She ordered me sit down.",
+      "She said sit down.",
+      "She asked that I sit down."
+    ],
+    "answer": 0
+  },
+  {
+    "question": "Change into indirect speech: He said, \"Hurrah! We have won the match.\"",
+    "options": [
+      "He exclaimed with joy that they had won the match.",
+      "He exclaimed sadly that they had won the match.",
+      "He said that they won the match.",
+      "He told joyfully that they had won."
+    ],
+    "answer": 0
+  },
+  {
+    "question": "Change into indirect speech: She said, \"Alas! My brother is dead.\"",
+    "options": [
+      "She exclaimed with joy that her brother was dead.",
+      "She exclaimed with sorrow that her brother was dead.",
+      "She said that her brother is dead.",
+      "She told sorrowfully her brother dead."
+    ],
+    "answer": 1
+  },
+  {
+    "question": "Change into indirect speech: He said, \"What a beautiful flower!\"",
+    "options": [
+      "He exclaimed that the flower was very beautiful.",
+      "He asked if the flower was beautiful.",
+      "He said the flower is beautiful.",
+      "He told that the flower was beautiful."
+    ],
+    "answer": 0
+  },
+  {
+    "question": "Change into indirect speech: She said, \"How clever you are!\"",
+    "options": [
+      "She exclaimed that I was very clever.",
+      "She asked if I was clever.",
+      "She said that I am clever.",
+      "She told I was clever."
+    ],
+    "answer": 0
+  },
+  {
+    "question": "Change into indirect speech: He said, \"Good morning!\"",
+    "options": [
+      "He wished me good morning.",
+      "He greeted me.",
+      "He said good morning to me.",
+      "He told me morning."
+    ],
+    "answer": 1
+  },
+  
+  {
+    "question": "Change into indirect speech: He said, \"I must finish this work today.\"",
+    "options": [
+      "He said that he had to finish that work that day.",
+      "He said that he must finish this work today.",
+      "He said that he has to finish that work that day.",
+      "He said that he had finish that work that day."
+    ],
+    "answer": 0
+  },
+  {
+    "question": "Change into indirect speech: She said, \"I shall return soon.\"",
+    "options": [
+      "She said that she shall return soon.",
+      "She said that she would return soon.",
+      "She said that she will return soon.",
+      "She said that she returned soon."
+    ],
+    "answer": 1
+  },
+  {
+    "question": "Change into indirect speech: He said, \"I have been waiting for two hours.\"",
+    "options": [
+      "He said that he had been waiting for two hours.",
+      "He said that he has been waiting for two hours.",
+      "He said that he waited for two hours.",
+      "He said that he was waiting for two hours."
+    ],
+    "answer": 0
+  },
+  {
+    "question": "Change into indirect speech: She said to me, \"You can trust me.\"",
+    "options": [
+      "She told me that I could trust her.",
+      "She said that I can trust her.",
+      "She told me that you could trust her.",
+      "She said me that I could trust her."
+    ],
+    "answer": 0
+  },
+  {
+    "question": "Change into indirect speech: He said, \"The sun rises in the east.\"",
+    "options": [
+      "He said that the sun rose in the east.",
+      "He said that the sun rises in the east.",
+      "He said that the sun had risen in the east.",
+      "He said that the sun was rising in the east."
+    ],
+    "answer": 1
+  },
+  {
+    "question": "Change into indirect speech: She said, \"I was cooking dinner.\"",
+    "options": [
+      "She said that she had been cooking dinner.",
+      "She said that she was cooking dinner.",
+      "She said that she cooked dinner.",
+      "She said that she has been cooking dinner."
+    ],
+    "answer": 0
+  },
+  {
+    "question": "Change into indirect speech: He said to her, \"You should work hard.\"",
+    "options": [
+      "He advised her that she should work hard.",
+      "He said her that she should work hard.",
+      "He told that she should work hard.",
+      "He says to her that she should work hard."
+    ],
+    "answer": 0
+  },
+  {
+    "question": "Change into indirect speech: She said, \"I need some help.\"",
+    "options": [
+      "She said that she needed some help.",
+      "She said that she needs some help.",
+      "She said that she had needed some help.",
+      "She said that she need some help."
+    ],
+    "answer": 0
+  },
+  {
+    "question": "Change into indirect speech: He said, \"Can you solve this problem?\"",
+    "options": [
+      "He asked if I could solve that problem.",
+      "He asked can I solve that problem.",
+      "He said if I could solve that problem.",
+      "He asked that I could solve that problem."
+    ],
+    "answer": 0
+  },
+  {
+    "question": "Change into indirect speech: She said, \"Will you attend the meeting?\"",
+    "options": [
+      "She asked if I would attend the meeting.",
+      "She asked would I attend the meeting.",
+      "She said if I would attend the meeting.",
+      "She asked that I attend the meeting."
+    ],
+    "answer": 0
+  },
+  {
+    "question": "Change into indirect speech: He said, \"What are you doing?\"",
+    "options": [
+      "He asked what I was doing.",
+      "He asked what was I doing.",
+      "He said what I was doing.",
+      "He asked that what I was doing."
+    ],
+    "answer": 0
+  },
+  {
+    "question": "Change into indirect speech: She said, \"Who wrote this letter?\"",
+    "options": [
+      "She asked who had written that letter.",
+      "She asked who wrote this letter.",
+      "She said who had written that letter.",
+      "She asked that who wrote that letter."
+    ],
+    "answer": 0
+  },
+  {
+    "question": "Change into indirect speech: He said, \"Where have you been?\"",
+    "options": [
+      "He asked where I had been.",
+      "He asked where have I been.",
+      "He said where I had been.",
+      "He asked that where I had been."
+    ],
+    "answer": 0
+  },
+  {
+    "question": "Change into indirect speech: She said, \"How did you do it?\"",
+    "options": [
+      "She asked how I had done it.",
+      "She asked how did I do it.",
+      "She said how I had done it.",
+      "She asked that how I had done it."
+    ],
+    "answer": 0
+  },
+  {
+    "question": "Change into indirect speech: He said, \"May God bless you!\"",
+    "options": [
+      "He prayed that God might bless me.",
+      "He said that God may bless me.",
+      "He wished God bless me.",
+      "He prayed God blesses me."
+    ],
+    "answer": 0
+  },
+  {
+    "question": "Change into indirect speech: She said, \"Would that I were rich!\"",
+    "options": [
+      "She wished that she had been rich.",
+      "She exclaimed that she was rich.",
+      "She wished that she were rich.",
+      "She said that she is rich."
+    ],
+    "answer": 2
+  },
+  {
+    "question": "Change into indirect speech: He said to me, \"Kindly close the door.\"",
+    "options": [
+      "He requested me to close the door.",
+      "He ordered me close the door.",
+      "He said kindly close the door.",
+      "He asked that I close the door."
+    ],
+    "answer": 0
+  },
+  {
+    "question": "Change into indirect speech: The officer said, \"March forward.\"",
+    "options": [
+      "The officer requested them to march forward.",
+      "The officer ordered them to march forward.",
+      "The officer advised them to march forward.",
+      "The officer said march forward."
+    ],
+    "answer": 1
+  },
+  {
+    "question": "Change into indirect speech: Father said, \"Never tell a lie.\"",
+    "options": [
+      "Father ordered never tell a lie.",
+      "Father advised us never to tell a lie.",
+      "Father said never tell a lie.",
+      "Father requested us tell no lie."
+    ],
+    "answer": 1
+  },
+  {
+    "question": "Change into indirect speech: She said, \"Bravo! You have done well.\"",
+    "options": [
+      "She exclaimed with sorrow that I had done well.",
+      "She applauded me saying that I had done well.",
+      "She asked if I had done well.",
+      "She said I had done well."
+    ],
+    "answer": 1
+  },
+  {
+    "question": "Change into indirect speech: He said, \"What a pity!\"",
+    "options": [
+      "He exclaimed with regret.",
+      "He exclaimed with joy.",
+      "He said it was a pity.",
+      "He asked if it was a pity."
+    ],
+    "answer": 0
+  },
+  {
+    "question": "Change into indirect speech: She said, \"Oh! I forgot my purse.\"",
+    "options": [
+      "She exclaimed with surprise that she had forgotten her purse.",
+      "She said that she forgot her purse.",
+      "She exclaimed with joy that she had forgotten her purse.",
+      "She asked about her purse."
+    ],
+    "answer": 0
+  },
+  {
+    "question": "Change into indirect speech: He said, \"Let us go for a walk.\"",
+    "options": [
+      "He suggested that they should go for a walk.",
+      "He ordered them to go for a walk.",
+      "He requested them go for a walk.",
+      "He said let us go for a walk."
+    ],
+    "answer": 0
+  },
+  {
+    "question": "Change into indirect speech: She said, \"Let's help the poor.\"",
+    "options": [
+      "She suggested helping the poor.",
+      "She ordered helping the poor.",
+      "She requested help the poor.",
+      "She said let's help the poor."
+    ],
+    "answer": 0
+  },
+  {
+    "question": "Change into indirect speech: He said, \"Long live our country!\"",
+    "options": [
+      "He prayed that his country might live long.",
+      "He wished that his country lived long.",
+      "He exclaimed that his country was great.",
+      "He said long live our country."
+    ],
+    "answer": 0
+  },
+  {
+    "question": "Change into indirect speech: He said, \"I had completed the task before sunset.\"",
+    "options": [
+      "He said that he had completed the task before sunset.",
+      "He said that he completed the task before sunset.",
+      "He said that he has completed the task before sunset.",
+      "He said that he was completing the task before sunset."
+    ],
+    "answer": 0
+  },
+  {
+    "question": "Change into indirect speech: She said, \"I will help you tomorrow.\"",
+    "options": [
+      "She said that she would help me the next day.",
+      "She said that she will help me tomorrow.",
+      "She said that she would help you tomorrow.",
+      "She said that she helps me the next day."
+    ],
+    "answer": 0
+  },
+  {
+    "question": "Change into indirect speech: He said to me, \"You have done your work well.\"",
+    "options": [
+      "He told me that I had done my work well.",
+      "He told me that I have done my work well.",
+      "He said me that I had done my work well.",
+      "He told me that you had done your work well."
+    ],
+    "answer": 0
+  },
+  {
+    "question": "Change into indirect speech: She said, \"I cannot solve this question.\"",
+    "options": [
+      "She said that she could not solve that question.",
+      "She said that she cannot solve this question.",
+      "She said that she could not solve this question.",
+      "She said that she cannot solve that question."
+    ],
+    "answer": 0
+  },
+  {
+    "question": "Change into indirect speech: He said, \"We were playing football.\"",
+    "options": [
+      "He said that they had been playing football.",
+      "He said that they were playing football.",
+      "He said that we had been playing football.",
+      "He said that they played football."
+    ],
+    "answer": 0
+  },
+  {
+    "question": "Change into indirect speech: She said, \"I have never seen such a place.\"",
+    "options": [
+      "She said that she had never seen such a place.",
+      "She said that she never saw such a place.",
+      "She said that she has never seen such a place.",
+      "She said that she had never saw such a place."
+    ],
+    "answer": 0
+  },
+  {
+    "question": "Change into indirect speech: He said, \"Do you like music?\"",
+    "options": [
+      "He asked if I liked music.",
+      "He asked do I like music.",
+      "He said if I liked music.",
+      "He asked that I liked music."
+    ],
+    "answer": 0
+  },
+  {
+    "question": "Change into indirect speech: She said, \"Have you finished the project?\"",
+    "options": [
+      "She asked if I had finished the project.",
+      "She asked had I finished the project.",
+      "She said if I had finished the project.",
+      "She asked that I finished the project."
+    ],
+    "answer": 0
+  },
+  {
+    "question": "Change into indirect speech: He said, \"Did you meet my brother?\"",
+    "options": [
+      "He asked if I had met his brother.",
+      "He asked did I meet his brother.",
+      "He said if I met his brother.",
+      "He asked that I met his brother."
+    ],
+    "answer": 0
+  },
+  {
+    "question": "Change into indirect speech: She said, \"Which book do you want?\"",
+    "options": [
+      "She asked which book I wanted.",
+      "She asked which book do I want.",
+      "She said which book I wanted.",
+      "She asked that which book I wanted."
+    ],
+    "answer": 0
+  },
+  {
+    "question": "Change into indirect speech: He said, \"Whom did you call yesterday?\"",
+    "options": [
+      "He asked whom I had called the previous day.",
+      "He asked whom did I call yesterday.",
+      "He said whom I called yesterday.",
+      "He asked that whom I had called."
+    ],
+    "answer": 0
+  },
+  {
+    "question": "Change into indirect speech: She said, \"What have you bought?\"",
+    "options": [
+      "She asked what I had bought.",
+      "She asked what have I bought.",
+      "She said what I had bought.",
+      "She asked that what I had bought."
+    ],
+    "answer": 0
+  },
+  {
+    "question": "Change into indirect speech: He said to the servant, \"Bring me a glass of water.\"",
+    "options": [
+      "He requested the servant bring him a glass of water.",
+      "He ordered the servant to bring him a glass of water.",
+      "He said bring me a glass of water.",
+      "He advised the servant to bring water."
+    ],
+    "answer": 1
+  },
+  {
+    "question": "Change into indirect speech: She said to her friend, \"Please wait for me.\"",
+    "options": [
+      "She requested her friend to wait for her.",
+      "She ordered her friend to wait for her.",
+      "She said please wait for me.",
+      "She told her friend wait for her."
+    ],
+    "answer": 0
+  },
+  {
+    "question": "Change into indirect speech: The teacher said, \"Do not waste your time.\"",
+    "options": [
+      "The teacher advised the students not to waste their time.",
+      "The teacher said do not waste your time.",
+      "The teacher ordered wasting no time.",
+      "The teacher requested don't waste time."
+    ],
+    "answer": 0
+  },
+  {
+    "question": "Change into indirect speech: He said, \"Alas! We lost the match.\"",
+    "options": [
+      "He exclaimed with sorrow that they had lost the match.",
+      "He exclaimed with joy that they had lost the match.",
+      "He said they lost the match.",
+      "He asked if they lost the match."
+    ],
+    "answer": 0
+  },
+  {
+    "question": "Change into indirect speech: She said, \"Hurrah! Our team has won.\"",
+    "options": [
+      "She exclaimed with joy that their team had won.",
+      "She exclaimed with sorrow that their team had won.",
+      "She said their team won.",
+      "She asked whether their team had won."
+    ],
+    "answer": 0
+  },
+  {
+    "question": "Change into indirect speech: He said, \"What a wonderful idea!\"",
+    "options": [
+      "He exclaimed that it was a wonderful idea.",
+      "He asked if it was a wonderful idea.",
+      "He said it is a wonderful idea.",
+      "He told that it was wonderful."
+    ],
+    "answer": 0
+  },
+  {
+    "question": "Change into indirect speech: She said, \"How foolish I have been!\"",
+    "options": [
+      "She exclaimed that she had been very foolish.",
+      "She asked whether she had been foolish.",
+      "She said she was foolish.",
+      "She told that she had been foolish."
+    ],
+    "answer": 0
+  },
+  {
+    "question": "Change into indirect speech: He said, \"May you succeed in life!\"",
+    "options": [
+      "He wished that I might succeed in life.",
+      "He said that I may succeed in life.",
+      "He prayed me to succeed in life.",
+      "He told me to succeed in life."
+    ],
+    "answer": 0
+  },
+  {
+    "question": "Change into indirect speech: She said, \"Let us celebrate the victory.\"",
+    "options": [
+      "She suggested that they should celebrate the victory.",
+      "She ordered them to celebrate the victory.",
+      "She requested them celebrate the victory.",
+      "She said let us celebrate the victory."
+    ],
+    "answer": 0
+  },
+  {
+    "question": "Change into indirect speech: He said, \"Let me finish my work.\"",
+    "options": [
+      "He requested that he might be allowed to finish his work.",
+      "He ordered to finish his work.",
+      "He suggested finishing his work.",
+      "He said let me finish my work."
+    ],
+    "answer": 0
+  },
+  {
+    "question": "Change into indirect speech: She said, \"Would that I could fly!\"",
+    "options": [
+      "She wished that she could fly.",
+      "She said that she could fly.",
+      "She exclaimed that she flies.",
+      "She prayed that she flew."
+    ],
+    "answer": 0
+  },
+  {
+    "question": "Change into indirect speech: He said, \"Goodbye, my friends!\"",
+    "options": [
+      "He bade his friends goodbye.",
+      "He greeted his friends.",
+      "He welcomed his friends.",
+      "He thanked his friends."
+    ],
+    "answer": 0
+  },
+  {
+    "question": "Change into indirect speech: She said, \"Congratulations on your success!\"",
+    "options": [
+      "She congratulated me on my success.",
+      "She thanked me for my success.",
+      "She wished me success.",
+      "She appreciated my success."
+    ],
+    "answer": 0
+  },
+  {
+    "question": "Change into indirect speech: He said, \"I ought to help the poor.\"",
+    "options": [
+      "He said that he ought to help the poor.",
+      "He said that he oughted to help the poor.",
+      "He said that he should helped the poor.",
+      "He said that he had ought to help the poor."
+    ],
+    "answer": 0
+  },
+  {
+    "question": "Change into indirect speech: She said, \"I used to play cricket.\"",
+    "options": [
+      "She said that she had used to play cricket.",
+      "She said that she used to play cricket.",
+      "She said that she was used to play cricket.",
+      "She said that she use to play cricket."
+    ],
+    "answer": 1
+  },
+  {
+    "question": "Change into indirect speech: He said to me, \"You may leave now.\"",
+    "options": [
+      "He told me that I might leave then.",
+      "He told me that I may leave now.",
+      "He said me that I might leave then.",
+      "He told me that you might leave then."
+    ],
+    "answer": 0
+  },
+  {
+    "question": "Change into indirect speech: She said, \"I am writing a letter.\"",
+    "options": [
+      "She said that she was writing a letter.",
+      "She said that she is writing a letter.",
+      "She said that she had written a letter.",
+      "She said that she wrote a letter."
+    ],
+    "answer": 0
+  },
+  {
+    "question": "Change into indirect speech: He said, \"We have been living here for years.\"",
+    "options": [
+      "He said that they had been living there for years.",
+      "He said that they have been living here for years.",
+      "He said that they lived there for years.",
+      "He said that we had been living there for years."
+    ],
+    "answer": 0
+  },
+  {
+    "question": "Change into indirect speech: She said, \"Can I borrow your pen?\"",
+    "options": [
+      "She asked if she could borrow my pen.",
+      "She asked if she can borrow my pen.",
+      "She said if she could borrow my pen.",
+      "She asked that she could borrow my pen."
+    ],
+    "answer": 0
+  },
+  {
+    "question": "Change into indirect speech: He said, \"Shall we start the meeting?\"",
+    "options": [
+      "He suggested that they should start the meeting.",
+      "He asked shall they start the meeting.",
+      "He said that they start the meeting.",
+      "He ordered them to start the meeting."
+    ],
+    "answer": 0
+  },
+  {
+    "question": "Change into indirect speech: She said, \"Must you go today?\"",
+    "options": [
+      "She asked if I had to go that day.",
+      "She asked must I go today.",
+      "She said if I had to go that day.",
+      "She asked that I had to go that day."
+    ],
+    "answer": 0
+  },
+  {
+    "question": "Change into indirect speech: He said, \"Who can solve this puzzle?\"",
+    "options": [
+      "He asked who could solve that puzzle.",
+      "He asked who can solve this puzzle.",
+      "He said who could solve that puzzle.",
+      "He asked that who could solve that puzzle."
+    ],
+    "answer": 0
+  },
+  {
+    "question": "Change into indirect speech: She said, \"Which train will you take?\"",
+    "options": [
+      "She asked which train I would take.",
+      "She asked which train will I take.",
+      "She said which train I would take.",
+      "She asked that which train I would take."
+    ],
+    "answer": 0
+  },
+  {
+    "question": "Change into indirect speech: He said to me, \"Never smoke.\"",
+    "options": [
+      "He advised me never to smoke.",
+      "He ordered me smoke.",
+      "He said never smoke.",
+      "He requested me smoking."
+    ],
+    "answer": 0
+  },
+  {
+    "question": "Change into indirect speech: The doctor said, \"Take this medicine regularly.\"",
+    "options": [
+      "The doctor advised me to take that medicine regularly.",
+      "The doctor said take this medicine regularly.",
+      "The doctor requested me taking medicine.",
+      "The doctor ordered medicine regularly."
+    ],
+    "answer": 0
+  },
+  {
+    "question": "Change into indirect speech: She said, \"Please forgive me.\"",
+    "options": [
+      "She requested me to forgive her.",
+      "She ordered me to forgive her.",
+      "She said please forgive me.",
+      "She asked that I forgive her."
+    ],
+    "answer": 0
+  },
+  {
+    "question": "Change into indirect speech: He said, \"What an amazing performance!\"",
+    "options": [
+      "He exclaimed that it was an amazing performance.",
+      "He asked if it was an amazing performance.",
+      "He said it was amazing performance.",
+      "He told about an amazing performance."
+    ],
+    "answer": 0
+  },
+  {
+    "question": "Change into indirect speech: She said, \"How beautiful the garden is!\"",
+    "options": [
+      "She exclaimed that the garden was very beautiful.",
+      "She asked whether the garden was beautiful.",
+      "She said the garden is beautiful.",
+      "She told that the garden was beautiful."
+    ],
+    "answer": 0
+  },
+  {
+    "question": "Change into indirect speech: He said, \"Alas! I am ruined.\"",
+    "options": [
+      "He exclaimed with sorrow that he was ruined.",
+      "He exclaimed with joy that he was ruined.",
+      "He said he is ruined.",
+      "He asked if he was ruined."
+    ],
+    "answer": 0
+  },
+  {
+    "question": "Change into indirect speech: She said, \"Hurrah! We are going on a trip.\"",
+    "options": [
+      "She exclaimed with joy that they were going on a trip.",
+      "She exclaimed with sorrow that they were going on a trip.",
+      "She said they were going on a trip.",
+      "She asked if they were going on a trip."
+    ],
+    "answer": 0
+  },
+  {
+    "question": "Change into indirect speech: He said, \"May all your wishes come true!\"",
+    "options": [
+      "He wished that all my wishes might come true.",
+      "He prayed me to fulfill wishes.",
+      "He said my wishes come true.",
+      "He ordered my wishes to come true."
+    ],
+    "answer": 0
+  },
+  {
+    "question": "Change into indirect speech: She said, \"Let us not waste time.\"",
+    "options": [
+      "She suggested that they should not waste time.",
+      "She ordered them not to waste time.",
+      "She requested them not wasting time.",
+      "She said let us not waste time."
+    ],
+    "answer": 0
+  },
+  {
+    "question": "Change into indirect speech: He said, \"Let him speak.\"",
+    "options": [
+      "He suggested that he should speak.",
+      "He ordered that he be allowed to speak.",
+      "He requested him speaking.",
+      "He said let him speak."
+    ],
+    "answer": 1
+  },
+  {
+    "question": "Change into indirect speech: She said, \"Would that I had more time!\"",
+    "options": [
+      "She wished that she had had more time.",
+      "She said she had more time.",
+      "She exclaimed that she has more time.",
+      "She prayed for more times."
+    ],
+    "answer": 0
+  },
+  {
+    "question": "Change into indirect speech: He said, \"Thank you for your help.\"",
+    "options": [
+      "He thanked me for my help.",
+      "He congratulated me for my help.",
+      "He appreciated me help.",
+      "He wished me for help."
+    ],
+    "answer": 0
+  },
+  {
+    "question": "Change into indirect speech: She said, \"Best of luck!\"",
+    "options": [
+      "She wished me good luck.",
+      "She thanked me.",
+      "She congratulated me.",
+      "She greeted me."
+    ],
+    "answer": 0
+  },
+  {
+    "question": "Change into indirect speech: He said, \"Welcome to our home.\"",
+    "options": [
+      "He welcomed me to their home.",
+      "He greeted me to their home.",
+      "He invited me home.",
+      "He thanked me for coming."
+    ],
+    "answer": 0
+  },
+  {
+    "question": "Change into indirect speech: She said, \"Congratulations! You have passed the exam.\"",
+    "options": [
+      "She congratulated me on passing the exam.",
+      "She thanked me for passing the exam.",
+      "She wished me to pass the exam.",
+      "She appreciated my exam."
+    ],
+    "answer": 0
+  }
+
+];
+
+
+let index = 0;
+let score = 0;
+let timer;
+let timeLeft = 10;
+
+function startQuiz() {
+  document.getElementById("startScreen").classList.add("hide");
+  document.getElementById("quizScreen").classList.remove("hide");
+  loadQuestion();
+}
+
+function loadQuestion() {
+  resetTimer();
+  let q = quizData[index];
+  document.getElementById("question").innerText = q.question;
+  document.getElementById("qNo").innerText = index + 1;
+
+  let optionsHTML = "";
+  q.options.forEach((opt, i) => {
+    optionsHTML += `<div class="option" onclick="selectOption(${i})">${opt}</div>`;
+  });
+
+  document.getElementById("options").innerHTML = optionsHTML;
+}
+
+function selectOption(selected) {
+  let correct = quizData[index].answer;
+  let options = document.querySelectorAll(".option");
+
+  options.forEach((opt, i) => {
+    if (i === correct) opt.classList.add("correct");
+    else if (i === selected) opt.classList.add("wrong");
+
+    opt.style.pointerEvents = "none";
+  });
+
+  if (selected === correct) score++;
+}
+
+function nextQuestion() {
+  index++;
+  if (index < quizData.length) {
+    loadQuestion();
+  } else {
+    showResult();
+  }
+}
+
+  function showResult() {
+  document.getElementById("quizScreen").classList.add("hide");
+  document.getElementById("resultScreen").classList.remove("hide");
+  document.getElementById("score").innerText = score + " / " + quizData.length;
+}
+
+function resetTimer() {
+  clearInterval(timer);
+  timeLeft = 10;
+  document.getElementById("timer").innerText = timeLeft;
+
+  timer = setInterval(() => {
+    timeLeft--;
+    document.getElementById("timer").innerText = timeLeft;
+
+    if (timeLeft === 0) {
+      nextQuestion();
+    }
+  }, 1000);
+}
+
+</script>
+
+</body>
+</html>

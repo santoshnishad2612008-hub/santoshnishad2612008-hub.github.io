@@ -1,0 +1,746 @@
+<!DOCTYPE html>
+<html>
+<head>
+     <!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-KN4DRRWZ17"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-KN4DRRWZ17');
+</script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>physics Quiz</title>
+
+<style>
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: Arial;
+}
+
+body {
+  background: #f5f5f5;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+}
+
+/* Container */
+.app {
+  width: 95%;
+  max-width: 500px;
+  background: white;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+}
+
+/* Header */
+header {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 20px;
+}
+
+.timer {
+  background: #2196F3;
+  color: white;
+  padding: 5px 10px;
+  border-radius: 5px;
+}
+
+/* Question */
+.question {
+  font-size: 20px;
+  margin-bottom: 15px;
+}
+
+/* Options */
+.option {
+  background: #eee;
+  padding: 10px;
+  margin: 8px 0;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.option:hover {
+  background: #ddd;
+}
+
+.correct {
+  background: #4CAF50 !important;
+  color: white;
+}
+
+.wrong {
+  background: #f44336 !important;
+  color: white;
+}
+
+/* Button */
+button {
+  margin-top: 15px;
+  padding: 10px;
+  width: 100%;
+  border: none;
+ background:linear-gradient(135deg,#0a2dbcf3,#779af583);
+  color: white;
+  font-size: 16px;
+  cursor: pointer;
+  border-radius: 5px;
+}
+
+/* Hidden */
+.hide {
+  display: none;
+}
+
+/* Result */
+.result {
+  text-align: center;
+}
+
+/* Responsive */
+@media (max-width: 600px) {
+  .question {
+    font-size: 18px;
+  }
+}
+</style>
+
+</head>
+<body>
+
+<div class="app">
+
+  <!-- Start Screen -->
+  <div id="startScreen">
+    <h2>Quiz App</h2>
+    <button onclick="startQuiz()">Start Quiz</button>
+  </div>
+
+  <!-- Quiz Screen -->
+  <div id="quizScreen" class="hide">
+    <header>
+      <div>Question <span id="qNo">1</span>/100</div>
+      <div class="timer" id="timer">10</div>
+    </header>
+
+    <div class="question" id="question"></div>
+    <div id="options"></div>
+
+    <button onclick="nextQuestion()">Next</button>
+  </div>
+
+  <!-- Result Screen -->
+  <div id="resultScreen" class="hide result">
+    <h2>Your Score</h2>
+    <h1 id="score"></h1>
+    <button onclick="location.reload()">Play Again</button>
+  </div>
+
+</div>
+
+<script>
+const quizData = [
+
+{
+question:"भौतिकी की शाखा जो गति का अध्ययन करती है क्या कहलाती है?",
+options:["ऑप्टिक्स","मैकेनिक्स","थर्मोडायनामिक्स","ध्वनि विज्ञान"],
+answer:1
+},
+{
+question:"न्यूटन का पहला नियम किससे संबंधित है?",
+options:["ऊर्जा संरक्षण","जड़त्व","गुरुत्वाकर्षण","कार्य"],
+answer:1
+},
+{
+question:"बल का SI मात्रक क्या है?",
+options:["जूल","न्यूटन","वाट","पास्कल"],
+answer:1
+},
+{
+question:"प्रकाश की गति निर्वात में कितनी होती है?",
+options:["3×10^8 m/s","3×10^6 m/s","3×10^5 m/s","3×10^7 m/s"],
+answer:0
+},
+{
+question:"विद्युत धारा का SI मात्रक क्या है?",
+options:["वोल्ट","एम्पियर","ओम","कूलॉम"],
+answer:1
+},
+{
+question:"ओम का नियम क्या दर्शाता है?",
+options:["V=IR","P=VI","F=ma","E=mc^2"],
+answer:0
+},
+{
+question:"ऊर्जा का SI मात्रक क्या है?",
+options:["जूल","वाट","न्यूटन","पास्कल"],
+answer:0
+},
+{
+question:"गुरुत्वाकर्षण का नियम किसने दिया?",
+options:["न्यूटन","आइंस्टीन","गैलीलियो","केप्लर"],
+answer:0
+},
+{
+question:"दाब का SI मात्रक क्या है?",
+options:["पास्कल","न्यूटन","जूल","वाट"],
+answer:0
+},
+{
+question:"ध्वनि तरंगें किस प्रकार की होती हैं?",
+options:["अनुप्रस्थ","अनुदैर्ध्य","विद्युतचुंबकीय","स्थिर"],
+answer:1
+},
+
+{
+question:"प्रकाश का अपवर्तन किससे संबंधित है?",
+options:["परावर्तन","माध्यम परिवर्तन","गति","ध्वनि"],
+answer:1
+},
+{
+question:"लेंस कितने प्रकार के होते हैं?",
+options:["1","2","3","4"],
+answer:1
+},
+{
+question:"उत्तल लेंस क्या करता है?",
+options:["किरणें फैलाता है","किरणें एकत्र करता है","कोई प्रभाव नहीं","ध्वनि बढ़ाता है"],
+answer:1
+},
+{
+question:"धारा की दिशा कौन निर्धारित करता है?",
+options:["इलेक्ट्रॉन","प्रोटॉन","न्यूट्रॉन","परमाणु"],
+answer:1
+},
+{
+question:"ताप का SI मात्रक क्या है?",
+options:["केल्विन","डिग्री","जूल","वाट"],
+answer:0
+},
+
+{
+question:"ऊष्मा का संचरण किस प्रकार होता है?",
+options:["चालन","संवहन","विकिरण","उपरोक्त सभी"],
+answer:3
+},
+{
+question:"विद्युत प्रतिरोध का SI मात्रक क्या है?",
+options:["ओम","वोल्ट","एम्पियर","वाट"],
+answer:0
+},
+{
+question:"आइंस्टीन का प्रसिद्ध समीकरण क्या है?",
+options:["F=ma","E=mc^2","V=IR","P=IV"],
+answer:1
+},
+{
+question:"चुंबकीय क्षेत्र का SI मात्रक क्या है?",
+options:["टेस्ला","गॉस","न्यूटन","वेबर"],
+answer:0
+},
+{
+question:"गति का दूसरा नियम क्या है?",
+options:["F=ma","E=mc^2","V=IR","P=VI"],
+answer:0
+},
+
+{
+question:"कार्य का SI मात्रक क्या है?",
+options:["जूल","वाट","न्यूटन","पास्कल"],
+answer:0
+},
+{
+question:"विद्युत शक्ति का SI मात्रक क्या है?",
+options:["वाट","जूल","न्यूटन","ओम"],
+answer:0
+},
+{
+question:"परावर्तन का नियम किससे संबंधित है?",
+options:["प्रकाश","ध्वनि","गति","ऊर्जा"],
+answer:0
+},
+{
+question:"सूर्य ऊर्जा का स्रोत क्या है?",
+options:["नाभिकीय संलयन","नाभिकीय विखंडन","रासायनिक प्रतिक्रिया","घर्षण"],
+answer:0
+},
+{
+question:"वोल्टेज का SI मात्रक क्या है?",
+options:["वोल्ट","ओम","एम्पियर","जूल"],
+answer:0
+},
+
+{
+question:"धातु में विद्युत प्रवाह कैसे होता है?",
+options:["आयन द्वारा","इलेक्ट्रॉन द्वारा","प्रोटॉन द्वारा","न्यूट्रॉन द्वारा"],
+answer:1
+},
+{
+question:"गुरुत्व त्वरण का मान पृथ्वी पर कितना है?",
+options:["9.8 m/s²","8.9 m/s²","10 m/s²","9 m/s"],
+answer:0
+},
+{
+question:"आवृत्ति का SI मात्रक क्या है?",
+options:["हर्ट्ज","वाट","जूल","न्यूटन"],
+answer:0
+},
+{
+question:"तरंग की लंबाई किससे संबंधित है?",
+options:["आवृत्ति","दूरी","ऊर्जा","दाब"],
+answer:1
+},
+{
+question:"विद्युत चुंबकीय तरंगों का उदाहरण क्या है?",
+options:["ध्वनि","प्रकाश","जल तरंग","भूकंप तरंग"],
+answer:1
+},
+
+{
+question:"न्यूटन का तीसरा नियम क्या है?",
+options:["F=ma","क्रिया-प्रतिक्रिया","जड़त्व","ऊर्जा संरक्षण"],
+answer:1
+},
+{
+question:"ऊर्जा संरक्षण का सिद्धांत किससे संबंधित है?",
+options:["ऊर्जा नष्ट नहीं होती","बल","गति","द्रव्यमान"],
+answer:0
+},
+{
+question:"द्रव्यमान का SI मात्रक क्या है?",
+options:["किलोग्राम","ग्राम","टन","पाउंड"],
+answer:0
+},
+{
+question:"दर्पण कितने प्रकार के होते हैं?",
+options:["1","2","3","4"],
+answer:1
+},
+{
+question:"अवतल दर्पण क्या करता है?",
+options:["बड़ा प्रतिबिंब","छोटा प्रतिबिंब","कोई प्रतिबिंब नहीं","ध्वनि बढ़ाता है"],
+answer:0
+},
+
+{
+question:"विद्युत सेल का उपयोग क्या है?",
+options:["ऊर्जा स्रोत","प्रकाश","ध्वनि","ऊष्मा"],
+answer:0
+},
+{
+question:"प्रकाश का वेग किस माध्यम में अधिक होता है?",
+options:["ठोस","द्रव","गैस","निर्वात"],
+answer:3
+},
+{
+question:"लेंस की शक्ति की इकाई क्या है?",
+options:["डायोप्टर","वाट","जूल","न्यूटन"],
+answer:0
+},
+{
+question:"चुंबक के कितने ध्रुव होते हैं?",
+options:["1","2","3","4"],
+answer:1
+},
+{
+question:"विद्युत धारा किस दिशा में बहती है?",
+options:["इलेक्ट्रॉन दिशा","धन से ऋण","ऋण से धन","यादृच्छिक"],
+answer:1
+},
+
+{
+question:"ऊष्मा का SI मात्रक क्या है?",
+options:["जूल","वाट","न्यूटन","ओम"],
+answer:0
+},
+{
+question:"गैलीलियो किससे संबंधित है?",
+options:["गति","प्रकाश","विद्युत","ध्वनि"],
+answer:0
+},
+{
+question:"परमाणु का केंद्र क्या कहलाता है?",
+options:["नाभिक","इलेक्ट्रॉन","प्रोटॉन","न्यूट्रॉन"],
+answer:0
+},
+{
+question:"विद्युत चुंबक किससे बनता है?",
+options:["लोहा + धारा","लकड़ी","प्लास्टिक","कांच"],
+answer:0
+},
+{
+question:"ऊष्मा ऊर्जा का स्थानांतरण किससे होता है?",
+options:["चालन","संवहन","विकिरण","सभी"],
+answer:3
+},
+
+{
+question:"त्वरण का SI मात्रक क्या है?",
+options:["m/s","m/s²","m²/s","N/m"],
+answer:1
+},
+{
+question:"किसी वस्तु का जड़त्व किस पर निर्भर करता है?",
+options:["वेग","द्रव्यमान","त्वरण","बल"],
+answer:1
+},
+{
+question:"कार्य करने की क्षमता क्या कहलाती है?",
+options:["बल","ऊर्जा","शक्ति","दाब"],
+answer:1
+},
+{
+question:"शक्ति का SI मात्रक क्या है?",
+options:["जूल","वाट","न्यूटन","ओम"],
+answer:1
+},
+{
+question:"द्रव्यमान और भार में क्या अंतर है?",
+options:["कोई नहीं","द्रव्यमान स्थिर होता है","भार स्थिर होता है","दोनों समान"],
+answer:1
+},
+
+{
+question:"न्यूटन का प्रथम नियम किसका सिद्धांत है?",
+options:["ऊर्जा संरक्षण","जड़त्व","गति","दाब"],
+answer:1
+},
+{
+question:"गति का तीसरा नियम क्या बताता है?",
+options:["F=ma","क्रिया-प्रतिक्रिया","ऊर्जा संरक्षण","वेग"],
+answer:1
+},
+{
+question:"वस्तु का भार किससे मापा जाता है?",
+options:["ग्राम","न्यूटन","किलोग्राम","जूल"],
+answer:1
+},
+{
+question:"गुरुत्वाकर्षण स्थिरांक G का मान लगभग क्या है?",
+options:["6.67×10^-11","9.8","3×10^8","1.6×10^-19"],
+answer:0
+},
+{
+question:"दाब बढ़ने पर उबलने का बिंदु क्या होता है?",
+options:["घटता है","बढ़ता है","समान रहता है","शून्य हो जाता है"],
+answer:1
+},
+
+{
+question:"वस्तु का संवेग क्या होता है?",
+options:["mv","ma","mgh","F/A"],
+answer:0
+},
+{
+question:"ऊष्मा किस प्रकार की ऊर्जा है?",
+options:["गतिज","स्थितिज","आंतरिक","विद्युत"],
+answer:2
+},
+{
+question:"प्रकाश एक क्या है?",
+options:["कण","तरंग","दोनों","न तो कण न तरंग"],
+answer:2
+},
+{
+question:"विद्युत धारा किसके प्रवाह से बनती है?",
+options:["प्रोटॉन","इलेक्ट्रॉन","न्यूट्रॉन","आयन"],
+answer:1
+},
+{
+question:"प्रतिरोध किससे प्रभावित होता है?",
+options:["लंबाई","क्षेत्रफल","पदार्थ","सभी"],
+answer:3
+},
+
+{
+question:"कौन सा पदार्थ चुंबक को आकर्षित करता है?",
+options:["लकड़ी","लोहा","प्लास्टिक","कांच"],
+answer:1
+},
+{
+question:"विद्युत ऊर्जा का SI मात्रक क्या है?",
+options:["जूल","वाट","ओम","वोल्ट"],
+answer:0
+},
+{
+question:"ध्वनि का वेग सबसे अधिक किसमें होता है?",
+options:["ठोस","द्रव","गैस","निर्वात"],
+answer:0
+},
+{
+question:"प्रकाश का परावर्तन किससे संबंधित है?",
+options:["ध्वनि","प्रकाश","विद्युत","ऊष्मा"],
+answer:1
+},
+{
+question:"लेंस की फोकस दूरी बढ़ने पर शक्ति क्या होती है?",
+options:["बढ़ती है","घटती है","समान रहती है","शून्य"],
+answer:1
+},
+
+{
+question:"उत्तल लेंस का उपयोग क्या है?",
+options:["आवर्धन","कमी करना","ध्वनि बढ़ाना","ऊष्मा"],
+answer:0
+},
+{
+question:"अवतल लेंस किसमें उपयोग होता है?",
+options:["मायोपिया","हाइपरमेट्रोपिया","दोनों","कोई नहीं"],
+answer:0
+},
+{
+question:"विद्युत बल का सूत्र क्या है?",
+options:["F=ma","V=IR","F=kq1q2/r²","P=VI"],
+answer:2
+},
+{
+question:"ऊर्जा संरक्षण किस पर लागू होता है?",
+options:["सभी प्रणालियों पर","केवल यांत्रिक","केवल विद्युत","केवल ऊष्मा"],
+answer:0
+},
+{
+question:"भारी वस्तु और हल्की वस्तु पहले कौन गिरेगी?",
+options:["भारी","हल्की","दोनों समान","निर्भर करता है"],
+answer:2
+},
+
+{
+question:"चुंबकीय क्षेत्र की रेखाएँ कैसी होती हैं?",
+options:["सीधी","वक्र","वृत्ताकार","यादृच्छिक"],
+answer:1
+},
+{
+question:"धारा बढ़ाने पर चुंबकीय क्षेत्र क्या होता है?",
+options:["घटता है","बढ़ता है","स्थिर","शून्य"],
+answer:1
+},
+{
+question:"इलेक्ट्रिक पावर का सूत्र क्या है?",
+options:["P=VI","F=ma","E=mc²","V=IR"],
+answer:0
+},
+{
+question:"नाभिकीय ऊर्जा किससे प्राप्त होती है?",
+options:["परमाणु नाभिक","इलेक्ट्रॉन","प्रोटॉन","न्यूट्रॉन"],
+answer:0
+},
+{
+question:"सूर्य में ऊर्जा उत्पादन कैसे होता है?",
+options:["संलयन","विखंडन","दहन","घर्षण"],
+answer:0
+},
+
+{
+question:"विद्युत धारा का प्रवाह किसमें अधिक होता है?",
+options:["सुचालक","कुचालक","अर्धचालक","निर्वात"],
+answer:0
+},
+{
+question:"सेमीकंडक्टर का उदाहरण क्या है?",
+options:["लोहा","सिलिकॉन","तांबा","सोना"],
+answer:1
+},
+{
+question:"डायोड का उपयोग क्या है?",
+options:["AC से DC","DC से AC","ऊष्मा","ध्वनि"],
+answer:0
+},
+{
+question:"ट्रांसफार्मर किस सिद्धांत पर काम करता है?",
+options:["प्रेरण","दाब","गति","घर्षण"],
+answer:0
+},
+{
+question:"विद्युत चुम्बकीय प्रेरण किसने खोजा?",
+options:["फैराडे","न्यूटन","आइंस्टीन","गैलीलियो"],
+answer:0
+},
+
+{
+question:"पृथ्वी का गुरुत्वाकर्षण किस दिशा में होता है?",
+options:["ऊपर","नीचे","आड़े","यादृच्छिक"],
+answer:1
+},
+{
+question:"कृत्रिम उपग्रह किस गति से घूमता है?",
+options:["नियत कक्षा गति","यादृच्छिक","सीधी","शून्य"],
+answer:0
+},
+{
+question:"ऊष्मा का स्थानांतरण कौन सा नहीं है?",
+options:["चालन","संवहन","विकिरण","संघर्षण"],
+answer:3
+},
+{
+question:"वायुमंडल में प्रकाश का अपवर्तन किससे होता है?",
+options:["घनत्व परिवर्तन","ताप","दाब","सभी"],
+answer:3
+},
+{
+question:"रेडियो तरंगें किस प्रकार की होती हैं?",
+options:["विद्युतचुंबकीय","ध्वनि","जल","भूकंप"],
+answer:0
+},
+{
+question:"ऊर्जा का रूपांतरण किस नियम के अनुसार होता है?",
+options:["न्यूटन का नियम","ऊर्जा संरक्षण का नियम","ओम का नियम","हुक का नियम"],
+answer:1
+},
+{
+question:"विद्युत धारा किस यंत्र से मापी जाती है?",
+options:["वोल्टमीटर","एमीटर","गैल्वेनोमीटर","ओममीटर"],
+answer:1
+},
+{
+question:"वोल्टमीटर को सर्किट में कैसे जोड़ा जाता है?",
+options:["सीरीज में","पैरालल में","दोनों में","कहीं नहीं"],
+answer:1
+},
+{
+question:"सौर ऊर्जा किस प्रकार की ऊर्जा है?",
+options:["नाभिकीय","नवीकरणीय","रासायनिक","यांत्रिक"],
+answer:1
+},
+{
+question:"इलेक्ट्रॉन की खोज किसने की?",
+options:["थॉमसन","रदरफोर्ड","बोर","न्यूटन"],
+answer:0
+},
+
+{
+question:"परमाणु मॉडल का प्रस्ताव किसने दिया?",
+options:["बोर","गैलीलियो","न्यूटन","फैराडे"],
+answer:0
+},
+{
+question:"किस माध्यम में प्रकाश सबसे तेज चलता है?",
+options:["पानी","कांच","निर्वात","हवा"],
+answer:2
+},
+{
+question:"ध्वनि तरंगें क्या होती हैं?",
+options:["विद्युतचुंबकीय","यांत्रिक","प्रकाश","नाभिकीय"],
+answer:1
+},
+{
+question:"प्रतिरोध का SI मात्रक ओम क्यों है?",
+options:["वैज्ञानिक के नाम पर","आविष्कार के कारण","द्रव्यमान के कारण","गति के कारण"],
+answer:0
+},
+{
+question:"चुंबकीय क्षेत्र किसके आसपास बनता है?",
+options:["धारा प्रवाहित चालक","लकड़ी","कांच","प्लास्टिक"],
+answer:0
+},
+
+{
+question:"लेंस का उपयोग किसमें होता है?",
+options:["कैमरा","टेलीस्कोप","चश्मा","सभी"],
+answer:3
+},
+{
+question:"न्यूटन के कितने नियम हैं?",
+options:["2","3","4","5"],
+answer:1
+},
+{
+question:"कार्य का सूत्र क्या है?",
+options:["F×d","m×v","V×I","P×t"],
+answer:0
+},
+{
+question:"ऊष्मा किस दिशा में प्रवाहित होती है?",
+options:["ठंडे से गर्म","गर्म से ठंडे","यादृच्छिक","ऊपर"],
+answer:1
+},
+{
+question:"गति किससे संबंधित है?",
+options:["स्थान परिवर्तन","ऊर्जा","द्रव्यमान","दाब"],
+answer:0
+}
+];
+
+
+let index = 0;
+let score = 0;
+let timer;
+let timeLeft = 10;
+
+function startQuiz() {
+  document.getElementById("startScreen").classList.add("hide");
+  document.getElementById("quizScreen").classList.remove("hide");
+  loadQuestion();
+}
+
+function loadQuestion() {
+  resetTimer();
+  let q = quizData[index];
+  document.getElementById("question").innerText = q.question;
+  document.getElementById("qNo").innerText = index + 1;
+
+  let optionsHTML = "";
+  q.options.forEach((opt, i) => {
+    optionsHTML += `<div class="option" onclick="selectOption(${i})">${opt}</div>`;
+  });
+
+  document.getElementById("options").innerHTML = optionsHTML;
+}
+
+function selectOption(selected) {
+  let correct = quizData[index].answer;
+  let options = document.querySelectorAll(".option");
+
+  options.forEach((opt, i) => {
+    if (i === correct) opt.classList.add("correct");
+    else if (i === selected) opt.classList.add("wrong");
+
+    opt.style.pointerEvents = "none";
+  });
+
+  if (selected === correct) score++;
+}
+
+function nextQuestion() {
+  index++;
+  if (index < quizData.length) {
+    loadQuestion();
+  } else {
+    showResult();
+  }
+}
+
+  function showResult() {
+  document.getElementById("quizScreen").classList.add("hide");
+  document.getElementById("resultScreen").classList.remove("hide");
+  document.getElementById("score").innerText = score + " / " + quizData.length;
+}
+
+function resetTimer() {
+  clearInterval(timer);
+  timeLeft = 10;
+  document.getElementById("timer").innerText = timeLeft;
+
+  timer = setInterval(() => {
+    timeLeft--;
+    document.getElementById("timer").innerText = timeLeft;
+
+    if (timeLeft === 0) {
+      nextQuestion();
+    }
+  }, 1000);
+}
+
+</script>
+
+</body>
+</html>

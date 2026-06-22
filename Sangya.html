@@ -1,0 +1,350 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-KN4DRRWZ17"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-KN4DRRWZ17');
+</script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title> sangya Quiz </title>
+
+<style>
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: Arial;
+}
+
+body {
+  background: #f5f5f5;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+}
+
+/* Container */
+.app {
+  width: 95%;
+  max-width: 500px;
+  background: white;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+}
+
+/* Header */
+header {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 20px;
+}
+
+.timer {
+  background: #2196F3;
+  color: white;
+  padding: 5px 10px;
+  border-radius: 5px;
+}
+
+/* Question */
+.question {
+  font-size: 20px;
+  margin-bottom: 15px;
+}
+
+/* Options */
+.option {
+  background: #eee;
+  padding: 10px;
+  margin: 8px 0;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.option:hover {
+  background: #ddd;
+}
+
+.correct {
+  background: #4CAF50 !important;
+  color: white;
+}
+
+.wrong {
+  background: #f44336 !important;
+  color: white;
+}
+
+/* Button */
+button {
+  margin-top: 15px;
+  padding: 10px;
+  width: 100%;
+  border: none;
+ background:linear-gradient(135deg,#0a2dbcf3,#779af583);
+  color: white;
+  font-size: 16px;
+  cursor: pointer;
+  border-radius: 5px;
+}
+
+/* Hidden */
+.hide {
+  display: none;
+}
+
+/* Result */
+.result {
+  text-align: center;
+}
+
+/* Responsive */
+@media (max-width: 600px) {
+  .question {
+    font-size: 18px;
+  }
+}
+</style>
+
+</head>
+<body>
+
+<div class="app">
+
+  <!-- Start Screen -->
+  <div id="startScreen">
+    <h2>Quiz App</h2>
+    <button onclick="startQuiz()">Start Quiz</button>
+  </div>
+
+  <!-- Quiz Screen -->
+  <div id="quizScreen" class="hide">
+    <header>
+      <div>Question <span id="qNo">1</span>/100</div>
+      <div class="timer" id="timer">10</div>
+    </header>
+
+    <div class="question" id="question"></div>
+    <div id="options"></div>
+
+    <button onclick="nextQuestion()">Next</button>
+  </div>
+
+  <!-- Result Screen -->
+  <div id="resultScreen" class="hide result">
+    <h2>Your Score</h2>
+    <h1 id="score"></h1>
+    <button onclick="location.reload()">Play Again</button>
+  </div>
+
+</div>
+
+<script>
+const quizData = [
+  
+{ question:"संज्ञा किसे कहते हैं?", options:["नाम वाले शब्द","क्रिया वाले शब्द","विशेषण वाले शब्द","सर्वनाम वाले शब्द"], answer:0 },
+{ question:"'राम' किस प्रकार की संज्ञा है?", options:["व्यक्तिवाचक","जातिवाचक","भाववाचक","समूहवाचक"], answer:0 },
+{ question:"'लड़की' किस संज्ञा का उदाहरण है?", options:["जातिवाचक","व्यक्तिवाचक","भाववाचक","द्रव्यवाचक"], answer:0 },
+{ question:"'आदमी' किस संज्ञा का उदाहरण है?", options:["जातिवाचक","व्यक्तिवाचक","भाववाचक","समूहवाचक"], answer:0 },
+{ question:"'भारत' किस प्रकार की संज्ञा है?", options:["व्यक्तिवाचक","जातिवाचक","भाववाचक","समूहवाचक"], answer:0 },
+
+{ question:"'पुस्तक' किस संज्ञा का उदाहरण है?", options:["जातिवाचक","व्यक्तिवाचक","भाववाचक","समूहवाचक"], answer:0 },
+{ question:"'विद्यालय' किस संज्ञा का उदाहरण है?", options:["जातिवाचक","व्यक्तिवाचक","भाववाचक","द्रव्यवाचक"], answer:0 },
+{ question:"'गंगा' किस संज्ञा का उदाहरण है?", options:["व्यक्तिवाचक","जातिवाचक","भाववाचक","समूहवाचक"], answer:0 },
+{ question:"'समूह' किस संज्ञा का उदाहरण है?", options:["समूहवाचक","व्यक्तिवाचक","जातिवाचक","भाववाचक"], answer:0 },
+{ question:"'दूध' किस संज्ञा का उदाहरण है?", options:["द्रव्यवाचक","जातिवाचक","व्यक्तिवाचक","भाववाचक"], answer:0 },
+
+{ question:"'खुशी' किस संज्ञा का उदाहरण है?", options:["भाववाचक","जातिवाचक","व्यक्तिवाचक","समूहवाचक"], answer:0 },
+{ question:"'दुःख' किस संज्ञा का उदाहरण है?", options:["भाववाचक","जातिवाचक","व्यक्तिवाचक","द्रव्यवाचक"], answer:0 },
+{ question:"'सोना (धातु)' किस संज्ञा का उदाहरण है?", options:["द्रव्यवाचक","जातिवाचक","व्यक्तिवाचक","भाववाचक"], answer:0 },
+{ question:"'सेना' किस संज्ञा का उदाहरण है?", options:["समूहवाचक","जातिवाचक","व्यक्तिवाचक","भाववाचक"], answer:0 },
+{ question:"'किताबें' किस संज्ञा का उदाहरण है?", options:["जातिवाचक","व्यक्तिवाचक","भाववाचक","द्रव्यवाचक"], answer:0 },
+
+{ question:"'लखनऊ' किस संज्ञा का उदाहरण है?", options:["व्यक्तिवाचक","जातिवाचक","भाववाचक","समूहवाचक"], answer:0 },
+{ question:"'दिल्ली' किस संज्ञा का उदाहरण है?", options:["व्यक्तिवाचक","जातिवाचक","भाववाचक","द्रव्यवाचक"], answer:0 },
+{ question:"'पेड़' किस संज्ञा का उदाहरण है?", options:["जातिवाचक","व्यक्तिवाचक","भाववाचक","समूहवाचक"], answer:0 },
+{ question:"'नदी' किस संज्ञा का उदाहरण है?", options:["जातिवाचक","व्यक्तिवाचक","भाववाचक","द्रव्यवाचक"], answer:0 },
+{ question:"'हिमालय' किस संज्ञा का उदाहरण है?", options:["व्यक्तिवाचक","जातिवाचक","भाववाचक","समूहवाचक"], answer:0 },
+
+{ question:"'सम्राट अशोक' किस संज्ञा का उदाहरण है?", options:["व्यक्तिवाचक","जातिवाचक","भाववाचक","द्रव्यवाचक"], answer:0 },
+{ question:"'डॉक्टर' किस संज्ञा का उदाहरण है?", options:["जातिवाचक","व्यक्तिवाचक","भाववाचक","समूहवाचक"], answer:0 },
+{ question:"'शिक्षक' किस संज्ञा का उदाहरण है?", options:["जातिवाचक","व्यक्तिवाचक","भाववाचक","द्रव्यवाचक"], answer:0 },
+{ question:"'छात्र' किस संज्ञा का उदाहरण है?", options:["जातिवाचक","व्यक्तिवाचक","भाववाचक","समूहवाचक"], answer:0 },
+{ question:"'पर्वत' किस संज्ञा का उदाहरण है?", options:["जातिवाचक","व्यक्तिवाचक","भाववाचक","द्रव्यवाचक"], answer:0 },
+
+{ question:"'आनंद' किस संज्ञा का उदाहरण है?", options:["भाववाचक","जातिवाचक","व्यक्तिवाचक","समूहवाचक"], answer:0 },
+{ question:"'क्रोध' किस संज्ञा का उदाहरण है?", options:["भाववाचक","जातिवाचक","व्यक्तिवाचक","द्रव्यवाचक"], answer:0 },
+{ question:"'कक्षा' किस संज्ञा का उदाहरण है?", options:["जातिवाचक","व्यक्तिवाचक","भाववाचक","समूहवाचक"], answer:0 },
+{ question:"'पुलिस' किस संज्ञा का उदाहरण है?", options:["समूहवाचक","जातिवाचक","व्यक्तिवाचक","भाववाचक"], answer:0 },
+{ question:"'फूल' किस संज्ञा का उदाहरण है?", options:["जातिवाचक","व्यक्तिवाचक","भाववाचक","द्रव्यवाचक"], answer:0 },
+
+{ question:"'चाँदी' किस संज्ञा का उदाहरण है?", options:["द्रव्यवाचक","जातिवाचक","व्यक्तिवाचक","भाववाचक"], answer:0 },
+{ question:"'घोड़ा' किस संज्ञा का उदाहरण है?", options:["जातिवाचक","व्यक्तिवाचक","भाववाचक","समूहवाचक"], answer:0 },
+{ question:"'गाय' किस संज्ञा का उदाहरण है?", options:["जातिवाचक","व्यक्तिवाचक","भाववाचक","द्रव्यवाचक"], answer:0 },
+{ question:"'कुत्ता' किस संज्ञा का उदाहरण है?", options:["जातिवाचक","व्यक्तिवाचक","भाववाचक","समूहवाचक"], answer:0 },
+{ question:"'सागर' किस संज्ञा का उदाहरण है?", options:["जातिवाचक","व्यक्तिवाचक","भाववाचक","द्रव्यवाचक"], answer:0 },
+
+{ question:"'पृथ्वी' किस संज्ञा का उदाहरण है?", options:["व्यक्तिवाचक","जातिवाचक","भाववाचक","समूहवाचक"], answer:0 },
+{ question:"'सूर्य' किस संज्ञा का उदाहरण है?", options:["व्यक्तिवाचक","जातिवाचक","भाववाचक","द्रव्यवाचक"], answer:0 },
+{ question:"'चंद्रमा' किस संज्ञा का उदाहरण है?", options:["व्यक्तिवाचक","जातिवाचक","भाववाचक","समूहवाचक"], answer:0 },
+{ question:"'पुस्तकालय' किस संज्ञा का उदाहरण है?", options:["जातिवाचक","व्यक्तिवाचक","भाववाचक","समूहवाचक"], answer:0 },
+{ question:"'नगर' किस संज्ञा का उदाहरण है?", options:["जातिवाचक","व्यक्तिवाचक","भाववाचक","द्रव्यवाचक"], answer:0 },
+
+{ question:"'भीड़' किस संज्ञा का उदाहरण है?", options:["समूहवाचक","जातिवाचक","व्यक्तिवाचक","भाववाचक"], answer:0 },
+{ question:"'झुंड' किस संज्ञा का उदाहरण है?", options:["समूहवाचक","जातिवाचक","व्यक्तिवाचक","द्रव्यवाचक"], answer:0 },
+{ question:"'बचपन' किस संज्ञा का उदाहरण है?", options:["भाववाचक","जातिवाचक","व्यक्तिवाचक","समूहवाचक"], answer:0 },
+{ question:"'बुढ़ापा' किस संज्ञा का उदाहरण है?", options:["भाववाचक","जातिवाचक","व्यक्तिवाचक","द्रव्यवाचक"], answer:0 },
+{ question:"'धैर्य' किस संज्ञा का उदाहरण है?", options:["भाववाचक","जातिवाचक","व्यक्तिवाचक","समूहवाचक"], answer:0 },
+
+{ question:"'पर्वत श्रृंखला' किस संज्ञा का उदाहरण है?", options:["समूहवाचक","जातिवाचक","व्यक्तिवाचक","भाववाचक"], answer:0 },
+{ question:"'जल' किस संज्ञा का उदाहरण है?", options:["द्रव्यवाचक","जातिवाचक","व्यक्तिवाचक","भाववाचक"], answer:0 },
+{ question:"'तेल' किस संज्ञा का उदाहरण है?", options:["द्रव्यवाचक","जातिवाचक","व्यक्तिवाचक","समूहवाचक"], answer:0 },
+{ question:"'आकाश' किस संज्ञा का उदाहरण है?", options:["जातिवाचक","व्यक्तिवाचक","भाववाचक","द्रव्यवाचक"], answer:0 },
+{ question:"'समुद्र' किस संज्ञा का उदाहरण है?", options:["जातिवाचक","व्यक्तिवाचक","भाववाचक","समूहवाचक"], answer:0 },
+
+{ question:"'राजा' किस संज्ञा का उदाहरण है?", options:["जातिवाचक","व्यक्तिवाचक","भाववाचक","समूहवाचक"], answer:0 },
+{ question:"'रानी' किस संज्ञा का उदाहरण है?", options:["जातिवाचक","व्यक्तिवाचक","भाववाचक","द्रव्यवाचक"], answer:0 },
+{ question:"'कविता' किस संज्ञा का उदाहरण है?", options:["जातिवाचक","व्यक्तिवाचक","भाववाचक","समूहवाचक"], answer:0 },
+{ question:"'लेखन' किस संज्ञा का उदाहरण है?", options:["भाववाचक","जातिवाचक","व्यक्तिवाचक","द्रव्यवाचक"], answer:0 },
+{ question:"'ज्ञान' किस संज्ञा का उदाहरण है?", options:["भाववाचक","जातिवाचक","व्यक्तिवाचक","समूहवाचक"], answer:0 },
+
+{ question:"'विद्यालय' किस संज्ञा का उदाहरण है?", options:["जातिवाचक","व्यक्तिवाचक","भाववाचक","द्रव्यवाचक"], answer:0 },
+{ question:"'महल' किस संज्ञा का उदाहरण है?", options:["जातिवाचक","व्यक्तिवाचक","भाववाचक","समूहवाचक"], answer:0 },
+{ question:"'मंदिर' किस संज्ञा का उदाहरण है?", options:["जातिवाचक","व्यक्तिवाचक","भाववाचक","द्रव्यवाचक"], answer:0 },
+{ question:"'मस्जिद' किस संज्ञा का उदाहरण है?", options:["जातिवाचक","व्यक्तिवाचक","भाववाचक","समूहवाचक"], answer:0 },
+{ question:"'चर्च' किस संज्ञा का उदाहरण है?", options:["जातिवाचक","व्यक्तिवाचक","भाववाचक","द्रव्यवाचक"], answer:0 },
+
+{ question:"'सैनिक' किस संज्ञा का उदाहरण है?", options:["जातिवाचक","व्यक्तिवाचक","भाववाचक","समूहवाचक"], answer:0 },
+{ question:"'सेना दल' किस संज्ञा का उदाहरण है?", options:["समूहवाचक","जातिवाचक","व्यक्तिवाचक","भाववाचक"], answer:0 },
+{ question:"'मित्र' किस संज्ञा का उदाहरण है?", options:["जातिवाचक","व्यक्तिवाचक","भाववाचक","द्रव्यवाचक"], answer:0 },
+{ question:"'दोस्ती' किस संज्ञा का उदाहरण है?", options:["भाववाचक","जातिवाचक","व्यक्तिवाचक","समूहवाचक"], answer:0 },
+{ question:"'प्रेम' किस संज्ञा का उदाहरण है?", options:["भाववाचक","जातिवाचक","व्यक्तिवाचक","द्रव्यवाचक"], answer:0 },
+
+{ question:"'घड़ी' किस संज्ञा का उदाहरण है?", options:["जातिवाचक","व्यक्तिवाचक","भाववाचक","समूहवाचक"], answer:0 },
+{ question:"'मोबाइल' किस संज्ञा का उदाहरण है?", options:["जातिवाचक","व्यक्तिवाचक","भाववाचक","द्रव्यवाचक"], answer:0 },
+{ question:"'गाड़ी' किस संज्ञा का उदाहरण है?", options:["जातिवाचक","व्यक्तिवाचक","भाववाचक","समूहवाचक"], answer:0 },
+{ question:"'बस' किस संज्ञा का उदाहरण है?", options:["जातिवाचक","व्यक्तिवाचक","भाववाचक","द्रव्यवाचक"], answer:0 },
+{ question:"'रेल' किस संज्ञा का उदाहरण है?", options:["जातिवाचक","व्यक्तिवाचक","भाववाचक","समूहवाचक"], answer:0 },
+
+{ question:"'कंप्यूटर' किस संज्ञा का उदाहरण है?", options:["जातिवाचक","व्यक्तिवाचक","भाववाचक","द्रव्यवाचक"], answer:0 },
+{ question:"'टीवी' किस संज्ञा का उदाहरण है?", options:["जातिवाचक","व्यक्तिवाचक","भाववाचक","समूहवाचक"], answer:0 },
+{ question:"'रेडियो' किस संज्ञा का उदाहरण है?", options:["जातिवाचक","व्यक्तिवाचक","भाववाचक","द्रव्यवाचक"], answer:0 },
+{ question:"'इंटरनेट' किस संज्ञा का उदाहरण है?", options:["जातिवाचक","व्यक्तिवाचक","भाववाचक","समूहवाचक"], answer:0 },
+{ question:"'बिजली' किस संज्ञा का उदाहरण है?", options:["जातिवाचक","व्यक्तिवाचक","भाववाचक","द्रव्यवाचक"], answer:0 },
+
+{ question:"'कृषि' किस संज्ञा का उदाहरण है?", options:["भाववाचक","जातिवाचक","व्यक्तिवाचक","समूहवाचक"], answer:0 },
+{ question:"'व्यापार' किस संज्ञा का उदाहरण है?", options:["भाववाचक","जातिवाचक","व्यक्तिवाचक","द्रव्यवाचक"], answer:0 },
+{ question:"'खेल' किस संज्ञा का उदाहरण है?", options:["भाववाचक","जातिवाचक","व्यक्तिवाचक","समूहवाचक"], answer:0 },
+{ question:"'दौड़' किस संज्ञा का उदाहरण है?", options:["भाववाचक","जातिवाचक","व्यक्तिवाचक","द्रव्यवाचक"], answer:0 },
+{ question:"'पढ़ाई' किस संज्ञा का उदाहरण है?", options:["भाववाचक","जातिवाचक","व्यक्तिवाचक","समूहवाचक"], answer:0 },
+
+{ question:"'समाज' किस संज्ञा का उदाहरण है?", options:["समूहवाचक","जातिवाचक","व्यक्तिवाचक","भाववाचक"], answer:0 },
+{ question:"'परिवार' किस संज्ञा का उदाहरण है?", options:["समूहवाचक","व्यक्तिवाचक","जातिवाचक","भाववाचक"], answer:0 },
+{ question:"'कक्षा' किस संज्ञा का उदाहरण है?", options:["जातिवाचक","व्यक्तिवाचक","भाववाचक","समूहवाचक"], answer:0 },
+{ question:"'शहर' किस संज्ञा का उदाहरण है?", options:["जातिवाचक","व्यक्तिवाचक","भाववाचक","द्रव्यवाचक"], answer:0 },
+{ question:"'ग्राम' किस संज्ञा का उदाहरण है?", options:["जातिवाचक","व्यक्तिवाचक","भाववाचक","समूहवाचक"], answer:0 },
+
+{ question:"'इंसानियत' किस संज्ञा का उदाहरण है?", options:["भाववाचक","जातिवाचक","व्यक्तिवाचक","द्रव्यवाचक"], answer:0 },
+{ question:"'सत्य' किस संज्ञा का उदाहरण है?", options:["भाववाचक","जातिवाचक","व्यक्तिवाचक","समूहवाचक"], answer:0 },
+{ question:"'अहिंसा' किस संज्ञा का उदाहरण है?", options:["भाववाचक","जातिवाचक","व्यक्तिवाचक","द्रव्यवाचक"], answer:0 },
+{ question:"'शांति' किस संज्ञा का उदाहरण है?", options:["भाववाचक","जातिवाचक","व्यक्तिवाचक","समूहवाचक"], answer:0 },
+{ question:"'शौर्य' किस संज्ञा का उदाहरण है?", options:["भाववाचक","जातिवाचक","व्यक्तिवाचक","द्रव्यवाचक"], answer:0 },
+
+{ question:"'कागज' किस संज्ञा का उदाहरण है?", options:["द्रव्यवाचक","जातिवाचक","व्यक्तिवाचक","भाववाचक"], answer:0 },
+{ question:"'लकड़ी' किस संज्ञा का उदाहरण है?", options:["द्रव्यवाचक","जातिवाचक","व्यक्तिवाचक","समूहवाचक"], answer:0 },
+{ question:"'पत्थर' किस संज्ञा का उदाहरण है?", options:["द्रव्यवाचक","जातिवाचक","व्यक्तिवाचक","भाववाचक"], answer:0 },
+{ question:"'मिट्टी' किस संज्ञा का उदाहरण है?", options:["द्रव्यवाचक","जातिवाचक","व्यक्तिवाचक","समूहवाचक"], answer:0 },
+{ question:"'धातु' किस संज्ञा का उदाहरण है?", options:["द्रव्यवाचक","जातिवाचक","व्यक्तिवाचक","भाववाचक"], answer:0 },
+
+{ question:"'बच्चा' किस संज्ञा का उदाहरण है?", options:["जातिवाचक","व्यक्तिवाचक","भाववाचक","समूहवाचक"], answer:0 },
+{ question:"'महिला' किस संज्ञा का उदाहरण है?", options:["जातिवाचक","व्यक्तिवाचक","भाववाचक","द्रव्यवाचक"], answer:0 },
+{ question:"'पुरुष' किस संज्ञा का उदाहरण है?", options:["जातिवाचक","व्यक्तिवाचक","भाववाचक","समूहवाचक"], answer:0 },
+{ question:"'अध्यापक' किस संज्ञा का उदाहरण है?", options:["जातिवाचक","व्यक्तिवाचक","भाववाचक","द्रव्यवाचक"], answer:0 },
+{ question:"'विद्यार्थी' किस संज्ञा का उदाहरण है?", options:["जातिवाचक","व्यक्तिवाचक","भाववाचक","समूहवाचक"], answer:0 }
+
+
+];
+
+
+let index = 0;
+let score = 0;
+let timer;
+let timeLeft = 10;
+
+function startQuiz() {
+  document.getElementById("startScreen").classList.add("hide");
+  document.getElementById("quizScreen").classList.remove("hide");
+  loadQuestion();
+}
+
+function loadQuestion() {
+  resetTimer();
+  let q = quizData[index];
+  document.getElementById("question").innerText = q.question;
+  document.getElementById("qNo").innerText = index + 1;
+
+  let optionsHTML = "";
+  q.options.forEach((opt, i) => {
+    optionsHTML += `<div class="option" onclick="selectOption(${i})">${opt}</div>`;
+  });
+
+  document.getElementById("options").innerHTML = optionsHTML;
+}
+
+function selectOption(selected) {
+  let correct = quizData[index].answer;
+  let options = document.querySelectorAll(".option");
+
+  options.forEach((opt, i) => {
+    if (i === correct) opt.classList.add("correct");
+    else if (i === selected) opt.classList.add("wrong");
+
+    opt.style.pointerEvents = "none";
+  });
+
+  if (selected === correct) score++;
+}
+
+function nextQuestion() {
+  index++;
+  if (index < quizData.length) {
+    loadQuestion();
+  } else {
+    showResult();
+  }
+}
+
+  function showResult() {
+  document.getElementById("quizScreen").classList.add("hide");
+  document.getElementById("resultScreen").classList.remove("hide");
+  document.getElementById("score").innerText = score + " / " + quizData.length;
+}
+
+function resetTimer() {
+  clearInterval(timer);
+  timeLeft = 10;
+  document.getElementById("timer").innerText = timeLeft;
+
+  timer = setInterval(() => {
+    timeLeft--;
+    document.getElementById("timer").innerText = timeLeft;
+
+    if (timeLeft === 0) {
+      nextQuestion();
+    }
+  }, 1000);
+}
+
+</script>
+
+</body>
+</html>

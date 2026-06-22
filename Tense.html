@@ -1,0 +1,732 @@
+<!DOCTYPE html>
+<html>
+<head>
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-KN4DRRWZ17"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-KN4DRRWZ17');
+</script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title> Tense Quiz </title>
+
+<style>
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: Arial;
+}
+
+body {
+  background: #f5f5f5;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+}
+
+/* Container */
+.app {
+  width: 95%;
+  max-width: 500px;
+  background: white;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+}
+
+/* Header */
+header {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 20px;
+}
+
+.timer {
+  background: #2196F3;
+  color: white;
+  padding: 5px 10px;
+  border-radius: 5px;
+}
+
+/* Question */
+.question {
+  font-size: 20px;
+  margin-bottom: 15px;
+}
+
+/* Options */
+.option {
+  background: #eee;
+  padding: 10px;
+  margin: 8px 0;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.option:hover {
+  background: #ddd;
+}
+
+.correct {
+  background: #4CAF50 !important;
+  color: white;
+}
+
+.wrong {
+  background: #f44336 !important;
+  color: white;
+}
+
+/* Button */
+button {
+  margin-top: 15px;
+  padding: 10px;
+  width: 100%;
+  border: none;
+ background:linear-gradient(135deg,#0a2dbcf3,#779af583);
+  color: white;
+  font-size: 16px;
+  cursor: pointer;
+  border-radius: 5px;
+}
+
+/* Hidden */
+.hide {
+  display: none;
+}
+
+/* Result */
+.result {
+  text-align: center;
+}
+
+/* Responsive */
+@media (max-width: 600px) {
+  .question {
+    font-size: 18px;
+  }
+}
+</style>
+
+</head>
+<body>
+
+<div class="app">
+
+  <!-- Start Screen -->
+  <div id="startScreen">
+    <h2>Quiz App</h2>
+    <button onclick="startQuiz()">Start Quiz</button>
+  </div>
+
+  <!-- Quiz Screen -->
+  <div id="quizScreen" class="hide">
+    <header>
+      <div>Question <span id="qNo">1</span>/100</div>
+      <div class="timer" id="timer">10</div>
+    </header>
+
+    <div class="question" id="question"></div>
+    <div id="options"></div>
+
+    <button onclick="nextQuestion()">Next</button>
+  </div>
+
+  <!-- Result Screen -->
+  <div id="resultScreen" class="hide result">
+    <h2>Your Score</h2>
+    <h1 id="score"></h1>
+    <button onclick="location.reload()">Play Again</button>
+  </div>
+
+</div>
+
+<script>
+const quizData = [
+
+
+  {
+    "question": "Identify the tense: 'She writes a letter every day.'",
+    "options": ["Present Simple", "Past Simple", "Future Simple", "Present Continuous"],
+    "answer": 0
+  },
+  {
+    "question": "Choose the correct form: He ___ to school daily.",
+    "options": ["go", "goes", "went", "going"],
+    "answer": 1
+  },
+  {
+    "question": "Identify the tense: 'They are playing cricket.'",
+    "options": ["Present Simple", "Past Continuous", "Present Continuous", "Future Continuous"],
+    "answer": 2
+  },
+  {
+    "question": "Choose the correct form: I ___ a book now.",
+    "options": ["read", "am reading", "reads", "reads"],
+    "answer": 1
+  },
+  {
+    "question": "Identify the tense: 'She has finished her homework.'",
+    "options": ["Present Perfect", "Past Perfect", "Future Perfect", "Present Continuous"],
+    "answer": 0
+  },
+  {
+    "question": "Choose the correct form: They ___ already completed the work.",
+    "options": ["has", "have", "had", "having"],
+    "answer": 1
+  },
+  {
+    "question": "Identify the tense: 'We have been waiting for two hours.'",
+    "options": ["Present Perfect", "Present Perfect Continuous", "Past Perfect", "Future Perfect"],
+    "answer": 1
+  },
+  {
+    "question": "Choose the correct form: He ___ here since morning.",
+    "options": ["has been working", "worked", "works", "will work"],
+    "answer": 0
+  },
+  {
+    "question": "Identify the tense: 'She visited Delhi last year.'",
+    "options": ["Present Simple", "Past Simple", "Future Simple", "Past Continuous"],
+    "answer": 1
+  },
+  {
+    "question": "Choose the correct form: They ___ the match yesterday.",
+    "options": ["win", "won", "wins", "winning"],
+    "answer": 1
+  },
+  {
+    "question": "Identify the tense: 'I was studying when he called.'",
+    "options": ["Past Simple", "Present Continuous", "Past Continuous", "Future Continuous"],
+    "answer": 2
+  },
+  {
+    "question": "Choose the correct form: She ___ dinner when I arrived.",
+    "options": ["cooks", "was cooking", "cooked", "has cooked"],
+    "answer": 1
+  },
+  {
+    "question": "Identify the tense: 'They had left before we arrived.'",
+    "options": ["Past Perfect", "Present Perfect", "Future Perfect", "Past Continuous"],
+    "answer": 0
+  },
+  {
+    "question": "Choose the correct form: He ___ the work before noon.",
+    "options": ["had completed", "has completed", "completes", "will complete"],
+    "answer": 0
+  },
+  {
+    "question": "Identify the tense: 'She had been reading for an hour.'",
+    "options": ["Past Perfect", "Past Perfect Continuous", "Present Perfect", "Future Perfect"],
+    "answer": 1
+  },
+  {
+    "question": "Choose the correct form: They ___ for three hours before the rain stopped.",
+    "options": ["had been playing", "have been playing", "played", "play"],
+    "answer": 0
+  },
+  {
+    "question": "Identify the tense: 'I will visit Mumbai next week.'",
+    "options": ["Future Simple", "Present Simple", "Past Simple", "Future Continuous"],
+    "answer": 0
+  },
+  {
+    "question": "Choose the correct form: She ___ tomorrow.",
+    "options": ["comes", "came", "will come", "coming"],
+    "answer": 2
+  },
+  {
+    "question": "Identify the tense: 'They will be traveling tomorrow evening.'",
+    "options": ["Future Simple", "Future Continuous", "Present Continuous", "Past Continuous"],
+    "answer": 1
+  },
+  {
+    "question": "Choose the correct form: I ___ at 8 PM tonight.",
+    "options": ["work", "worked", "will be working", "have worked"],
+    "answer": 2
+  },
+  {
+    "question": "Identify the tense: 'She will have completed the project by Monday.'",
+    "options": ["Future Perfect", "Present Perfect", "Past Perfect", "Future Continuous"],
+    "answer": 0
+  },
+  {
+    "question": "Choose the correct form: They ___ the task by next week.",
+    "options": ["will have finished", "finish", "finished", "have finished"],
+    "answer": 0
+  },
+  {
+    "question": "Identify the tense: 'He will have been working here for ten years next month.'",
+    "options": ["Future Perfect", "Future Perfect Continuous", "Present Perfect", "Past Perfect Continuous"],
+    "answer": 1
+  },
+  {
+    "question": "Choose the correct form: By 2030, she ___ here for twenty years.",
+    "options": ["will have been teaching", "teaches", "taught", "has taught"],
+    "answer": 0
+  },
+  {
+    "question": "Choose the correct form: We ___ football every Sunday.",
+    "options": ["play", "played", "playing", "have played"],
+    "answer": 0
+  },
+  {
+    "question": "Identify the tense: 'The train is arriving now.'",
+    "options": ["Present Continuous", "Past Continuous", "Future Simple", "Past Perfect"],
+    "answer": 0
+  },
+  {
+    "question": "Choose the correct form: He ___ his homework already.",
+    "options": ["has done", "did", "does", "doing"],
+    "answer": 0
+  },
+  {
+    "question": "Identify the tense: 'They were watching TV.'",
+    "options": ["Past Continuous", "Present Continuous", "Past Perfect", "Future Continuous"],
+    "answer": 0
+  },
+  {
+    "question": "Choose the correct form: She ___ before I reached home.",
+    "options": ["had left", "has left", "leaves", "will leave"],
+    "answer": 0
+  },
+  {
+    "question": "Identify the tense: 'I will call you later.'",
+    "options": ["Future Simple", "Present Perfect", "Past Simple", "Future Perfect"],
+    "answer": 0
+  },
+  {
+    "question": "Choose the correct form: She ___ English for five years.",
+    "options": ["has studied", "studied", "studies", "study"],
+    "answer": 0
+  },
+  {
+    "question": "Identify the tense: 'They have lived here since 2020.'",
+    "options": ["Present Perfect", "Past Perfect", "Future Perfect", "Present Continuous"],
+    "answer": 0
+  },
+  {
+    "question": "Choose the correct form: I ___ a letter when he arrived.",
+    "options": ["write", "was writing", "wrote", "have written"],
+    "answer": 1
+  },
+  {
+    "question": "Identify the tense: 'He had finished the work before sunset.'",
+    "options": ["Past Perfect", "Present Perfect", "Future Perfect", "Past Continuous"],
+    "answer": 0
+  },
+  {
+    "question": "Choose the correct form: They ___ dinner now.",
+    "options": ["eat", "are eating", "ate", "have eaten"],
+    "answer": 1
+  },
+  {
+    "question": "Identify the tense: 'We are learning English.'",
+    "options": ["Present Continuous", "Past Continuous", "Future Continuous", "Present Perfect"],
+    "answer": 0
+  },
+  {
+    "question": "Choose the correct form: She ___ to the market yesterday.",
+    "options": ["go", "went", "gone", "goes"],
+    "answer": 1
+  },
+  {
+    "question": "Identify the tense: 'I had been waiting for an hour.'",
+    "options": ["Past Perfect Continuous", "Present Perfect Continuous", "Past Continuous", "Future Continuous"],
+    "answer": 0
+  },
+  {
+    "question": "Choose the correct form: By next year, he ___ his degree.",
+    "options": ["will complete", "will have completed", "completed", "completes"],
+    "answer": 1
+  },
+  {
+    "question": "Identify the tense: 'They will be playing at this time tomorrow.'",
+    "options": ["Future Continuous", "Future Perfect", "Present Continuous", "Past Continuous"],
+    "answer": 0
+  },
+  {
+    "question": "Choose the correct form: We ___ in this city since childhood.",
+    "options": ["have lived", "live", "lived", "living"],
+    "answer": 0
+  },
+  {
+    "question": "Identify the tense: 'She writes poems.'",
+    "options": ["Present Simple", "Past Simple", "Future Simple", "Present Continuous"],
+    "answer": 0
+  },
+  {
+    "question": "Choose the correct form: The students ___ for the exam now.",
+    "options": ["prepare", "prepared", "are preparing", "have prepared"],
+    "answer": 2
+  },
+  {
+    "question": "Identify the tense: 'He was sleeping when I called.'",
+    "options": ["Past Continuous", "Present Continuous", "Future Continuous", "Past Perfect"],
+    "answer": 0
+  },
+  {
+    "question": "Choose the correct form: They ___ the project last month.",
+    "options": ["finish", "finished", "finishes", "have finished"],
+    "answer": 1
+  },
+  {
+    "question": "Identify the tense: 'We will travel next summer.'",
+    "options": ["Future Simple", "Present Simple", "Past Simple", "Future Perfect"],
+    "answer": 0
+  },
+  {
+    "question": "Choose the correct form: She ___ for two hours before the bus arrived.",
+    "options": ["had been waiting", "has waited", "waits", "will wait"],
+    "answer": 0
+  },
+  {
+    "question": "Identify the tense: 'I have completed my homework.'",
+    "options": ["Present Perfect", "Past Perfect", "Future Perfect", "Present Continuous"],
+    "answer": 0
+  },
+  {
+    "question": "Choose the correct form: He ___ football every evening.",
+    "options": ["play", "plays", "played", "playing"],
+    "answer": 1
+  },
+  {
+    "question": "Identify the tense: 'They had been working all day.'",
+    "options": ["Past Perfect Continuous", "Present Perfect Continuous", "Past Continuous", "Future Continuous"],
+    "answer": 0
+  },
+  {
+    "question": "Choose the correct form: I ___ my friend tomorrow.",
+    "options": ["meet", "met", "will meet", "meeting"],
+    "answer": 2
+  },
+  {
+    "question": "Identify the tense: 'She has been reading since morning.'",
+    "options": ["Present Perfect Continuous", "Past Perfect Continuous", "Present Perfect", "Future Continuous"],
+    "answer": 0
+  },
+  {
+    "question": "Choose the correct form: They ___ TV when the lights went out.",
+    "options": ["watch", "watched", "were watching", "have watched"],
+    "answer": 2
+  },
+  {
+    "question": "Identify the tense: 'The baby cried loudly.'",
+    "options": ["Past Simple", "Present Simple", "Future Simple", "Past Continuous"],
+    "answer": 0
+  },
+  {
+    "question": "Choose the correct form: We ___ the work by tomorrow evening.",
+    "options": ["finish", "finished", "will have finished", "have finished"],
+    "answer": 2
+  },
+  {
+    "question": "Identify the tense: 'He will have been studying for three hours.'",
+    "options": ["Future Perfect Continuous", "Future Perfect", "Present Perfect Continuous", "Past Perfect Continuous"],
+    "answer": 0
+  },
+  {
+    "question": "Choose the correct form: She ___ a song at the moment.",
+    "options": ["sings", "is singing", "sang", "has sung"],
+    "answer": 1
+  },
+  {
+    "question": "Identify the tense: 'We played cricket yesterday.'",
+    "options": ["Past Simple", "Present Simple", "Future Simple", "Past Continuous"],
+    "answer": 0
+  },
+  {
+    "question": "Choose the correct form: They ___ in the garden since morning.",
+    "options": ["have been working", "worked", "work", "will work"],
+    "answer": 0
+  },
+  {
+    "question": "Identify the tense: 'I will have finished my work by 5 PM.'",
+    "options": ["Future Perfect", "Future Continuous", "Present Perfect", "Past Perfect"],
+    "answer": 0
+  },
+  
+  {
+    "question": "Choose the correct form: He ___ a book every month.",
+    "options": ["read", "reads", "reading", "reads to"],
+    "answer": 1
+  },
+  {
+    "question": "Identify the tense: 'She is cooking dinner now.'",
+    "options": ["Present Continuous", "Past Continuous", "Future Continuous", "Present Perfect"],
+    "answer": 0
+  },
+  {
+    "question": "Choose the correct form: They ___ the movie last night.",
+    "options": ["watch", "watched", "watching", "have watched"],
+    "answer": 1
+  },
+  {
+    "question": "Identify the tense: 'We have visited Jaipur twice.'",
+    "options": ["Present Perfect", "Past Perfect", "Future Perfect", "Present Continuous"],
+    "answer": 0
+  },
+  {
+    "question": "Choose the correct form: I ___ for the bus when it started raining.",
+    "options": ["wait", "was waiting", "waited", "have waited"],
+    "answer": 1
+  },
+  {
+    "question": "Identify the tense: 'He had gone home before I arrived.'",
+    "options": ["Past Perfect", "Present Perfect", "Future Perfect", "Past Continuous"],
+    "answer": 0
+  },
+  {
+    "question": "Choose the correct form: She ___ her project by next Monday.",
+    "options": ["completes", "completed", "will complete", "will have completed"],
+    "answer": 3
+  },
+  {
+    "question": "Identify the tense: 'They will be waiting for us.'",
+    "options": ["Future Continuous", "Future Simple", "Present Continuous", "Past Continuous"],
+    "answer": 0
+  },
+  {
+    "question": "Choose the correct form: We ___ English since childhood.",
+    "options": ["have known", "know", "knew", "knowing"],
+    "answer": 0
+  },
+  {
+    "question": "Identify the tense: 'The teacher explained the lesson.'",
+    "options": ["Past Simple", "Present Simple", "Future Simple", "Past Continuous"],
+    "answer": 0
+  },
+  {
+    "question": "Choose the correct form: She ___ in the library right now.",
+    "options": ["study", "studies", "is studying", "studied"],
+    "answer": 2
+  },
+  {
+    "question": "Identify the tense: 'I have been learning French for two years.'",
+    "options": ["Present Perfect Continuous", "Present Perfect", "Past Perfect Continuous", "Future Perfect"],
+    "answer": 0
+  },
+  {
+    "question": "Choose the correct form: They ___ lunch before the guests arrived.",
+    "options": ["have finished", "had finished", "finish", "finished"],
+    "answer": 1
+  },
+  {
+    "question": "Identify the tense: 'He will travel to Delhi tomorrow.'",
+    "options": ["Future Simple", "Present Simple", "Past Simple", "Future Continuous"],
+    "answer": 0
+  },
+  {
+    "question": "Choose the correct form: We ___ TV when the phone rang.",
+    "options": ["watched", "watch", "were watching", "have watched"],
+    "answer": 2
+  },
+  {
+    "question": "Identify the tense: 'She had been working there for five years.'",
+    "options": ["Past Perfect Continuous", "Present Perfect Continuous", "Past Perfect", "Future Perfect Continuous"],
+    "answer": 0
+  },
+  {
+    "question": "Choose the correct form: By next month, I ___ here for ten years.",
+    "options": ["will work", "will have worked", "worked", "have worked"],
+    "answer": 1
+  },
+  {
+    "question": "Identify the tense: 'They play football every weekend.'",
+    "options": ["Present Simple", "Past Simple", "Future Simple", "Present Continuous"],
+    "answer": 0
+  },
+  {
+    "question": "Choose the correct form: She ___ her keys yesterday.",
+    "options": ["lose", "loses", "lost", "has lost"],
+    "answer": 2
+  },
+  {
+    "question": "Identify the tense: 'I am writing an email.'",
+    "options": ["Present Continuous", "Present Perfect", "Past Continuous", "Future Continuous"],
+    "answer": 0
+  },
+  {
+    "question": "Choose the correct form: He ___ the book already.",
+    "options": ["read", "has read", "reads", "reading"],
+    "answer": 1
+  },
+  {
+    "question": "Identify the tense: 'We were traveling all night.'",
+    "options": ["Past Continuous", "Present Continuous", "Future Continuous", "Past Perfect"],
+    "answer": 0
+  },
+  {
+    "question": "Choose the correct form: They ___ a new house next year.",
+    "options": ["build", "built", "will build", "have built"],
+    "answer": 2
+  },
+  {
+    "question": "Identify the tense: 'She will have completed her degree by 2028.'",
+    "options": ["Future Perfect", "Future Continuous", "Present Perfect", "Past Perfect"],
+    "answer": 0
+  },
+  {
+    "question": "Choose the correct form: I ___ for three hours before he came.",
+    "options": ["had been studying", "have studied", "study", "will study"],
+    "answer": 0
+  },
+  {
+    "question": "Identify the tense: 'They have been playing since morning.'",
+    "options": ["Present Perfect Continuous", "Present Perfect", "Past Perfect Continuous", "Future Continuous"],
+    "answer": 0
+  },
+  {
+    "question": "Choose the correct form: She ___ coffee every morning.",
+    "options": ["drink", "drinks", "drank", "drinking"],
+    "answer": 1
+  },
+  {
+    "question": "Identify the tense: 'He worked in Mumbai for five years.'",
+    "options": ["Past Simple", "Present Perfect", "Past Perfect", "Future Simple"],
+    "answer": 0
+  },
+  {
+    "question": "Choose the correct form: We ___ our homework by tonight.",
+    "options": ["finish", "finished", "will have finished", "have finished"],
+    "answer": 2
+  },
+  {
+    "question": "Identify the tense: 'I will be attending the meeting tomorrow.'",
+    "options": ["Future Continuous", "Future Perfect", "Present Continuous", "Past Continuous"],
+    "answer": 0
+  },
+  {
+    "question": "Choose the correct form: They ___ in this school since 2021.",
+    "options": ["study", "studied", "have studied", "studying"],
+    "answer": 2
+  },
+  {
+    "question": "Identify the tense: 'She sang beautifully at the event.'",
+    "options": ["Past Simple", "Present Simple", "Future Simple", "Past Continuous"],
+    "answer": 0
+  },
+  {
+    "question": "Choose the correct form: He ___ his work when I met him.",
+    "options": ["does", "was doing", "did", "has done"],
+    "answer": 1
+  },
+  {
+    "question": "Identify the tense: 'We had completed the task before sunset.'",
+    "options": ["Past Perfect", "Present Perfect", "Future Perfect", "Past Continuous"],
+    "answer": 0
+  },
+  {
+    "question": "Choose the correct form: She ___ abroad next month.",
+    "options": ["go", "went", "goes", "will go"],
+    "answer": 3
+  },
+  {
+    "question": "Identify the tense: 'They will have been living here for a decade.'",
+    "options": ["Future Perfect Continuous", "Future Perfect", "Present Perfect Continuous", "Past Perfect Continuous"],
+    "answer": 0
+  },
+  {
+    "question": "Choose the correct form: I ___ my homework now.",
+    "options": ["do", "did", "am doing", "have done"],
+    "answer": 2
+  },
+  {
+    "question": "Identify the tense: 'He has written three books.'",
+    "options": ["Present Perfect", "Past Perfect", "Future Perfect", "Present Continuous"],
+    "answer": 0
+  },
+  {
+    "question": "Choose the correct form: They ___ cricket when it started raining.",
+    "options": ["played", "play", "were playing", "have played"],
+    "answer": 2
+  },
+  {
+    "question": "Identify the tense: 'She will have been teaching for twenty years by 2030.'",
+    "options": ["Future Perfect Continuous", "Future Perfect", "Present Perfect Continuous", "Past Perfect Continuous"],
+    "answer": 0
+  }
+
+];
+
+
+let index = 0;
+let score = 0;
+let timer;
+let timeLeft = 10;
+
+function startQuiz() {
+  document.getElementById("startScreen").classList.add("hide");
+  document.getElementById("quizScreen").classList.remove("hide");
+  loadQuestion();
+}
+
+function loadQuestion() {
+  resetTimer();
+  let q = quizData[index];
+  document.getElementById("question").innerText = q.question;
+  document.getElementById("qNo").innerText = index + 1;
+
+  let optionsHTML = "";
+  q.options.forEach((opt, i) => {
+    optionsHTML += `<div class="option" onclick="selectOption(${i})">${opt}</div>`;
+  });
+
+  document.getElementById("options").innerHTML = optionsHTML;
+}
+
+function selectOption(selected) {
+  let correct = quizData[index].answer;
+  let options = document.querySelectorAll(".option");
+
+  options.forEach((opt, i) => {
+    if (i === correct) opt.classList.add("correct");
+    else if (i === selected) opt.classList.add("wrong");
+
+    opt.style.pointerEvents = "none";
+  });
+
+  if (selected === correct) score++;
+}
+
+function nextQuestion() {
+  index++;
+  if (index < quizData.length) {
+    loadQuestion();
+  } else {
+    showResult();
+  }
+}
+
+  function showResult() {
+  document.getElementById("quizScreen").classList.add("hide");
+  document.getElementById("resultScreen").classList.remove("hide");
+  document.getElementById("score").innerText = score + " / " + quizData.length;
+}
+
+function resetTimer() {
+  clearInterval(timer);
+  timeLeft = 10;
+  document.getElementById("timer").innerText = timeLeft;
+
+  timer = setInterval(() => {
+    timeLeft--;
+    document.getElementById("timer").innerText = timeLeft;
+
+    if (timeLeft === 0) {
+      nextQuestion();
+    }
+  }, 1000);
+}
+
+</script>
+
+</body>
+</html>

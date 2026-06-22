@@ -1,0 +1,354 @@
+<!DOCTYPE html>
+<html>
+<head>
+     <!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-KN4DRRWZ17"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-KN4DRRWZ17');
+</script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>International Current Affairs Quiz </title>
+
+<style>
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: Arial;
+}
+
+body {
+  background: #f5f5f5;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+}
+
+/* Container */
+.app {
+  width: 95%;
+  max-width: 500px;
+  background: white;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+}
+
+/* Header */
+header {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 20px;
+}
+
+.timer {
+  background: #2196F3;
+  color: white;
+  padding: 5px 10px;
+  border-radius: 5px;
+}
+
+/* Question */
+.question {
+  font-size: 20px;
+  margin-bottom: 15px;
+}
+
+/* Options */
+.option {
+  background: #eee;
+  padding: 10px;
+  margin: 8px 0;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.option:hover {
+  background: #ddd;
+}
+
+.correct {
+  background: #4CAF50 !important;
+  color: white;
+}
+
+.wrong {
+  background: #f44336 !important;
+  color: white;
+}
+
+/* Button */
+button {
+  margin-top: 15px;
+  padding: 10px;
+  width: 100%;
+  border: none;
+ background:linear-gradient(135deg,#0a2dbcf3,#779af583);
+  color: white;
+  font-size: 16px;
+  cursor: pointer;
+  border-radius: 5px;
+}
+
+/* Hidden */
+.hide {
+  display: none;
+}
+
+/* Result */
+.result {
+  text-align: center;
+}
+
+/* Responsive */
+@media (max-width: 600px) {
+  .question {
+    font-size: 18px;
+  }
+}
+</style>
+
+</head>
+<body>
+
+<div class="app">
+
+  <!-- Start Screen -->
+  <div id="startScreen">
+    <h2>Quiz App</h2>
+    <button onclick="startQuiz()">Start Quiz</button>
+  </div>
+
+  <!-- Quiz Screen -->
+  <div id="quizScreen" class="hide">
+    <header>
+      <div>Question <span id="qNo">1</span>/105</div>
+      <div class="timer" id="timer">10</div>
+    </header>
+
+    <div class="question" id="question"></div>
+    <div id="options"></div>
+
+    <button onclick="nextQuestion()">Next</button>
+  </div>
+
+  <!-- Result Screen -->
+  <div id="resultScreen" class="hide result">
+    <h2>Your Score</h2>
+    <h1 id="score"></h1>
+    <button onclick="location.reload()">Play Again</button>
+  </div>
+
+</div>
+
+<script>
+const quizData = [
+
+{ question:"संयुक्त राष्ट्र (UN) की स्थापना कब हुई थी?", options:["1942","1945","1947","1950"], answer:1 },
+{ question:"UN का मुख्यालय कहाँ स्थित है?", options:["पेरिस","न्यूयॉर्क","जिनेवा","लंदन"], answer:1 },
+{ question:"NATO का पूरा नाम क्या है?", options:["North Atlantic Treaty Organization","New Asian Trade Organization","National Atlantic Treaty Office","None"], answer:0 },
+{ question:"G20 शिखर सम्मेलन 2023 की मेजबानी किस देश ने की?", options:["भारत","जापान","इटली","अमेरिका"], answer:0 },
+{ question:"COP28 (2023) का आयोजन कहाँ हुआ?", options:["दुबई","पेरिस","लंदन","टोक्यो"], answer:0 },
+{ question:"WHO का मुख्यालय कहाँ है?", options:["जिनेवा","न्यूयॉर्क","रोम","वियना"], answer:0 },
+{ question:"WHO के वर्तमान महानिदेशक कौन हैं?", options:["टेड्रोस अधानोम","बान की मून","एंटोनियो गुटेरेस","जो बाइडेन"], answer:0 },
+{ question:"IMF का पूरा नाम क्या है?", options:["International Monetary Fund","International Money Federation","Indian Monetary Fund","None"], answer:0 },
+{ question:"World Bank का मुख्य उद्देश्य क्या है?", options:["गरीबी कम करना","युद्ध करना","खेल बढ़ाना","तकनीक बनाना"], answer:0 },
+{ question:"BRICS में 2024 में कौन सा नया सदस्य शामिल हुआ?", options:["ईरान","जर्मनी","फ्रांस","जापान"], answer:0 },
+
+{ question:"Artemis मिशन किस देश का है?", options:["अमेरिका","रूस","चीन","भारत"], answer:0 },
+{ question:"SpaceX के संस्थापक कौन हैं?", options:["एलन मस्क","जेफ बेजोस","रतन टाटा","बिल गेट्स"], answer:0 },
+{ question:"चंद्रयान-3 किसने लॉन्च किया?", options:["ISRO","NASA","ESA","CNSA"], answer:0 },
+{ question:"James Webb Telescope किसने लॉन्च किया?", options:["NASA","ISRO","JAXA","Roscosmos"], answer:0 },
+{ question:"International Space Station (ISS) किससे संबंधित है?", options:["अंतरिक्ष स्टेशन","परमाणु ऊर्जा","समुद्री शोध","AI प्रोजेक्ट"], answer:0 },
+
+{ question:"Russia-Ukraine युद्ध कब शुरू हुआ?", options:["2020","2021","2022","2023"], answer:2 },
+{ question:"Israel और Hamas के बीच बड़ा संघर्ष कब हुआ?", options:["2021","2022","2023","2024"], answer:2 },
+{ question:"Sudan में संघर्ष किससे संबंधित है?", options:["सैन्य शक्ति संघर्ष","खेल","जल संकट","AI"], answer:0 },
+{ question:"Myanmar में हालिया संकट किससे जुड़ा है?", options:["सैन्य तख्तापलट","खेल","अर्थव्यवस्था","जलवायु"], answer:0 },
+{ question:"Afghanistan में सत्ता किसने संभाली?", options:["तालिबान","ISIS","NATO","UN"], answer:0 },
+
+{ question:"EU AI Act किससे संबंधित है?", options:["Artificial Intelligence regulation","Trade law","Space law","Banking"], answer:0 },
+{ question:"Artificial Intelligence के लिए वैश्विक चर्चा किस संस्था में होती है?", options:["UN","FIFA","IOC","WHO"], answer:0 },
+{ question:"Semiconductor chips का मुख्य केंद्र कौन सा क्षेत्र है?", options:["Taiwan","Brazil","Africa","Canada"], answer:0 },
+{ question:"US CHIPS Act किससे संबंधित है?", options:["Semiconductor industry","Agriculture","Sports","Education"], answer:0 },
+{ question:"Cryptocurrency regulation किस मुद्दे से जुड़ा है?", options:["Digital finance","Agriculture","Defense","Space"], answer:0 },
+
+{ question:"COP28 का मुख्य फोकस क्या था?", options:["जलवायु परिवर्तन","युद्ध","खेल","शिक्षा"], answer:0 },
+{ question:"Paris Agreement कब हुआ?", options:["2010","2015","2020","2023"], answer:1 },
+{ question:"Global warming का लक्ष्य कितने डिग्री तक सीमित करना है?", options:["1°C","2°C","3°C","4°C"], answer:1 },
+{ question:"UNFCCC का पूरा नाम क्या है?", options:["Climate Change Convention","Trade Organization","Finance Bank","None"], answer:0 },
+{ question:"Green energy का उद्देश्य क्या है?", options:["प्रदूषण कम करना","युद्ध बढ़ाना","खेल बढ़ाना","AI बनाना"], answer:0 },
+
+{ question:"COVID-19 को WHO ने कब महामारी घोषित किया?", options:["2018","2019","2020","2021"], answer:2 },
+{ question:"MPox (Monkeypox) किससे संबंधित है?", options:["वायरस रोग","खेल","अर्थव्यवस्था","AI"], answer:0 },
+{ question:"WHO का उद्देश्य क्या है?", options:["स्वास्थ्य सुधार","युद्ध","व्यापार","तकनीक"], answer:0 },
+{ question:"Global Health Emergency कौन घोषित करता है?", options:["WHO","UNESCO","NATO","IMF"], answer:0 },
+{ question:"Vaccination का मुख्य उद्देश्य क्या है?", options:["रोग रोकथाम","युद्ध","व्यापार","खेल"], answer:0 },
+
+{ question:"G7 समूह में कितने देश हैं?", options:["5","6","7","8"], answer:2 },
+{ question:"G7 का प्रमुख उद्देश्य क्या है?", options:["आर्थिक सहयोग","युद्ध","खेल","जलवायु"], answer:0 },
+{ question:"ASEAN का मुख्यालय कहाँ है?", options:["जकार्ता","दिल्ली","लंदन","पेरिस"], answer:0 },
+{ question:"SAARC में कितने देश हैं?", options:["6","7","8","9"], answer:2 },
+{ question:"BRICS का विस्तार किस वर्ष हुआ?", options:["2021","2022","2023","2024"], answer:2 },
+
+{ question:"Nobel Peace Prize 2023 किसे मिला?", options:["Narges Mohammadi","Malala","Obama","Trump"], answer:0 },
+{ question:"Nobel Prize किस देश में दिया जाता है?", options:["स्वीडन","भारत","अमेरिका","फ्रांस"], answer:0 },
+{ question:"United Nations के महासचिव कौन हैं?", options:["Antonio Guterres","Ban Ki-moon","Obama","Putin"], answer:0 },
+{ question:"ICC (International Criminal Court) कहाँ है?", options:["The Hague","Paris","New York","Delhi"], answer:0 },
+{ question:"World Trade Organization (WTO) का उद्देश्य क्या है?", options:["व्यापार नियम","युद्ध","खेल","स्वास्थ्य"], answer:0 },
+
+{ question:"Artificial Intelligence का सबसे बड़ा खतरा क्या माना जाता है?", options:["Job loss","Weather","Sports","Food"], answer:0 },
+{ question:"5G तकनीक किससे संबंधित है?", options:["Communication","Agriculture","Defense","Space"], answer:0 },
+{ question:"Elon Musk किस कंपनी से जुड़े हैं?", options:["Tesla","Apple","Google","Microsoft"], answer:0 },
+{ question:"Apple कंपनी किस देश की है?", options:["USA","Japan","China","India"], answer:0 },
+{ question:"Google का मुख्यालय कहाँ है?", options:["California","Texas","New York","London"], answer:0 },
+
+{ question:"Facebook का नया नाम क्या है?", options:["Meta","Gram","FaceX","Social+"], answer:0 },
+{ question:"Instagram किस कंपनी का हिस्सा है?", options:["Meta","Google","Microsoft","Amazon"], answer:0 },
+{ question:"Amazon के संस्थापक कौन हैं?", options:["Jeff Bezos","Elon Musk","Bill Gates","Larry Page"], answer:0 },
+{ question:"AI का पूरा नाम क्या है?", options:["Artificial Intelligence","Auto Input","Advanced Internet","None"], answer:0 },
+{ question:"OpenAI का मुख्य उत्पाद क्या है?", options:["ChatGPT","Google","Windows","Linux"], answer:0 },
+
+{ question:"World Economic Forum कहाँ होता है?", options:["Davos","Delhi","Paris","Tokyo"], answer:0 },
+{ question:"Davos किस देश में है?", options:["Switzerland","India","USA","France"], answer:0 },
+{ question:"International Court of Justice कहाँ स्थित है?", options:["The Hague","Rome","Berlin","Moscow"], answer:0 },
+{ question:"UNESCO का उद्देश्य क्या है?", options:["Education & Culture","War","Trade","Defense"], answer:0 },
+{ question:"OPEC किससे संबंधित है?", options:["Oil production","Sports","AI","Health"], answer:0 },
+
+
+{ question:"G20 2024 की मेजबानी किस देश ने की?", options:["ब्राजील","भारत","इटली","जापान"], answer:0 },
+{ question:"UN Climate Change Conference (COP29) की मेजबानी किस देश ने की?", options:["अज़रबैजान","UAE","भारत","फ्रांस"], answer:0 },
+{ question:"OPEC+ का मुख्य उद्देश्य क्या है?", options:["तेल उत्पादन नियंत्रण","खेल विकास","शिक्षा सुधार","AI विकास"], answer:0 },
+{ question:"World’s largest economy 2024 में कौन है?", options:["USA","China","Japan","India"], answer:0 },
+{ question:"IMF का मुख्य कार्य क्या है?", options:["आर्थिक स्थिरता","युद्ध","खेल","तकनीक"], answer:0 },
+
+{ question:"World Bank का मुख्यालय कहाँ है?", options:["Washington D.C.","New York","London","Paris"], answer:0 },
+{ question:"UN में कुल सदस्य देश कितने हैं?", options:["193","195","200","180"], answer:0 },
+{ question:"NATO में वर्तमान सदस्य देशों की संख्या लगभग कितनी है?", options:["32","20","25","15"], answer:0 },
+{ question:"EU (European Union) का मुख्यालय कहाँ है?", options:["Brussels","Paris","Berlin","Rome"], answer:0 },
+{ question:"Schengen Area किससे संबंधित है?", options:["Visa-free travel","Trade","Defense","Health"], answer:0 },
+
+{ question:"World Cup 2023 (Cricket) किसने जीता?", options:["Australia","India","England","Pakistan"], answer:0 },
+{ question:"FIFA World Cup 2022 किस देश ने जीता?", options:["Argentina","France","Brazil","Germany"], answer:0 },
+{ question:"FIFA का मुख्यालय कहाँ है?", options:["Zurich","Paris","London","Rome"], answer:0 },
+{ question:"Olympics 2024 कहाँ हुए?", options:["Paris","Tokyo","London","Beijing"], answer:0 },
+{ question:"IOC का पूरा नाम क्या है?", options:["International Olympic Committee","Indian Olympic Council","International Organization of Cricket","None"], answer:0 },
+
+{ question:"Artificial Intelligence Summit 2023 कहाँ हुआ?", options:["UK","India","USA","Japan"], answer:0 },
+{ question:"ChatGPT किस कंपनी का उत्पाद है?", options:["OpenAI","Google","Microsoft","Meta"], answer:0 },
+{ question:"Microsoft का CEO कौन है?", options:["Satya Nadella","Elon Musk","Jeff Bezos","Tim Cook"], answer:0 },
+{ question:"Tesla किस क्षेत्र से संबंधित है?", options:["Electric Vehicles","Banking","Agriculture","Defense"], answer:0 },
+{ question:"SpaceX का मुख्य उद्देश्य क्या है?", options:["Space exploration","Banking","Education","Sports"], answer:0 },
+
+{ question:"James Webb Telescope का मुख्य कार्य क्या है?", options:["Universe study","Weather forecast","War system","Agriculture"], answer:0 },
+{ question:"ISRO का मुख्यालय कहाँ है?", options:["Bengaluru","Delhi","Chennai","Hyderabad"], answer:0 },
+{ question:"NASA का पूरा नाम क्या है?", options:["National Aeronautics and Space Administration","National Aviation Space Agency","New Aerospace System of America","None"], answer:0 },
+{ question:"JAXA किस देश की space agency है?", options:["Japan","China","Russia","USA"], answer:0 },
+{ question:"Roscosmos किस देश की agency है?", options:["Russia","USA","India","France"], answer:0 },
+
+{ question:"Global AI Regulation चर्चा मुख्य रूप से किस पर है?", options:["Ethics & Safety","Sports","Trade","Agriculture"], answer:0 },
+{ question:"Cyber Security का मुख्य उद्देश्य क्या है?", options:["Data protection","War","Sports","Food supply"], answer:0 },
+{ question:"Digital Currency किससे संबंधित है?", options:["Crypto & CBDC","Agriculture","Defense","Education"], answer:0 },
+{ question:"CBDC का पूरा नाम क्या है?", options:["Central Bank Digital Currency","Crypto Bank Digital Coin","Central Business Digital Cash","None"], answer:0 },
+{ question:"Bitcoin किस प्रकार की currency है?", options:["Cryptocurrency","Physical currency","Gold currency","None"], answer:0 },
+
+{ question:"BRICS New Development Bank कहाँ है?", options:["Shanghai","Delhi","Moscow","Rio"], answer:0 },
+{ question:"Asian Development Bank (ADB) कहाँ है?", options:["Manila","Tokyo","Delhi","Singapore"], answer:0 },
+{ question:"ASEAN का मुख्य उद्देश्य क्या है?", options:["Regional cooperation","War","Sports","AI"], answer:0 },
+{ question:"SAARC का मुख्यालय कहाँ है?", options:["Kathmandu","Delhi","Dhaka","Colombo"], answer:0 },
+{ question:"G7 का सबसे बड़ा सदस्य देश कौन है?", options:["USA","India","Brazil","China"], answer:0 },
+
+{ question:"Human Development Index (HDI) कौन जारी करता है?", options:["UNDP","IMF","World Bank","WHO"], answer:0 },
+{ question:"UNDP का पूरा नाम क्या है?", options:["United Nations Development Programme","United Nations Defense Program","Universal Nation Development Project","None"], answer:0 },
+{ question:"Transparency International किससे संबंधित है?", options:["Corruption index","Sports","Health","Space"], answer:0 },
+{ question:"World Press Freedom Index कौन जारी करता है?", options:["Reporters Without Borders","UN","WHO","IMF"], answer:0 },
+{ question:"Global Peace Index किससे संबंधित है?", options:["Peace ranking","Trade","AI","Health"], answer:0 },
+
+{ question:"El Niño प्रभाव किससे संबंधित है?", options:["Climate change","War","AI","Sports"], answer:0 },
+{ question:"La Niña किससे संबंधित है?", options:["Weather pattern","Banking","Defense","Technology"], answer:0 },
+{ question:"Green Hydrogen किससे संबंधित है?", options:["Clean energy","War","Sports","Finance"], answer:0 },
+{ question:"Electric Vehicle (EV) का मुख्य लाभ क्या है?", options:["Pollution reduction","War increase","Food increase","None"], answer:0 },
+{ question:"Net Zero Emission का लक्ष्य क्या है?", options:["Carbon neutrality","War","Sports","Trade"], answer:0 }
+];
+
+
+let index = 0;
+let score = 0;
+let timer;
+let timeLeft = 10;
+
+function startQuiz() {
+  document.getElementById("startScreen").classList.add("hide");
+  document.getElementById("quizScreen").classList.remove("hide");
+  loadQuestion();
+}
+
+function loadQuestion() {
+  resetTimer();
+  let q = quizData[index];
+  document.getElementById("question").innerText = q.question;
+  document.getElementById("qNo").innerText = index + 1;
+
+  let optionsHTML = "";
+  q.options.forEach((opt, i) => {
+    optionsHTML += `<div class="option" onclick="selectOption(${i})">${opt}</div>`;
+  });
+
+  document.getElementById("options").innerHTML = optionsHTML;
+}
+
+function selectOption(selected) {
+  let correct = quizData[index].answer;
+  let options = document.querySelectorAll(".option");
+
+  options.forEach((opt, i) => {
+    if (i === correct) opt.classList.add("correct");
+    else if (i === selected) opt.classList.add("wrong");
+
+    opt.style.pointerEvents = "none";
+  });
+
+  if (selected === correct) score++;
+}
+
+function nextQuestion() {
+  index++;
+  if (index < quizData.length) {
+    loadQuestion();
+  } else {
+    showResult();
+  }
+}
+
+  function showResult() {
+  document.getElementById("quizScreen").classList.add("hide");
+  document.getElementById("resultScreen").classList.remove("hide");
+  document.getElementById("score").innerText = score + " / " + quizData.length;
+}
+
+function resetTimer() {
+  clearInterval(timer);
+  timeLeft = 10;
+  document.getElementById("timer").innerText = timeLeft;
+
+  timer = setInterval(() => {
+    timeLeft--;
+    document.getElementById("timer").innerText = timeLeft;
+
+    if (timeLeft === 0) {
+      nextQuestion();
+    }
+  }, 1000);
+}
+
+</script>
+
+</body>
+</html>

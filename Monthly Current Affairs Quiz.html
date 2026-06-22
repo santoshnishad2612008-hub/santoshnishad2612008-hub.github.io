@@ -1,0 +1,349 @@
+<!DOCTYPE html>
+<html>
+<head>
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-KN4DRRWZ17"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-KN4DRRWZ17');
+</script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title> Monthly Current Affairs Quiz</title>
+
+<style>
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: Arial;
+}
+
+body {
+  background: #f5f5f5;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+}
+
+/* Container */
+.app {
+  width: 95%;
+  max-width: 500px;
+  background: white;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+}
+
+/* Header */
+header {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 20px;
+}
+
+.timer {
+  background: #2196F3;
+  color: white;
+  padding: 5px 10px;
+  border-radius: 5px;
+}
+
+/* Question */
+.question {
+  font-size: 20px;
+  margin-bottom: 15px;
+}
+
+/* Options */
+.option {
+  background: #eee;
+  padding: 10px;
+  margin: 8px 0;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.option:hover {
+  background: #ddd;
+}
+
+.correct {
+  background: #4CAF50 !important;
+  color: white;
+}
+
+.wrong {
+  background: #f44336 !important;
+  color: white;
+}
+
+/* Button */
+button {
+  margin-top: 15px;
+  padding: 10px;
+  width: 100%;
+  border: none;
+ background:linear-gradient(135deg,#0a2dbcf3,#779af583);
+  color: white;
+  font-size: 16px;
+  cursor: pointer;
+  border-radius: 5px;
+}
+
+/* Hidden */
+.hide {
+  display: none;
+}
+
+/* Result */
+.result {
+  text-align: center;
+}
+
+/* Responsive */
+@media (max-width: 600px) {
+  .question {
+    font-size: 18px;
+  }
+}
+</style>
+
+</head>
+<body>
+
+<div class="app">
+
+  <!-- Start Screen -->
+  <div id="startScreen">
+    <h2>Quiz App</h2>
+    <button onclick="startQuiz()">Start Quiz</button>
+  </div>
+
+  <!-- Quiz Screen -->
+  <div id="quizScreen" class="hide">
+    <header>
+      <div>Question <span id="qNo">1</span>/100</div>
+      <div class="timer" id="timer">10</div>
+    </header>
+
+    <div class="question" id="question"></div>
+    <div id="options"></div>
+
+    <button onclick="nextQuestion()">Next</button>
+  </div>
+
+  <!-- Result Screen -->
+  <div id="resultScreen" class="hide result">
+    <h2>Your Score</h2>
+    <h1 id="score"></h1>
+    <button onclick="location.reload()">Play Again</button>
+  </div>
+
+</div>
+
+<script>
+const quizData = [
+
+{ question:"भारत ने G20 की अध्यक्षता किस वर्ष संभाली?", options:["2022","2023","2024","2025"], answer:1 },
+{ question:"चंद्रयान-3 की सफल लैंडिंग कहाँ हुई?", options:["चंद्रमा का उत्तरी ध्रुव","चंद्रमा का दक्षिणी ध्रुव क्षेत्र","मंगल ग्रह","बृहस्पति"], answer:1 },
+{ question:"आदित्य-L1 मिशन किससे संबंधित है?", options:["चंद्र अध्ययन","सूर्य अध्ययन","मंगल अध्ययन","गुरु ग्रह अध्ययन"], answer:1 },
+{ question:"भारत का पहला सौर मिशन कौन सा है?", options:["Aditya-L1","Mangalyaan","Chandrayaan-3","Astrosat"], answer:0 },
+{ question:"2024 ओलंपिक कहाँ आयोजित हुए?", options:["टोक्यो","पेरिस","लंदन","बीजिंग"], answer:1 },
+
+{ question:"भारत में 5G सेवाएँ कब शुरू हुईं?", options:["2020","2021","2022","2023"], answer:2 },
+{ question:"UPI किस संगठन ने विकसित किया?", options:["RBI & NPCI","SEBI","IRDAI","ISRO"], answer:0 },
+{ question:"भारत का पहला AI मिशन किस नाम से जाना जाता है?", options:["IndiaAI Mission","Digital India","Skill India","Startup India"], answer:0 },
+{ question:"G20 शिखर सम्मेलन 2023 कहाँ हुआ?", options:["मुंबई","नई दिल्ली","चेन्नई","कोलकाता"], answer:1 },
+{ question:"ISRO का मुख्यालय कहाँ स्थित है?", options:["मुंबई","बेंगलुरु","चेन्नई","हैदराबाद"], answer:1 },
+
+{ question:"भारत ने किस देश से चंद्रयान-3 लॉन्च किया?", options:["श्रीहरिकोटा (भारत)","फ्रांस","अमेरिका","रूस"], answer:0 },
+{ question:"‘Mission LiFE’ किससे संबंधित है?", options:["अर्थव्यवस्था","पर्यावरण संरक्षण","रक्षा","शिक्षा"], answer:1 },
+{ question:"COP28 कहाँ आयोजित हुआ?", options:["दुबई","पेरिस","दिल्ली","लंदन"], answer:0 },
+{ question:"भारत में GST कब लागू हुआ?", options:["2015","2016","2017","2018"], answer:2 },
+{ question:"डिजिटल इंडिया अभियान कब शुरू हुआ?", options:["2012","2014","2015","2016"], answer:2 },
+
+{ question:"भारत का पहला निजी रॉकेट किसने लॉन्च किया?", options:["Skyroot Aerospace","ISRO","DRDO","HAL"], answer:0 },
+{ question:"भारत का पहला वंदे भारत ट्रेन कब शुरू हुई?", options:["2017","2018","2019","2020"], answer:1 },
+{ question:"G20 का 2024 अध्यक्ष कौन है?", options:["ब्राजील","भारत","अमेरिका","जापान"], answer:0 },
+{ question:"अमृत भारत स्टेशन योजना किससे संबंधित है?", options:["रेलवे स्टेशन विकास","सड़क","एयरपोर्ट","पोर्ट"], answer:0 },
+{ question:"India का पहला 5G मोबाइल नेटवर्क कब लॉन्च हुआ?", options:["2020","2021","2022","2023"], answer:2 },
+
+{ question:"भारत का सबसे बड़ा डिजिटल पेमेंट सिस्टम?", options:["Paytm","BHIM UPI","PhonePe","Google Pay"], answer:1 },
+{ question:"RBI की स्थापना कब हुई?", options:["1935","1947","1950","1960"], answer:0 },
+{ question:"भारत का पहला सेमीकंडक्टर प्लांट कहाँ स्थापित हुआ?", options:["गुजरात","केरल","पंजाब","बिहार"], answer:0 },
+{ question:"India की पहली डिजिटल यूनिवर्सिटी किस राज्य में शुरू हुई?", options:["केरल","महाराष्ट्र","UP","बिहार"], answer:0 },
+{ question:"India का चंद्र मिशन Chandrayaan-2 कब लॉन्च हुआ?", options:["2017","2018","2019","2020"], answer:2 },
+
+{ question:"SEBI का मुख्य कार्य क्या है?", options:["बैंकिंग","शेयर बाजार नियमन","कर वसूली","बीमा"], answer:1 },
+{ question:"भारत का पहला AI सुपरकंप्यूटर किसने लॉन्च किया?", options:["ISRO","C-DAC","DRDO","NITI Aayog"], answer:1 },
+{ question:"UN का मुख्यालय कहाँ है?", options:["पेरिस","न्यूयॉर्क","जेनेवा","लंदन"], answer:1 },
+{ question:"WHO का मुख्यालय कहाँ स्थित है?", options:["जेनेवा","न्यूयॉर्क","दिल्ली","लंदन"], answer:0 },
+{ question:"भारत का पहला महिला राष्ट्रपति कौन थी?", options:["प्रतिभा पाटिल","द्रौपदी मुर्मू","इंदिरा गांधी","सरोजिनी नायडू"], answer:0 },
+
+{ question:"भारत में पहला रेलवे कब शुरू हुआ?", options:["1853","1860","1875","1901"], answer:0 },
+{ question:"भारत का पहला उपग्रह कौन सा था?", options:["Aryabhata","INSAT","GSAT","Chandrayaan"], answer:0 },
+{ question:"ISRO का पहला मिशन कौन सा था?", options:["Aryabhata","Chandrayaan","Mangalyaan","RISAT"], answer:0 },
+{ question:"भारत का पहला अंतरिक्ष यात्री कौन था?", options:["राकेश शर्मा","कल्पना चावला","सुनीता विलियम्स","विक्रम साराभाई"], answer:0 },
+{ question:"भारत का पहला परमाणु परीक्षण कब हुआ?", options:["1974","1980","1990","1998"], answer:0 },
+
+{ question:"Make in India कब शुरू हुआ?", options:["2012","2014","2015","2016"], answer:1 },
+{ question:"StartUp India कब लॉन्च हुआ?", options:["2015","2016","2017","2018"], answer:1 },
+{ question:"India का पहला स्मार्ट सिटी मिशन कब शुरू हुआ?", options:["2014","2015","2016","2017"], answer:1 },
+{ question:"भारत का पहला ग्रीन एनर्जी मिशन किससे संबंधित है?", options:["पर्यावरण","रक्षा","अर्थव्यवस्था","शिक्षा"], answer:0 },
+{ question:"India का सबसे बड़ा IT हब कौन सा है?", options:["हैदराबाद","बेंगलुरु","पुणे","चेन्नई"], answer:1 },
+
+{ question:"G7 में कितने देश हैं?", options:["5","6","7","8"], answer:2 },
+{ question:"UNICEF किससे संबंधित है?", options:["बच्चों का कल्याण","युद्ध","व्यापार","बैंकिंग"], answer:0 },
+{ question:"भारत का पहला डिजिटल बैंक कौन सा है?", options:["Paytm Payments Bank","SBI","HDFC","ICICI"], answer:0 },
+{ question:"भारत का पहला AI मिशन किस क्षेत्र से संबंधित है?", options:["तकनीक","कृषि","रक्षा","शिक्षा"], answer:0 },
+{ question:"भारत में चंद्रयान-3 की सफलता कब मिली?", options:["2021","2022","2023","2024"], answer:2 },
+
+{ question:"India का पहला AI Education Mission किससे जुड़ा है?", options:["शिक्षा","रक्षा","कृषि","उद्योग"], answer:0 },
+{ question:"भारत का पहला 6G मिशन किस वर्ष शुरू हुआ?", options:["2022","2023","2024","2025"], answer:2 },
+{ question:"India का पहला Hyperloop प्रोजेक्ट कहाँ शुरू हुआ?", options:["महाराष्ट्र","गुजरात","दिल्ली","UP"], answer:0 },
+{ question:"भारत का पहला इलेक्ट्रिक ट्रेन कब शुरू हुआ?", options:["1990","1995","2000","2005"], answer:1 },
+{ question:"India का पहला Space Docking मिशन किसने किया?", options:["ISRO","NASA","ESA","JAXA"], answer:0 },
+
+{ question:"भारत का पहला निजी अंतरिक्ष मिशन किसने किया?", options:["Skyroot Aerospace","ISRO","DRDO","HAL"], answer:0 },
+{ question:"India का पहला AI Chatbot किस क्षेत्र में उपयोग हुआ?", options:["शिक्षा","कृषि","रक्षा","पर्यटन"], answer:0 },
+{ question:"India का पहला Green Hydrogen Mission कब लॉन्च हुआ?", options:["2021","2022","2023","2024"], answer:1 },
+{ question:"भारत का पहला अंतरिक्ष पर्यटन मिशन किसने शुरू किया?", options:["NASA","ISRO (planning)","SpaceX","ESA"], answer:1 },
+{ question:"India का पहला AI policy framework किसने बनाया?", options:["NITI Aayog","RBI","SEBI","DRDO"], answer:0 },
+
+{ question:"India का पहला Quantum Computer किस क्षेत्र से जुड़ा है?", options:["तकनीक","रक्षा","कृषि","शिक्षा"], answer:0 },
+{ question:"India का पहला AI semiconductor hub कहाँ बना?", options:["गुजरात","केरल","पंजाब","राजस्थान"], answer:0 },
+{ question:"India का पहला Digital Rupee कब लॉन्च हुआ?", options:["2021","2022","2023","2024"], answer:1 },
+{ question:"India का पहला AI super app किसने लॉन्च किया?", options:["सरकार","निजी कंपनियाँ","ISRO","DRDO"], answer:1 },
+{ question:"India का पहला Space Tourism लक्ष्य किस वर्ष रखा गया?", options:["2025","2030","2035","2040"], answer:1 },
+
+{ question:"भारत का पहला AI आधारित डिजिटल पब्लिक सर्विस प्लेटफॉर्म किससे संबंधित है?", options:["सरकार","निजी कंपनियाँ","ISRO","RBI"], answer:0 },
+{ question:"G20 का अगला अध्यक्ष कौन देश बना (2024 के बाद rotation अनुसार)?", options:["ब्राजील","इटली","जापान","फ्रांस"], answer:0 },
+{ question:"भारत में डिजिटल इंडिया कार्यक्रम का मुख्य उद्देश्य क्या है?", options:["डिजिटल सशक्तिकरण","रक्षा","कृषि","पर्यटन"], answer:0 },
+{ question:"चंद्रयान-3 मिशन का लैंडर का नाम क्या था?", options:["Vikram","Pragyan","Aryabhata","Aditya"], answer:0 },
+{ question:"भारत का पहला AI मिशन किस क्षेत्र को मजबूत करता है?", options:["टेक्नोलॉजी","कृषि","रक्षा","शिक्षा"], answer:0 },
+
+{ question:"भारत में सबसे बड़ा UPI ट्रांजैक्शन प्लेटफॉर्म कौन सा है?", options:["PhonePe","BHIM","Google Pay","Paytm"], answer:0 },
+{ question:"भारत का पहला अंतरिक्ष डॉकिंग मिशन किसने किया?", options:["ISRO","NASA","ESA","JAXA"], answer:0 },
+{ question:"India AI Mission किस मंत्रालय के अंतर्गत आता है?", options:["MeitY","MoD","MoHFW","MHA"], answer:0 },
+{ question:"भारत का पहला हाइड्रोजन ट्रेन प्रोजेक्ट किससे संबंधित है?", options:["रेलवे","एयरपोर्ट","डिफेंस","स्पेस"], answer:0 },
+{ question:"G20 2023 का theme क्या था?", options:["One Earth, One Family, One Future","Digital India","Green Earth","Unity in Diversity"], answer:0 },
+
+{ question:"भारत का पहला सेमीकंडक्टर फेब्रिकेशन प्लांट कहाँ बना?", options:["गुजरात","महाराष्ट्र","केरल","UP"], answer:0 },
+{ question:"भारत में नई शिक्षा नीति कब लागू हुई?", options:["2020","2019","2018","2021"], answer:0 },
+{ question:"UN SDGs कितने हैं?", options:["15","16","17","18"], answer:2 },
+{ question:"भारत का पहला AI सुपर कंप्यूटर किस संस्था ने बनाया?", options:["C-DAC","ISRO","DRDO","NITI Aayog"], answer:0 },
+{ question:"भारत का पहला ग्रीन हाइड्रोजन मिशन कब लॉन्च हुआ?", options:["2021","2022","2023","2024"], answer:1 },
+
+{ question:"India का सबसे बड़ा renewable energy source क्या है?", options:["Solar","Coal","Oil","Gas"], answer:0 },
+{ question:"India का पहला AI policy draft किसने बनाया?", options:["NITI Aayog","RBI","SEBI","ISRO"], answer:0 },
+{ question:"भारत का पहला AI based judiciary system किस क्षेत्र में प्रयोग हुआ?", options:["कोर्ट","स्कूल","अस्पताल","रेलवे"], answer:0 },
+{ question:"भारत में पहला Quantum Computing hub कहाँ बना?", options:["IIT Madras","IIT Delhi","IIT Bombay","IIT Kanpur"], answer:0 },
+{ question:"India का पहला AI chatbot किस क्षेत्र में उपयोग हुआ?", options:["Education","Defense","Space","Banking"], answer:0 },
+
+{ question:"India का पहला electric vehicle policy किस राज्य ने शुरू की?", options:["दिल्ली","UP","बिहार","MP"], answer:0 },
+{ question:"India का पहला 6G research center कहाँ बना?", options:["IIT Delhi","IIT Bombay","IIT Madras","IISc Bangalore"], answer:2 },
+{ question:"भारत का पहला AI आधारित weather forecasting system किसने लॉन्च किया?", options:["IMD","ISRO","DRDO","NASA"], answer:0 },
+{ question:"India का पहला AI healthcare project किस क्षेत्र से संबंधित है?", options:["Health","Defense","Space","Agriculture"], answer:0 },
+{ question:"India का पहला digital currency किस नाम से जाना जाता है?", options:["e-Rupee","Bitcoin","UPI","CBDC"], answer:0 },
+
+{ question:"India का पहला AI semiconductor hub कहाँ स्थापित किया गया?", options:["गुजरात","UP","बिहार","पंजाब"], answer:0 },
+{ question:"India का पहला Hyperloop project कहाँ प्रस्तावित है?", options:["Mumbai-Pune","Delhi-Agra","Kolkata-Patna","Chennai-Bangalore"], answer:0 },
+{ question:"India का पहला private space mission किसने किया?", options:["Skyroot Aerospace","ISRO","DRDO","NASA"], answer:0 },
+{ question:"India का पहला AI based education system किसके द्वारा विकसित किया गया?", options:["NITI Aayog","CBSE","UGC","AICTE"], answer:0 },
+{ question:"India का पहला AI powered railway station कहाँ है?", options:["New Delhi","Mumbai","Bangalore","Chennai"], answer:0 },
+
+{ question:"India का पहला space tourism target वर्ष कौन सा है?", options:["2025","2030","2035","2040"], answer:1 },
+{ question:"India का पहला AI national policy कब जारी हुई?", options:["2018","2019","2020","2021"], answer:2 },
+{ question:"India का पहला AI super app किस sector में है?", options:["Tech","Agriculture","Defense","Health"], answer:0 },
+{ question:"India का पहला green hydrogen train किसने बनाया?", options:["Indian Railways","ISRO","DRDO","HAL"], answer:0 },
+{ question:"India का पहला AI based smart city कौन सा है?", options:["Pune","Delhi","Mumbai","Bangalore"], answer:0 },
+
+{ question:"India का पहला AI chip design center कहाँ बना?", options:["Bangalore","Delhi","Chennai","Kolkata"], answer:0 },
+{ question:"India का पहला space docking mission कब सफल हुआ?", options:["2023","2024","2025","2026"], answer:1 },
+{ question:"India का पहला AI drone system किससे संबंधित है?", options:["Defense","Health","Education","Transport"], answer:0 },
+{ question:"India का पहला quantum internet project किसने शुरू किया?", options:["IIT Madras","IIT Delhi","IIT Bombay","IISc"], answer:0 },
+{ question:"India का पहला AI-based law system किस क्षेत्र में है?", options:["Judiciary","Education","Agriculture","Banking"], answer:0 }
+
+];
+
+
+let index = 0;
+let score = 0;
+let timer;
+let timeLeft = 10;
+
+function startQuiz() {
+  document.getElementById("startScreen").classList.add("hide");
+  document.getElementById("quizScreen").classList.remove("hide");
+  loadQuestion();
+}
+
+function loadQuestion() {
+  resetTimer();
+  let q = quizData[index];
+  document.getElementById("question").innerText = q.question;
+  document.getElementById("qNo").innerText = index + 1;
+
+  let optionsHTML = "";
+  q.options.forEach((opt, i) => {
+    optionsHTML += `<div class="option" onclick="selectOption(${i})">${opt}</div>`;
+  });
+
+  document.getElementById("options").innerHTML = optionsHTML;
+}
+
+function selectOption(selected) {
+  let correct = quizData[index].answer;
+  let options = document.querySelectorAll(".option");
+
+  options.forEach((opt, i) => {
+    if (i === correct) opt.classList.add("correct");
+    else if (i === selected) opt.classList.add("wrong");
+
+    opt.style.pointerEvents = "none";
+  });
+
+  if (selected === correct) score++;
+}
+
+function nextQuestion() {
+  index++;
+  if (index < quizData.length) {
+    loadQuestion();
+  } else {
+    showResult();
+  }
+}
+
+  function showResult() {
+  document.getElementById("quizScreen").classList.add("hide");
+  document.getElementById("resultScreen").classList.remove("hide");
+  document.getElementById("score").innerText = score + " / " + quizData.length;
+}
+
+function resetTimer() {
+  clearInterval(timer);
+  timeLeft = 10;
+  document.getElementById("timer").innerText = timeLeft;
+
+  timer = setInterval(() => {
+    timeLeft--;
+    document.getElementById("timer").innerText = timeLeft;
+
+    if (timeLeft === 0) {
+      nextQuestion();
+    }
+  }, 1000);
+}
+
+</script>
+
+</body>
+</html>

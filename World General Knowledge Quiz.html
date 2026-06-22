@@ -1,0 +1,381 @@
+<!DOCTYPE html>
+<html>
+<head>
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-KN4DRRWZ17"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-KN4DRRWZ17');
+</script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>World General knowledge Quiz</title>
+
+<style>
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: Arial;
+}
+
+body {
+  background: #f5f5f5;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+}
+
+/* Container */
+.app {
+  width: 95%;
+  max-width: 500px;
+  background: white;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+}
+
+/* Header */
+header {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 20px;
+}
+
+.timer {
+  background: #2196F3;
+  color: white;
+  padding: 5px 10px;
+  border-radius: 5px;
+}
+
+/* Question */
+.question {
+  font-size: 20px;
+  margin-bottom: 15px;
+}
+
+/* Options */
+.option {
+  background: #eee;
+  padding: 10px;
+  margin: 8px 0;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.option:hover {
+  background: #ddd;
+}
+
+.correct {
+  background: #4CAF50 !important;
+  color: white;
+}
+
+.wrong {
+  background: #f44336 !important;
+  color: white;
+}
+
+/* Button */
+button {
+  margin-top: 15px;
+  padding: 10px;
+  width: 100%;
+  border: none;
+ background:linear-gradient(135deg,#0a2dbcf3,#779af583);
+  color: white;
+  font-size: 16px;
+  cursor: pointer;
+  border-radius: 5px;
+}
+
+/* Hidden */
+.hide {
+  display: none;
+}
+
+/* Result */
+.result {
+  text-align: center;
+}
+
+/* Responsive */
+@media (max-width: 600px) {
+  .question {
+    font-size: 18px;
+  }
+}
+</style>
+
+</head>
+<body>
+
+<div class="app">
+
+  <!-- Start Screen -->
+  <div id="startScreen">
+    <h2>Quiz App</h2>
+    <button onclick="startQuiz()">Start Quiz</button>
+  </div>
+
+  <!-- Quiz Screen -->
+  <div id="quizScreen" class="hide">
+    <header>
+      <div>Question <span id="qNo">1</span>/140</div>
+      <div class="timer" id="timer">10</div>
+    </header>
+
+    <div class="question" id="question"></div>
+    <div id="options"></div>
+
+    <button onclick="nextQuestion()">Next</button>
+  </div>
+
+  <!-- Result Screen -->
+  <div id="resultScreen" class="hide result">
+    <h2>Your Score</h2>
+    <h1 id="score"></h1>
+    <button onclick="location.reload()">Play Again</button>
+  </div>
+
+</div>
+
+<script>
+const quizData = [
+{ question:"संयुक्त राष्ट्र संघ (UNO) की स्थापना कब हुई थी?", options:["1942","1945","1947","1950"], answer:1 },
+{ question:"UNO का मुख्यालय कहाँ स्थित है?", options:["पेरिस","लंदन","न्यूयॉर्क","जेनेवा"], answer:2 },
+{ question:"पृथ्वी का सबसे बड़ा महासागर कौन सा है?", options:["अटलांटिक","हिंद महासागर","आर्कटिक","प्रशांत महासागर"], answer:3 },
+{ question:"विश्व का सबसे छोटा देश कौन सा है?", options:["नेपाल","वेटिकन सिटी","भूटान","मोनाको"], answer:1 },
+{ question:"विश्व का सबसे बड़ा देश क्षेत्रफल के अनुसार कौन सा है?", options:["अमेरिका","चीन","रूस","कनाडा"], answer:2 },
+{ question:"ग्रेट वॉल ऑफ चाइना किस देश में है?", options:["जापान","चीन","कोरिया","थाईलैंड"], answer:1 },
+{ question:"ताजमहल किसने बनवाया?", options:["अकबर","शाहजहाँ","बाबर","औरंगजेब"], answer:1 },
+{ question:"माउंट एवरेस्ट की ऊँचाई लगभग कितनी है?", options:["8848 मीटर","8000 मीटर","9000 मीटर","7500 मीटर"], answer:0 },
+{ question:"विश्व का सबसे लंबा नदी कौन सी है?", options:["अमेज़न","नील","मिसिसिपी","गंगा"], answer:1 },
+{ question:"अमेज़न नदी किस महाद्वीप में है?", options:["एशिया","अफ्रीका","दक्षिण अमेरिका","यूरोप"], answer:2 },
+
+{ question:"Olympic Games की शुरुआत कहाँ हुई थी?", options:["रोम","एथेंस","पेरिस","लंदन"], answer:1 },
+{ question:"UNO के कितने स्थायी सदस्य हैं?", options:["4","5","6","7"], answer:1 },
+{ question:"विश्व का सबसे बड़ा रेगिस्तान कौन सा है?", options:["गोबी","सहारा","अरबियन","अंटार्कटिक"], answer:3 },
+{ question:"सूर्य के सबसे निकट ग्रह कौन सा है?", options:["शुक्र","पृथ्वी","बुध","मंगल"], answer:2 },
+{ question:"विश्व का सबसे बड़ा महाद्वीप कौन सा है?", options:["एशिया","अफ्रीका","यूरोप","ऑस्ट्रेलिया"], answer:0 },
+{ question:"पिरामिड किस देश में हैं?", options:["ग्रीस","मिस्र","इराक","ईरान"], answer:1 },
+{ question:"Eiffel Tower कहाँ स्थित है?", options:["इटली","जर्मनी","फ्रांस","स्पेन"], answer:2 },
+{ question:"Japan की राजधानी क्या है?", options:["ओसाका","टोक्यो","क्योटो","नागोया"], answer:1 },
+{ question:"USA की राजधानी क्या है?", options:["न्यूयॉर्क","वाशिंगटन DC","लॉस एंजेलिस","शिकागो"], answer:1 },
+{ question:"World Bank का मुख्यालय कहाँ है?", options:["लंदन","जेनेवा","वाशिंगटन DC","पेरिस"], answer:2 },
+
+{ question:"NASA किस देश की अंतरिक्ष एजेंसी है?", options:["रूस","चीन","USA","जापान"], answer:2 },
+{ question:"चाँद पर पहला कदम किसने रखा?", options:["यूरी गगारिन","नील आर्मस्ट्रांग","बज़ एल्ड्रिन","राकेश शर्मा"], answer:1 },
+{ question:"भारत का चंद्रयान-3 किस वर्ष लॉन्च हुआ?", options:["2020","2021","2023","2024"], answer:2 },
+{ question:"विश्व का सबसे ऊँचा जलप्रपात कौन सा है?", options:["नियाग्रा","एंजल फॉल्स","इगुआज़ु","विक्टोरिया"], answer:1 },
+{ question:"ब्राजील की राजधानी क्या है?", options:["रियो","ब्रासीलिया","साओ पाउलो","लिमा"], answer:1 },
+{ question:"ऑस्ट्रेलिया की राजधानी क्या है?", options:["सिडनी","मेलबर्न","कैनबरा","पर्थ"], answer:2 },
+{ question:"दक्षिण अफ्रीका की कितनी राजधानी हैं?", options:["1","2","3","4"], answer:2 },
+{ question:"UNO के पहले महासचिव कौन थे?", options:["कोफी अन्नान","उ थांट","ट्रिग्वे ली","बान की मून"], answer:2 },
+{ question:"विश्व का सबसे बड़ा द्वीप कौन सा है?", options:["ग्रीनलैंड","मेडागास्कर","बोर्नियो","न्यू गिनी"], answer:0 },
+{ question:"चीन की मुद्रा क्या है?", options:["येन","युआन","डॉलर","रुपया"], answer:1 },
+
+{ question:"World Heritage List किस संस्था द्वारा बनाई जाती है?", options:["WHO","UNESCO","WTO","IMF"], answer:1 },
+{ question:"Golden Temple कहाँ स्थित है?", options:["दिल्ली","अमृतसर","जयपुर","लखनऊ"], answer:1 },
+{ question:"Mount Kilimanjaro किस देश में है?", options:["केन्या","तंजानिया","इथियोपिया","सूडान"], answer:1 },
+{ question:"विश्व का सबसे बड़ा लोकतंत्र कौन सा देश है?", options:["USA","भारत","चीन","ब्राजील"], answer:1 },
+{ question:"Facebook का CEO कौन है?", options:["एलन मस्क","मार्क जुकरबर्ग","जेफ बेजोस","सुंदर पिचाई"], answer:1 },
+{ question:"Google का मुख्यालय कहाँ है?", options:["न्यूयॉर्क","कैलिफोर्निया","टेक्सास","वाशिंगटन"], answer:1 },
+{ question:"Tesla कंपनी किसने बनाई?", options:["एलन मस्क","बिल गेट्स","स्टीव जॉब्स","लैरी पेज"], answer:0 },
+{ question:"World Cup Football 2022 किसने जीता?", options:["ब्राजील","फ्रांस","अर्जेंटीना","जर्मनी"], answer:2 },
+{ question:"G20 का 2023 शिखर सम्मेलन कहाँ हुआ था?", options:["मुंबई","नई दिल्ली","लंदन","टोक्यो"], answer:1 },
+{ question:"United Nations में कितने देश सदस्य हैं (लगभग)?", options:["150","180","193","210"], answer:2 },
+
+{ question:"विश्व का सबसे ठंडा स्थान कौन सा है?", options:["ग्रीनलैंड","अंटार्कटिका","कनाडा","रूस"], answer:1 },
+{ question:"दुनिया की सबसे बड़ी झील कौन सी है?", options:["कैस्पियन सागर","सुपीरियर झील","विक्टोरिया","अराल सागर"], answer:0 },
+{ question:"पानी का रासायनिक सूत्र क्या है?", options:["CO2","H2O","O2","H2SO4"], answer:1 },
+{ question:"सोने का रासायनिक प्रतीक क्या है?", options:["Ag","Au","Fe","Pb"], answer:1 },
+{ question:"चाँद पर पहला मानवयुक्त मिशन कौन सा था?", options:["Apollo 11","Apollo 10","Sputnik","Chandrayaan"], answer:0 },
+{ question:"World Health Organization (WHO) का मुख्यालय कहाँ है?", options:["न्यूयॉर्क","जेनेवा","पेरिस","लंदन"], answer:1 },
+{ question:"Apple कंपनी किस देश की है?", options:["जापान","USA","चीन","जर्मनी"], answer:1 },
+{ question:"विश्व का सबसे बड़ा शहर जनसंख्या के अनुसार कौन सा है?", options:["टोक्यो","दिल्ली","शंघाई","न्यूयॉर्क"], answer:0 },
+{ question:"Mount Fuji कहाँ स्थित है?", options:["चीन","जापान","कोरिया","नेपाल"], answer:1 },
+{ question:"Euro मुद्रा किस क्षेत्र में चलती है?", options:["USA","यूरोप","एशिया","अफ्रीका"], answer:1 },
+
+{ question:"World Trade Organization (WTO) की स्थापना कब हुई?", options:["1990","1995","2000","1985"], answer:1 },
+{ question:"Bitcoin किस प्रकार की मुद्रा है?", options:["फिजिकल","डिजिटल","पेपर","गोल्ड"], answer:1 },
+{ question:"UNO के कितने अंग होते हैं?", options:["4","5","6","7"], answer:2 },
+{ question:"विश्व का सबसे बड़ा तेल उत्पादक देश कौन सा है?", options:["USA","सऊदी अरब","रूस","इराक"], answer:0 },
+{ question:"Facebook का पुराना नाम क्या था?", options:["Faceweb","The Facebook","MyFace","BookFace"], answer:1 },
+{ question:"Amazon कंपनी किस क्षेत्र से संबंधित है?", options:["कृषि","ई-कॉमर्स","मेडिकल","ऑटोमोबाइल"], answer:1 },
+{ question:"विश्व का सबसे बड़ा महाद्वीप कौन सा है?", options:["अफ्रीका","एशिया","यूरोप","ऑस्ट्रेलिया"], answer:1 },
+{ question:"Big Ben कहाँ स्थित है?", options:["फ्रांस","इंग्लैंड","जर्मनी","इटली"], answer:1 },
+{ question:"World Tourism Organization का मुख्यालय कहाँ है?", options:["मैड्रिड","पेरिस","रोम","लंदन"], answer:0 },
+{ question:"Mars को किस नाम से जाना जाता है?", options:["Red Planet","Blue Planet","Green Planet","Yellow Planet"], answer:0 },
+
+{ question:"विश्व का सबसे ऊँचा पर्वत कौन सा है?", options:["K2","कंचनजंगा","माउंट एवरेस्ट","मकालू"], answer:2 },
+{ question:"UNO का गठन किस दस्तावेज के बाद हुआ?", options:["Treaty of Versailles","Charter of UN","Geneva Convention","Paris Agreement"], answer:1 },
+{ question:"विश्व का सबसे बड़ा बंदरगाह कौन सा है?", options:["सिंगापुर","शंघाई","दुबई","हांगकांग"], answer:1 },
+{ question:"Twitter का नया नाम क्या है?", options:["X","Bluebird","TweetX","SocialX"], answer:0 },
+{ question:"World Food Programme किससे संबंधित है?", options:["खेल","खाद्य सहायता","अंतरिक्ष","शिक्षा"], answer:1 },
+{ question:"विश्व का सबसे बड़ा द्वीपसमूह देश कौन सा है?", options:["इंडोनेशिया","जापान","फिलीपींस","मलेशिया"], answer:0 },
+{ question:"विश्व का सबसे व्यस्त हवाई अड्डा कौन सा है?", options:["दुबई","अटलांटा","लंदन","टोक्यो"], answer:1 },
+{ question:"Mount Everest किस देश में स्थित है?", options:["भारत","नेपाल","चीन","भूटान"], answer:1 },
+{ question:"Red Cross की स्थापना कब हुई?", options:["1859","1863","1900","1920"], answer:1 },
+{ question:"World Literacy Day कब मनाया जाता है?", options:["5 सितंबर","8 सितंबर","10 अक्टूबर","1 दिसंबर"], answer:1 },
+{ question:"संयुक्त राष्ट्र संघ (UNO) की स्थापना कब हुई थी?", options:["1942","1945","1947","1950"], answer:1 },
+{ question:"UNO का मुख्यालय कहाँ स्थित है?", options:["पेरिस","लंदन","न्यूयॉर्क","जेनेवा"], answer:2 },
+{ question:"पृथ्वी का सबसे बड़ा महासागर कौन सा है?", options:["अटलांटिक","हिंद महासागर","आर्कटिक","प्रशांत महासागर"], answer:3 },
+{ question:"विश्व का सबसे छोटा देश कौन सा है?", options:["नेपाल","वेटिकन सिटी","भूटान","मोनाको"], answer:1 },
+{ question:"विश्व का सबसे बड़ा देश क्षेत्रफल के अनुसार कौन सा है?", options:["USA","चीन","रूस","कनाडा"], answer:2 },
+{ question:"Great Wall of China किस देश में है?", options:["जापान","चीन","कोरिया","थाईलैंड"], answer:1 },
+{ question:"ताजमहल किसने बनवाया?", options:["अकबर","शाहजहाँ","बाबर","औरंगजेब"], answer:1 },
+{ question:"Mount Everest की ऊँचाई लगभग कितनी है?", options:["8848 मीटर","8000 मीटर","9000 मीटर","7500 मीटर"], answer:0 },
+{ question:"विश्व की सबसे लंबी नदी कौन सी है?", options:["अमेज़न","नील","मिसिसिपी","गंगा"], answer:1 },
+{ question:"अमेज़न नदी किस महाद्वीप में है?", options:["एशिया","अफ्रीका","दक्षिण अमेरिका","यूरोप"], answer:2 },
+
+{ question:"Olympic Games की शुरुआत कहाँ हुई थी?", options:["रोम","एथेंस","पेरिस","लंदन"], answer:1 },
+{ question:"UNO के कितने स्थायी सदस्य हैं?", options:["4","5","6","7"], answer:1 },
+{ question:"विश्व का सबसे बड़ा रेगिस्तान कौन सा है?", options:["गोबी","सहारा","अरबियन","अंटार्कटिक"], answer:3 },
+{ question:"सूर्य के सबसे निकट ग्रह कौन सा है?", options:["शुक्र","पृथ्वी","बुध","मंगल"], answer:2 },
+{ question:"सबसे बड़ा महाद्वीप कौन सा है?", options:["एशिया","अफ्रीका","यूरोप","ऑस्ट्रेलिया"], answer:0 },
+{ question:"पिरामिड किस देश में हैं?", options:["ग्रीस","मिस्र","इराक","ईरान"], answer:1 },
+{ question:"Eiffel Tower कहाँ स्थित है?", options:["इटली","जर्मनी","फ्रांस","स्पेन"], answer:2 },
+{ question:"Japan की राजधानी क्या है?", options:["ओसाका","टोक्यो","क्योटो","नागोया"], answer:1 },
+{ question:"USA की राजधानी क्या है?", options:["न्यूयॉर्क","वाशिंगटन DC","लॉस एंजेलिस","शिकागो"], answer:1 },
+{ question:"World Bank का मुख्यालय कहाँ है?", options:["लंदन","जेनेवा","वाशिंगटन DC","पेरिस"], answer:2 },
+
+{ question:"NASA किस देश की एजेंसी है?", options:["रूस","चीन","USA","जापान"], answer:2 },
+{ question:"चाँद पर पहला कदम किसने रखा?", options:["यूरी गगारिन","नील आर्मस्ट्रांग","बज़ एल्ड्रिन","राकेश शर्मा"], answer:1 },
+{ question:"ब्राजील की राजधानी क्या है?", options:["रियो","ब्रासीलिया","साओ पाउलो","लिमा"], answer:1 },
+{ question:"ऑस्ट्रेलिया की राजधानी क्या है?", options:["सिडनी","मेलबर्न","कैनबरा","पर्थ"], answer:2 },
+{ question:"South Africa की कितनी राजधानी हैं?", options:["1","2","3","4"], answer:2 },
+{ question:"World Heritage List किस संस्था द्वारा बनाई जाती है?", options:["WHO","UNESCO","WTO","IMF"], answer:1 },
+{ question:"Golden Temple कहाँ स्थित है?", options:["दिल्ली","अमृतसर","जयपुर","लखनऊ"], answer:1 },
+{ question:"Mount Kilimanjaro किस देश में है?", options:["केन्या","तंजानिया","इथियोपिया","सूडान"], answer:1 },
+{ question:"विश्व का सबसे बड़ा लोकतंत्र कौन सा देश है?", options:["USA","भारत","चीन","ब्राजील"], answer:1 },
+{ question:"World Cup Football 2022 किसने जीता?", options:["ब्राजील","फ्रांस","अर्जेंटीना","जर्मनी"], answer:2 },
+
+{ question:"United Nations में कितने सदस्य देश हैं?", options:["150","180","193","210"], answer:2 },
+{ question:"विश्व का सबसे ठंडा स्थान कौन सा है?", options:["ग्रीनलैंड","अंटार्कटिका","कनाडा","रूस"], answer:1 },
+{ question:"कैस्पियन सागर क्या है?", options:["झील","नदी","महासागर","द्वीप"], answer:0 },
+{ question:"पानी का रासायनिक सूत्र क्या है?", options:["CO2","H2O","O2","H2SO4"], answer:1 },
+{ question:"सोने का प्रतीक क्या है?", options:["Ag","Au","Fe","Pb"], answer:1 },
+{ question:"WHO का मुख्यालय कहाँ है?", options:["न्यूयॉर्क","जेनेवा","पेरिस","लंदन"], answer:1 },
+{ question:"Apple कंपनी किस देश की है?", options:["जापान","USA","चीन","जर्मनी"], answer:1 },
+{ question:"विश्व का सबसे बड़ा शहर जनसंख्या के अनुसार कौन सा है?", options:["टोक्यो","दिल्ली","शंघाई","न्यूयॉर्क"], answer:0 },
+{ question:"Mount Fuji कहाँ स्थित है?", options:["चीन","जापान","कोरिया","नेपाल"], answer:1 },
+{ question:"Euro मुद्रा कहाँ चलती है?", options:["USA","यूरोप","एशिया","अफ्रीका"], answer:1 },
+
+{ question:"WTO की स्थापना कब हुई?", options:["1990","1995","2000","1985"], answer:1 },
+{ question:"Bitcoin क्या है?", options:["डिजिटल करेंसी","पेपर करेंसी","गोल्ड","शेयर"], answer:0 },
+{ question:"UNO के कितने प्रमुख अंग हैं?", options:["4","5","6","7"], answer:2 },
+{ question:"सबसे बड़ा तेल उत्पादक देश?", options:["USA","सऊदी अरब","रूस","इराक"], answer:0 },
+{ question:"Facebook का पुराना नाम?", options:["Faceweb","The Facebook","MyFace","BookFace"], answer:1 },
+{ question:"Amazon कंपनी किस क्षेत्र की है?", options:["कृषि","ई-कॉमर्स","शिक्षा","ऑटो"], answer:1 },
+{ question:"Big Ben कहाँ है?", options:["फ्रांस","इंग्लैंड","जर्मनी","इटली"], answer:1 },
+{ question:"Mars को क्या कहते हैं?", options:["Red Planet","Blue Planet","Green Planet","Yellow Planet"], answer:0 },
+{ question:"World Tourism Organization का मुख्यालय?", options:["मैड्रिड","पेरिस","रोम","लंदन"], answer:0 },
+{ question:"World Food Programme किससे संबंधित है?", options:["खेल","खाद्य सहायता","अंतरिक्ष","शिक्षा"], answer:1 },
+
+{ question:"Twitter का नया नाम?", options:["X","TweetX","Blue","SocialX"], answer:0 },
+{ question:"World Literacy Day कब?", options:["5 Sept","8 Sept","10 Oct","1 Dec"], answer:1 },
+{ question:"Red Cross की स्थापना कब?", options:["1859","1863","1900","1920"], answer:1 },
+{ question:"सबसे बड़ा द्वीप कौन सा है?", options:["ग्रीनलैंड","मेडागास्कर","बोर्नियो","न्यू गिनी"], answer:0 },
+{ question:"World’s busiest airport?", options:["दुबई","अटलांटा","लंदन","टोक्यो"], answer:1 },
+{ question:"Mount Everest किस देश में है?", options:["भारत","नेपाल","चीन","भूटान"], answer:1 },
+{ question:"Google का मुख्यालय कहाँ?", options:["न्यूयॉर्क","कैलिफोर्निया","टेक्सास","वाशिंगटन"], answer:1 },
+{ question:"Tesla किसने बनाई?", options:["एलन मस्क","बिल गेट्स","स्टीव जॉब्स","लैरी पेज"], answer:0 },
+{ question:"G20 2023 कहाँ हुआ?", options:["मुंबई","नई दिल्ली","लंदन","टोक्यो"], answer:1 },
+{ question:"World Literacy Rate बढ़ाने वाली संस्था?", options:["UNESCO","WHO","IMF","WTO"], answer:0 },
+
+{ question:"World’s largest ocean?", options:["Atlantic","Indian","Arctic","Pacific"], answer:3 },
+{ question:"World’s smallest continent?", options:["Asia","Africa","Europe","Australia"], answer:3 },
+{ question:"World’s longest river (commonly accepted)?", options:["Amazon","Nile","Mississippi","Yangtze"], answer:0 },
+{ question:"World’s highest waterfall?", options:["Niagara","Angel Falls","Iguazu","Victoria"], answer:1 },
+{ question:"Currency of China?", options:["Yen","Yuan","Dollar","Won"], answer:1 },
+{ question:"Currency of Japan?", options:["Yen","Yuan","Dollar","Euro"], answer:0 },
+{ question:"Capital of France?", options:["Berlin","Madrid","Paris","Rome"], answer:2 },
+{ question:"Capital of UK?", options:["London","Paris","Rome","Berlin"], answer:0 },
+{ question:"Capital of Germany?", options:["Berlin","Munich","Hamburg","Frankfurt"], answer:0 },
+{ question:"Capital of Italy?", options:["Rome","Milan","Venice","Naples"], answer:0 }
+
+];
+
+
+let index = 0;
+let score = 0;
+let timer;
+let timeLeft = 10;
+
+function startQuiz() {
+  document.getElementById("startScreen").classList.add("hide");
+  document.getElementById("quizScreen").classList.remove("hide");
+  loadQuestion();
+}
+
+function loadQuestion() {
+  resetTimer();
+  let q = quizData[index];
+  document.getElementById("question").innerText = q.question;
+  document.getElementById("qNo").innerText = index + 1;
+
+  let optionsHTML = "";
+  q.options.forEach((opt, i) => {
+    optionsHTML += `<div class="option" onclick="selectOption(${i})">${opt}</div>`;
+  });
+
+  document.getElementById("options").innerHTML = optionsHTML;
+}
+
+function selectOption(selected) {
+  let correct = quizData[index].answer;
+  let options = document.querySelectorAll(".option");
+
+  options.forEach((opt, i) => {
+    if (i === correct) opt.classList.add("correct");
+    else if (i === selected) opt.classList.add("wrong");
+
+    opt.style.pointerEvents = "none";
+  });
+
+  if (selected === correct) score++;
+}
+
+function nextQuestion() {
+  index++;
+  if (index < quizData.length) {
+    loadQuestion();
+  } else {
+    showResult();
+  }
+}
+
+  function showResult() {
+  document.getElementById("quizScreen").classList.add("hide");
+  document.getElementById("resultScreen").classList.remove("hide");
+  document.getElementById("score").innerText = score + " / " + quizData.length;
+}
+
+function resetTimer() {
+  clearInterval(timer);
+  timeLeft = 10;
+  document.getElementById("timer").innerText = timeLeft;
+
+  timer = setInterval(() => {
+    timeLeft--;
+    document.getElementById("timer").innerText = timeLeft;
+
+    if (timeLeft === 0) {
+      nextQuestion();
+    }
+  }, 1000);
+}
+
+</script>
+
+</body>
+</html>

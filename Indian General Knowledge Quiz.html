@@ -1,0 +1,349 @@
+<!DOCTYPE html>
+<html>
+<head>
+      <!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-KN4DRRWZ17"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-KN4DRRWZ17');
+</script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Indian General Knowledge Quiz</title>
+
+<style>
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: Arial;
+}
+
+body {
+  background: #f5f5f5;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+}
+
+/* Container */
+.app {
+  width: 95%;
+  max-width: 500px;
+  background: white;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+}
+
+/* Header */
+header {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 20px;
+}
+
+.timer {
+  background: #2196F3;
+  color: white;
+  padding: 5px 10px;
+  border-radius: 5px;
+}
+
+/* Question */
+.question {
+  font-size: 20px;
+  margin-bottom: 15px;
+}
+
+/* Options */
+.option {
+  background: #eee;
+  padding: 10px;
+  margin: 8px 0;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.option:hover {
+  background: #ddd;
+}
+
+.correct {
+  background: #4CAF50 !important;
+  color: white;
+}
+
+.wrong {
+  background: #f44336 !important;
+  color: white;
+}
+
+/* Button */
+button {
+  margin-top: 15px;
+  padding: 10px;
+  width: 100%;
+  border: none;
+ background:linear-gradient(135deg,#0a2dbcf3,#779af583);
+  color: white;
+  font-size: 16px;
+  cursor: pointer;
+  border-radius: 5px;
+}
+
+/* Hidden */
+.hide {
+  display: none;
+}
+
+/* Result */
+.result {
+  text-align: center;
+}
+
+/* Responsive */
+@media (max-width: 600px) {
+  .question {
+    font-size: 18px;
+  }
+}
+</style>
+
+</head>
+<body>
+
+<div class="app">
+
+  <!-- Start Screen -->
+  <div id="startScreen">
+    <h2>Quiz App</h2>
+    <button onclick="startQuiz()">Start Quiz</button>
+  </div>
+
+  <!-- Quiz Screen -->
+  <div id="quizScreen" class="hide">
+    <header>
+      <div>Question <span id="qNo">1</span>/100</div>
+      <div class="timer" id="timer">10</div>
+    </header>
+
+    <div class="question" id="question"></div>
+    <div id="options"></div>
+
+    <button onclick="nextQuestion()">Next</button>
+  </div>
+
+  <!-- Result Screen -->
+  <div id="resultScreen" class="hide result">
+    <h2>Your Score</h2>
+    <h1 id="score"></h1>
+    <button onclick="location.reload()">Play Again</button>
+  </div>
+
+</div>
+
+<script>
+const quizData = [
+{ question:"भारत का राष्ट्रीय पशु कौन है?", options:["शेर","बाघ","हाथी","गैंडा"], answer:1 },
+{ question:"भारतीय संविधान का निर्माता किसे कहा जाता है?", options:["महात्मा गांधी","डॉ. बी.आर. अंबेडकर","नेहरू","पटेल"], answer:1 },
+{ question:"भारत का राष्ट्रीय पक्षी कौन है?", options:["मोर","तोता","कबूतर","हंस"], answer:0 },
+{ question:"भारत का राष्ट्रीय फूल कौन सा है?", options:["गुलाब","कमल","सूरजमुखी","गेंदा"], answer:1 },
+{ question:"भारत का राष्ट्रीय फल कौन सा है?", options:["सेब","आम","केला","अंगूर"], answer:1 },
+{ question:"भारत का राष्ट्रीय खेल क्या है?", options:["क्रिकेट","हॉकी","फुटबॉल","कबड्डी"], answer:1 },
+{ question:"भारत की राजधानी क्या है?", options:["मुंबई","कोलकाता","नई दिल्ली","चेन्नई"], answer:2 },
+{ question:"भारत का सबसे बड़ा राज्य क्षेत्रफल में कौन सा है?", options:["मध्य प्रदेश","राजस्थान","महाराष्ट्र","उत्तर प्रदेश"], answer:1 },
+{ question:"भारत का सबसे छोटा राज्य कौन सा है?", options:["गोवा","सिक्किम","त्रिपुरा","मणिपुर"], answer:0 },
+{ question:"ताजमहल कहाँ स्थित है?", options:["दिल्ली","आगरा","जयपुर","लखनऊ"], answer:1 },
+
+{ question:"गंगा नदी का उद्गम स्थल क्या है?", options:["यमुनोत्री","गंगोत्री","केदारनाथ","अमरकंटक"], answer:1 },
+{ question:"भारत का सबसे ऊँचा पर्वत कौन सा है (भारत में)?", options:["कंचनजंगा","एवरेस्ट","नंदा देवी","कामेट"], answer:0 },
+{ question:"भारतीय मुद्रा क्या है?", options:["डॉलर","रुपया","येन","यूरो"], answer:1 },
+{ question:"भारत में कुल राज्य कितने हैं (2026 अनुसार)?", options:["28","29","30","27"], answer:0 },
+{ question:"लोकसभा का कार्यकाल कितने वर्ष का होता है?", options:["4","5","6","7"], answer:1 },
+
+{ question:"भारत का सबसे लंबा बांध कौन सा है?", options:["हीराकुंड बांध","भाखड़ा नांगल","सरदार सरोवर","टेहरी बांध"], answer:0 },
+{ question:"भारतीय अंतरिक्ष अनुसंधान संगठन (ISRO) कहाँ स्थित है?", options:["मुंबई","बेंगलुरु","चेन्नई","हैदराबाद"], answer:1 },
+{ question:"भारत का सबसे बड़ा राज्य जनसंख्या में कौन सा है?", options:["बिहार","महाराष्ट्र","उत्तर प्रदेश","पश्चिम बंगाल"], answer:2 },
+{ question:"कौन सा ग्रह 'लाल ग्रह' कहलाता है?", options:["शुक्र","मंगल","बृहस्पति","शनि"], answer:1 },
+{ question:"सूर्य से सबसे नजदीक ग्रह कौन सा है?", options:["पृथ्वी","बुध","शुक्र","मंगल"], answer:1 },
+
+{ question:"भारत के राष्ट्रपति का कार्यकाल कितना होता है?", options:["4 वर्ष","5 वर्ष","6 वर्ष","7 वर्ष"], answer:1 },
+{ question:"भारत के प्रथम प्रधानमंत्री कौन थे?", options:["पटेल","नेहरू","गांधी","राजेंद्र प्रसाद"], answer:1 },
+{ question:"भारतीय संसद में कितने सदन होते हैं?", options:["1","2","3","4"], answer:1 },
+{ question:"राज्यसभा को क्या कहा जाता है?", options:["निचला सदन","उच्च सदन","लोक सदन","जनसभा"], answer:1 },
+{ question:"लोकसभा को क्या कहा जाता है?", options:["उच्च सदन","निचला सदन","राज्य सभा","परिषद"], answer:1 },
+
+{ question:"भारत का सबसे बड़ा महासागर कौन सा है?", options:["अटलांटिक","हिंद महासागर","प्रशांत महासागर","आर्कटिक"], answer:1 },
+{ question:"भारत में सबसे अधिक बोली जाने वाली भाषा कौन सी है?", options:["तमिल","हिंदी","बंगाली","तेलुगु"], answer:1 },
+{ question:"राष्ट्रीय गान किसने लिखा?", options:["रवींद्रनाथ टैगोर","प्रेमचंद","महादेवी वर्मा","दिनकर"], answer:0 },
+{ question:"राष्ट्रीय गीत कौन सा है?", options:["वंदे मातरम्","जन गण मन","सारे जहां से अच्छा","जय हिंद"], answer:0 },
+{ question:"भारत का सबसे बड़ा डेल्टा कौन सा है?", options:["सुंदरबन डेल्टा","महनदी डेल्टा","गोदावरी डेल्टा","कावेरी डेल्टा"], answer:0 },
+
+{ question:"विश्व का सबसे बड़ा महाद्वीप कौन सा है?", options:["अफ्रीका","एशिया","यूरोप","ऑस्ट्रेलिया"], answer:1 },
+{ question:"भारत का सबसे दक्षिणी बिंदु कौन सा है?", options:["कन्याकुमारी","इंदिरा पॉइंट","कोच्चि","पोर्ट ब्लेयर"], answer:1 },
+{ question:"भारत का सबसे ऊँचा जलप्रपात कौन सा है?", options:["जोग फॉल्स","धुआंधार","हुंडरू","चित्रकूट"], answer:0 },
+{ question:"भारत का सबसे लंबा रेलवे प्लेटफॉर्म कहाँ है?", options:["गोरखपुर","नई दिल्ली","हावड़ा","चेन्नई"], answer:0 },
+{ question:"कंप्यूटर का जनक किसे कहा जाता है?", options:["चार्ल्स बैबेज","न्यूटन","गैलीलियो","एडिसन"], answer:0 },
+
+{ question:"पृथ्वी का उपग्रह क्या है?", options:["मंगल","चंद्रमा","शुक्र","सूर्य"], answer:1 },
+{ question:"भारत में योजना आयोग का स्थान किसने लिया?", options:["नीति आयोग","वित्त आयोग","राज्यसभा","लोकसभा"], answer:0 },
+{ question:"भारत का सबसे बड़ा बंदरगाह कौन सा है?", options:["मुंबई बंदरगाह","चेन्नई बंदरगाह","कोलकाता बंदरगाह","कांडला बंदरगाह"], answer:0 },
+{ question:"डॉ. बी.आर. अंबेडकर का जन्म कहाँ हुआ था?", options:["दिल्ली","महू","पुणे","नागपुर"], answer:1 },
+{ question:"भारत में संविधान कब लागू हुआ?", options:["1947","1950","1952","1949"], answer:1 },
+
+{ question:"विश्व का सबसे बड़ा देश क्षेत्रफल में कौन सा है?", options:["भारत","रूस","चीन","कनाडा"], answer:1 },
+{ question:"भारत का सबसे बड़ा पठार कौन सा है?", options:["दक्कन पठार","छोटा नागपुर","मालवा पठार","मैसूर पठार"], answer:0 },
+{ question:"तिरंगे में हरा रंग क्या दर्शाता है?", options:["शांति","समृद्धि","धर्म","शक्ति"], answer:1 },
+{ question:"भारत का सबसे बड़ा मरुस्थल कौन सा है?", options:["थार मरुस्थल","सहारा","गोबी","कालाहारी"], answer:0 },
+{ question:"भारत का सर्वोच्च नागरिक सम्मान कौन सा है?", options:["पद्मश्री","भारत रत्न","पद्म भूषण","वीर चक्र"], answer:1 },
+
+{ question:"माउंट एवरेस्ट कहाँ स्थित है?", options:["भारत","नेपाल-चीन सीमा","भूटान","पाकिस्तान"], answer:1 },
+{ question:"भारत में पहला परमाणु परीक्षण कब हुआ?", options:["1964","1974","1984","1998"], answer:1 },
+{ question:"ISRO का पहला उपग्रह कौन सा था?", options:["आर्यभट्ट","रोहिणी","चंद्रयान","इनसैट"], answer:0 },
+{ question:"भारत का सबसे लंबा राष्ट्रीय राजमार्ग कौन सा है?", options:["NH44","NH1","NH2","NH7"], answer:0 },
+{ question:"भारत में कितने केंद्र शासित प्रदेश हैं?", options:["7","8","9","10"], answer:2 },
+
+{ question:"भारतीय सेना दिवस कब मनाया जाता है?", options:["15 जनवरी","26 जनवरी","15 अगस्त","2 अक्टूबर"], answer:0 },
+{ question:"विश्व पर्यावरण दिवस कब मनाया जाता है?", options:["5 जून","5 जुलाई","5 मई","5 अगस्त"], answer:0 },
+{ question:"महात्मा गांधी का जन्म कब हुआ था?", options:["1869","1857","1889","1890"], answer:0 },
+{ question:"भारत छोड़ो आंदोलन कब शुरू हुआ?", options:["1942","1930","1920","1950"], answer:0 },
+{ question:"दांडी यात्रा किसने शुरू की?", options:["नेहरू","गांधी","पटेल","अंबेडकर"], answer:1 },
+
+{ question:"कौन सा ग्रह 'पृथ्वी का जुड़वां' कहलाता है?", options:["मंगल","शुक्र","बृहस्पति","शनि"], answer:1 },
+{ question:"भारत का सबसे बड़ा राज्य भाषा के आधार पर कौन सा है?", options:["उत्तर प्रदेश","महाराष्ट्र","बिहार","तमिलनाडु"], answer:0 },
+{ question:"किस देश को 'उगते सूर्य का देश' कहा जाता है?", options:["चीन","जापान","रूस","कोरिया"], answer:1 },
+{ question:"विश्व का सबसे ऊँचा जलप्रपात कौन सा है?", options:["एंजेल फॉल्स","नियाग्रा","जोग फॉल्स","इगुआजु"], answer:0 },
+{ question:"भारत का सबसे बड़ा उद्योग कौन सा है?", options:["कृषि","IT","स्टील","ऑटोमोबाइल"], answer:0 },
+
+{ question:"ब्रह्मपुत्र नदी कहाँ से आती है?", options:["तिब्बत","नेपाल","भारत","भूटान"], answer:0 },
+{ question:"भारत में हरित क्रांति के जनक कौन हैं?", options:["एम.एस. स्वामीनाथन","नेहरू","गांधी","पटेल"], answer:0 },
+{ question:"विश्व का सबसे छोटा महाद्वीप कौन सा है?", options:["यूरोप","ऑस्ट्रेलिया","अफ्रीका","अंटार्कटिका"], answer:1 },
+{ question:"भारत का सबसे बड़ा रेलवे ज़ोन कौन सा है?", options:["उत्तरी रेलवे","दक्षिण रेलवे","पश्चिम रेलवे","पूर्व रेलवे"], answer:0 },
+{ question:"भारत का पहला उपग्रह कब लॉन्च हुआ?", options:["1975","1980","1965","1990"], answer:0 },
+
+{ question:"राष्ट्रीय ध्वज किसने डिजाइन किया?", options:["पिंगली वेंकैया","नेहरू","गांधी","पटेल"], answer:0 },
+{ question:"भारत का सबसे बड़ा राज्य कौन सा है जनसंख्या घनत्व में?", options:["बिहार","यूपी","महाराष्ट्र","पंजाब"], answer:0 },
+{ question:"कौन सा शहर 'भारत का मैनचेस्टर' कहलाता है?", options:["मुंबई","अहमदाबाद","चेन्नई","कोलकाता"], answer:1 },
+{ question:"विश्व का सबसे बड़ा लोकतंत्र कौन सा देश है?", options:["अमेरिका","भारत","चीन","ब्राजील"], answer:1 },
+{ question:"भारत में पहली रेल कब चली?", options:["1853","1860","1845","1900"], answer:0 },
+
+{ question:"ताजमहल किसने बनवाया?", options:["अकबर","शाहजहां","बाबर","औरंगजेब"], answer:1 },
+{ question:"भारत का सबसे बड़ा बांध कौन सा है?", options:["भाखड़ा नांगल","हीराकुंड","टेहरी","सरदार सरोवर"], answer:1 },
+{ question:"भारत का सबसे बड़ा प्राकृतिक बंदरगाह कौन सा है?", options:["मुंबई","कोच्चि","कांडला","चेन्नई"], answer:1 },
+{ question:"ISRO का मुख्यालय कहाँ है?", options:["मुंबई","बेंगलुरु","दिल्ली","चेन्नई"], answer:1 },
+{ question:"भारत का सबसे लंबा पुल कौन सा है?", options:["बोगीबील पुल","हावड़ा पुल","मुंबई सी लिंक","पटना पुल"], answer:0 
+  
+},
+
+{ question:"भारत के प्रथम राष्ट्रपति कौन थे?", options:["डॉ. सर्वपल्ली राधाकृष्णन","डॉ. राजेंद्र प्रसाद","जवाहरलाल नेहरू","सरदार पटेल"], answer:1 },
+{ question:"भारतीय रिज़र्व बैंक (RBI) की स्थापना कब हुई?", options:["1935","1947","1950","1925"], answer:0 },
+{ question:"भारत के मुद्रा चिन्ह (₹) को किसने डिजाइन किया?", options:["रघुराम राजन","मनमोहन सिंह","डी. उदय कुमार","अरुण जेटली"], answer:2 },
+{ question:"भारत में पहली जनगणना कब हुई?", options:["1872","1881","1901","1857"], answer:0 },
+{ question:"भारत की प्रथम महिला प्रधानमंत्री कौन थीं?", options:["प्रतिभा पाटिल","इंदिरा गांधी","सोनिया गांधी","सरोजिनी नायडू"], answer:1 },
+
+{ question:"भारत की प्रथम महिला राष्ट्रपति कौन थीं?", options:["प्रतिभा पाटिल","द्रौपदी मुर्मू","इंदिरा गांधी","सुषमा स्वराज"], answer:0 },
+{ question:"ISRO की स्थापना कब हुई?", options:["1969","1950","1972","1980"], answer:0 },
+{ question:"भारत के मिसाइल मैन किसे कहा जाता है?", options:["विक्रम साराभाई","ए.पी.जे. अब्दुल कलाम","होमी भाभा","सी.वी. रमन"], answer:1 },
+{ question:"भारतीय संविधान कब अपनाया गया?", options:["26 जनवरी 1950","15 अगस्त 1947","26 नवंबर 1949","2 अक्टूबर 1950"], answer:2 },
+{ question:"भारत का सबसे लंबा नदी कौन सी है?", options:["यमुना","गोदावरी","गंगा","ब्रह्मपुत्र"], answer:2 },
+
+{ question:"भारत में हरित क्रांति कब शुरू हुई?", options:["1965","1975","1950","1980"], answer:0 },
+{ question:"भारत का राष्ट्रीय प्रतीक क्या है?", options:["अशोक स्तंभ","कमल","शेर","चक्र"], answer:0 },
+{ question:"संसद भवन कहाँ स्थित है?", options:["मुंबई","नई दिल्ली","कोलकाता","चेन्नई"], answer:1 },
+{ question:"भारत का सबसे बड़ा राज्य भाषा के आधार पर कौन सा है?", options:["महाराष्ट्र","उत्तर प्रदेश","बिहार","राजस्थान"], answer:1 },
+{ question:"भारत में पहली रेल कहाँ चली?", options:["मुंबई-ठाणे","दिल्ली-आगरा","कोलकाता-हावड़ा","चेन्नई-मैसूर"], answer:0 },
+
+{ question:"भारत का सबसे बड़ा बांध कौन सा है?", options:["हीराकुंड बांध","भाखड़ा नांगल","टेहरी बांध","सरदार सरोवर"], answer:0 },
+{ question:"विश्व का सबसे बड़ा लोकतंत्र कौन सा देश है?", options:["अमेरिका","भारत","चीन","रूस"], answer:1 },
+{ question:"ताजमहल किसने बनवाया था?", options:["अकबर","शाहजहां","बाबर","औरंगजेब"], answer:1 },
+{ question:"भारत का राष्ट्रीय गान किसने लिखा?", options:["बंकिम चंद्र चट्टोपाध्याय","रवींद्रनाथ टैगोर","महादेवी वर्मा","हरिवंश राय बच्चन"], answer:1 },
+{ question:"भारत का राष्ट्रीय गीत कौन सा है?", options:["वंदे मातरम्","जन गण मन","सारे जहां से अच्छा","जय हिंद"], answer:0 },
+
+{ question:"कंप्यूटर के जनक किसे कहा जाता है?", options:["चार्ल्स बैबेज","न्यूटन","एडिसन","गैलीलियो"], answer:0 },
+{ question:"विश्व का सबसे बड़ा महासागर कौन सा है?", options:["अटलांटिक","हिंद महासागर","प्रशांत महासागर","आर्कटिक"], answer:2 },
+{ question:"भारत का सबसे बड़ा मरुस्थल कौन सा है?", options:["थार मरुस्थल","गोबी","सहारा","कालाहारी"], answer:0 },
+{ question:"विश्व का सबसे बड़ा पर्वत कौन सा है?", options:["कंचनजंगा","माउंट एवरेस्ट","के2","नंदा देवी"], answer:1 },
+{ question:"भारत का सबसे बड़ा राज्य क्षेत्रफल में कौन सा है?", options:["मध्य प्रदेश","राजस्थान","महाराष्ट्र","उत्तर प्रदेश"], answer:1 }
+
+];
+
+
+let index = 0;
+let score = 0;
+let timer;
+let timeLeft = 10;
+
+function startQuiz() {
+  document.getElementById("startScreen").classList.add("hide");
+  document.getElementById("quizScreen").classList.remove("hide");
+  loadQuestion();
+}
+
+function loadQuestion() {
+  resetTimer();
+  let q = quizData[index];
+  document.getElementById("question").innerText = q.question;
+  document.getElementById("qNo").innerText = index + 1;
+
+  let optionsHTML = "";
+  q.options.forEach((opt, i) => {
+    optionsHTML += `<div class="option" onclick="selectOption(${i})">${opt}</div>`;
+  });
+
+  document.getElementById("options").innerHTML = optionsHTML;
+}
+
+function selectOption(selected) {
+  let correct = quizData[index].answer;
+  let options = document.querySelectorAll(".option");
+
+  options.forEach((opt, i) => {
+    if (i === correct) opt.classList.add("correct");
+    else if (i === selected) opt.classList.add("wrong");
+
+    opt.style.pointerEvents = "none";
+  });
+
+  if (selected === correct) score++;
+}
+
+function nextQuestion() {
+  index++;
+  if (index < quizData.length) {
+    loadQuestion();
+  } else {
+    showResult();
+  }
+}
+
+  function showResult() {
+  document.getElementById("quizScreen").classList.add("hide");
+  document.getElementById("resultScreen").classList.remove("hide");
+  document.getElementById("score").innerText = score + " / " + quizData.length;
+}
+
+function resetTimer() {
+  clearInterval(timer);
+  timeLeft = 10;
+  document.getElementById("timer").innerText = timeLeft;
+
+  timer = setInterval(() => {
+    timeLeft--;
+    document.getElementById("timer").innerText = timeLeft;
+
+    if (timeLeft === 0) {
+      nextQuestion();
+    }
+  }, 1000);
+}
+
+</script>
+
+</body>
+</html>

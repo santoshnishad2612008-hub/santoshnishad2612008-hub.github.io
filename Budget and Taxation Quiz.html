@@ -1,0 +1,347 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-KN4DRRWZ17"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-KN4DRRWZ17');
+</script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title> Budget and Taxation Quiz </title>
+
+<style>
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: Arial;
+}
+
+body {
+  background: #f5f5f5;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+}
+
+/* Container */
+.app {
+  width: 95%;
+  max-width: 500px;
+  background: white;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+}
+
+/* Header */
+header {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 20px;
+}
+
+.timer {
+  background: #2196F3;
+  color: white;
+  padding: 5px 10px;
+  border-radius: 5px;
+}
+
+/* Question */
+.question {
+  font-size: 20px;
+  margin-bottom: 15px;
+}
+
+/* Options */
+.option {
+  background: #eee;
+  padding: 10px;
+  margin: 8px 0;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.option:hover {
+  background: #ddd;
+}
+
+.correct {
+  background: #4CAF50 !important;
+  color: white;
+}
+
+.wrong {
+  background: #f44336 !important;
+  color: white;
+}
+
+/* Button */
+button {
+  margin-top: 15px;
+  padding: 10px;
+  width: 100%;
+  border: none;
+ background:linear-gradient(135deg,#0a2dbcf3,#779af583);
+  color: white;
+  font-size: 16px;
+  cursor: pointer;
+  border-radius: 5px;
+}
+
+/* Hidden */
+.hide {
+  display: none;
+}
+
+/* Result */
+.result {
+  text-align: center;
+}
+
+/* Responsive */
+@media (max-width: 600px) {
+  .question {
+    font-size: 18px;
+  }
+}
+</style>
+
+</head>
+<body>
+
+<div class="app">
+
+  <!-- Start Screen -->
+  <div id="startScreen">
+    <h2>Quiz App</h2>
+    <button onclick="startQuiz()">Start Quiz</button>
+  </div>
+
+  <!-- Quiz Screen -->
+  <div id="quizScreen" class="hide">
+    <header>
+      <div>Question <span id="qNo">1</span>/100</div>
+      <div class="timer" id="timer">10</div>
+    </header>
+
+    <div class="question" id="question"></div>
+    <div id="options"></div>
+
+    <button onclick="nextQuestion()">Next</button>
+  </div>
+
+  <!-- Result Screen -->
+  <div id="resultScreen" class="hide result">
+    <h2>Your Score</h2>
+    <h1 id="score"></h1>
+    <button onclick="location.reload()">Play Again</button>
+  </div>
+
+</div>
+
+<script>
+const quizData = [
+{ question:"भारत का केंद्रीय बजट कौन प्रस्तुत करता है?", options:["राष्ट्रपति","प्रधानमंत्री","वित्त मंत्री","आरबीआई गवर्नर"], answer:2 },
+{ question:"भारत में बजट किस अनुच्छेद के तहत प्रस्तुत किया जाता है?", options:["अनुच्छेद 110","अनुच्छेद 112","अनुच्छेद 115","अनुच्छेद 120"], answer:1 },
+{ question:"GST कब लागू हुआ?", options:["2015","2016","2017","2018"], answer:2 },
+{ question:"GST का पूरा नाम क्या है?", options:["General Sales Tax","Goods and Services Tax","Government Sales Tax","Gross Supply Tax"], answer:1 },
+{ question:"भारत में GST किस प्रकार का कर है?", options:["प्रत्यक्ष कर","अप्रत्यक्ष कर","राज्य कर","नगर कर"], answer:1 },
+
+{ question:"इनकम टैक्स कौन वसूलता है?", options:["RBI","CBDT","SEBI","NITI Aayog"], answer:1 },
+{ question:"CBDT का पूरा नाम क्या है?", options:["Central Board of Direct Taxes","Central Bank of Direct Taxation","Council of Budget Tax","Central Bureau of Tax"], answer:0 },
+{ question:"भारत का बजट किस मंत्रालय द्वारा तैयार किया जाता है?", options:["गृह मंत्रालय","वित्त मंत्रालय","रक्षा मंत्रालय","शिक्षा मंत्रालय"], answer:1 },
+{ question:"वित्त वर्ष भारत में कब से कब तक होता है?", options:["जनवरी-दिसंबर","अप्रैल-मार्च","मार्च-अप्रैल","जुलाई-जून"], answer:1 },
+{ question:"प्रत्यक्ष कर का उदाहरण क्या है?", options:["GST","Custom Duty","Income Tax","Excise Duty"], answer:2 },
+
+{ question:"अप्रत्यक्ष कर का उदाहरण क्या है?", options:["Income Tax","Corporate Tax","GST","Wealth Tax"], answer:2 },
+{ question:"बजट को और क्या कहा जाता है?", options:["वार्षिक वित्तीय विवरण","योजना दस्तावेज","नीति पत्र","राजस्व रिपोर्ट"], answer:0 },
+{ question:"वित्त मंत्री बजट किसके समक्ष प्रस्तुत करता है?", options:["राज्यसभा","लोकसभा","राष्ट्रपति भवन","नीति आयोग"], answer:1 },
+{ question:"भारत में पहला बजट किसने प्रस्तुत किया था?", options:["जवाहरलाल नेहरू","आर.के. शनमुखम चेट्टी","महात्मा गांधी","लाल बहादुर शास्त्री"], answer:1 },
+{ question:"बजट शब्द किस भाषा से लिया गया है?", options:["संस्कृत","फ्रेंच","अंग्रेजी","लैटिन"], answer:1 },
+
+{ question:"GST परिषद का अध्यक्ष कौन होता है?", options:["प्रधानमंत्री","वित्त मंत्री","राज्यपाल","आरबीआई गवर्नर"], answer:1 },
+{ question:"सीमा शुल्क (Custom Duty) किस पर लगता है?", options:["आय पर","आयात-निर्यात पर","संपत्ति पर","वेतन पर"], answer:1 },
+{ question:"कॉरपोरेट टैक्स किस पर लगता है?", options:["कंपनियों की आय पर","व्यक्तियों की आय पर","माल पर","सेवाओं पर"], answer:0 },
+{ question:"भारत में सबसे बड़ा कर कौन सा है?", options:["GST","Income Tax","Custom Duty","Excise Duty"], answer:1 },
+{ question:"टैक्स कितने प्रकार के होते हैं?", options:["1","2","3","4"], answer:1 },
+
+{ question:"राजस्व बजट क्या होता है?", options:["लाभ का बजट","आय-व्यय का विवरण","केवल आय","केवल व्यय"], answer:1 },
+{ question:"पूंजी बजट किससे संबंधित होता है?", options:["दैनिक खर्च","दीर्घकालिक निवेश","कर संग्रह","मजदूरी"], answer:1 },
+{ question:"डायरेक्ट टैक्स किस पर लगता है?", options:["माल पर","सेवाओं पर","आय पर","आयात पर"], answer:2 },
+{ question:"इनडायरेक्ट टैक्स किस पर लगता है?", options:["आय पर","वस्तुओं और सेवाओं पर","संपत्ति पर","वेतन पर"], answer:1 },
+{ question:"भारत में आयकर की शुरुआत कब हुई?", options:["1860","1947","1950","2000"], answer:0 },
+
+{ question:"GST में कितने प्रकार के टैक्स शामिल हैं?", options:["2","3","4","5"], answer:1 },
+{ question:"CGST का पूरा नाम क्या है?", options:["Central Goods and Services Tax","Central Government Sales Tax","Combined GST","Central General Service Tax"], answer:0 },
+{ question:"SGST का पूरा नाम क्या है?", options:["State Goods and Services Tax","State Government Sales Tax","Simple GST","Standard GST"], answer:0 },
+{ question:"IGST का उपयोग कब होता है?", options:["राज्य के अंदर","दो राज्यों के बीच","गांव में","केवल निर्यात में"], answer:1 },
+{ question:"टैक्स चोरी को क्या कहा जाता है?", options:["Tax Saving","Tax Evasion","Tax Planning","Tax Refund"], answer:1 },
+
+{ question:"टैक्स प्लानिंग क्या है?", options:["चोरी","कानूनी तरीके से टैक्स बचाना","सरकारी योजना","लोन"], answer:1 },
+{ question:"GST लागू करने वाला देश कौन सा था?", options:["भारत","फ्रांस","जापान","जर्मनी"], answer:1 },
+{ question:"GST का मुख्य उद्देश्य क्या है?", options:["कर बढ़ाना","एकीकृत कर प्रणाली","महंगाई बढ़ाना","निर्यात रोकना"], answer:1 },
+{ question:"बजट कौन तैयार करता है?", options:["प्रधानमंत्री","वित्त मंत्रालय","RBI","SEBI"], answer:1 },
+{ question:"वित्त आयोग का गठन कौन करता है?", options:["राष्ट्रपति","प्रधानमंत्री","वित्त मंत्री","संसद"], answer:0 },
+
+{ question:"वस्तु एवं सेवा कर किस प्रकार का कर है?", options:["प्रत्यक्ष","अप्रत्यक्ष","राज्य","स्थानीय"], answer:1 },
+{ question:"आयकर किस प्रकार का कर है?", options:["अप्रत्यक्ष","प्रत्यक्ष","राज्य","नगर"], answer:1 },
+{ question:"भारत में GST लागू करने वाला 101वां संशोधन कौन सा है?", options:["100वां","101वां","102वां","103वां"], answer:1 },
+{ question:"टैक्स स्लैब का मतलब क्या है?", options:["कर दरों की श्रेणी","बजट योजना","लोन योजना","सरकारी खर्च"], answer:0 },
+{ question:"बजट भाषण कौन देता है?", options:["राष्ट्रपति","वित्त मंत्री","प्रधानमंत्री","मुख्य न्यायाधीश"], answer:1 },
+
+{ question:"नया बजट कब पेश होता है?", options:["1 जनवरी","1 फरवरी","1 अप्रैल","15 अगस्त"], answer:1 },
+{ question:"भारत का बजट किस वर्ष से फरवरी में पेश होने लगा?", options:["2015","2016","2017","2018"], answer:2 },
+{ question:"रेल बजट कब मुख्य बजट में शामिल हुआ?", options:["2015","2016","2017","2018"], answer:1 },
+{ question:"प्रत्यक्ष कर संग्रह कौन करता है?", options:["CBDT","CBIC","RBI","SEBI"], answer:0 },
+{ question:"अप्रत्यक्ष कर संग्रह कौन करता है?", options:["CBDT","CBIC","NITI Aayog","RBI"], answer:1 },
+
+{ question:"GST में सबसे अधिक स्लैब कितने हैं?", options:["2","3","4","5"], answer:2 },
+{ question:"GST में सबसे कम स्लैब कितने हैं?", options:["0%","5%","12%","18%"], answer:0 },
+{ question:"भारत में GST परिषद कब बनी?", options:["2015","2016","2017","2018"], answer:1 },
+{ question:"बजट का मुख्य उद्देश्य क्या है?", options:["कर बढ़ाना","आर्थिक विकास","बेरोजगारी बढ़ाना","महंगाई बढ़ाना"], answer:1 },
+{ question:"सरकार की आय का मुख्य स्रोत क्या है?", options:["कर","लोन","दान","निर्यात"], answer:0 },
+
+{ question:"सबसे बड़ा अप्रत्यक्ष कर कौन सा है?", options:["GST","Income Tax","Corporate Tax","Wealth Tax"], answer:0 },
+{ question:"भारत में टैक्स कौन लगाता है?", options:["राज्य सरकार","केंद्र सरकार","दोनों","नगर निगम"], answer:2 },
+{ question:"कर नीति कौन बनाता है?", options:["RBI","सरकार","SEBI","NITI Aayog"], answer:1 },
+{ question:"बजट घाटा क्या होता है?", options:["आय अधिक व्यय कम","व्यय अधिक आय कम","दोनों बराबर","कोई नहीं"], answer:1 },
+{ question:"राजकोषीय घाटा क्या दर्शाता है?", options:["लाभ","सरकारी उधार","निर्यात","आय"], answer:1 },
+
+{ question:"भारत में टैक्स कब देना अनिवार्य है?", options:["हर साल","हर महीने","हर दिन","एक बार"], answer:0 },
+{ question:"GST लागू करने से क्या खत्म हुआ?", options:["Income Tax","Multiple Indirect Taxes","Custom Duty","Wealth Tax"], answer:1 },
+{ question:"GST किस मॉडल पर आधारित है?", options:["अमेरिका","कनाडा","फ्रांस","जर्मनी"], answer:2 },
+{ question:"आयकर अधिनियम कब लागू हुआ?", options:["1961","1971","1981","1991"], answer:0 },
+{ question:"टैक्स रिटर्न क्या होता है?", options:["सरकारी योजना","आय की रिपोर्ट","लोन फॉर्म","बजट दस्तावेज"], answer:1 },
+
+{ question:"PAN का उपयोग किस लिए होता है?", options:["बैंकिंग","टैक्स पहचान","लोन","नौकरी"], answer:1 },
+{ question:"TDS क्या होता है?", options:["Tax Deducted at Source","Total Direct System","Tax Deposit Scheme","Tax Division System"], answer:0 },
+{ question:"बजट का मुख्य भाग कौन सा होता है?", options:["राजस्व और पूंजी","केवल आय","केवल व्यय","लोन"], answer:0 },
+{ question:"GST में कौन शामिल नहीं है?", options:["Income Tax","CGST","SGST","IGST"], answer:0 },
+{ question:"भारत में सबसे अधिक कर कौन देता है?", options:["कंपनियां","किसान","सरकारी कर्मचारी","छात्र"], answer:0 },
+
+{ question:"इनकम टैक्स स्लैब किस पर निर्भर करता है?", options:["आय पर","उम्र पर","शहर पर","पेशा पर"], answer:0 },
+{ question:"सरकार का वित्तीय वर्ष क्यों महत्वपूर्ण है?", options:["योजना के लिए","मनोरंजन के लिए","त्योहार के लिए","खेल के लिए"], answer:0 },
+{ question:"बजट को कौन मंजूरी देता है?", options:["लोकसभा","राज्यसभा","राष्ट्रपति","RBI"], answer:0 },
+{ question:"बजट घाटा कैसे पूरा किया जाता है?", options:["लोन","टैक्स","निर्यात","दान"], answer:0 },
+{ question:"GST से क्या लाभ हुआ?", options:["जटिलता बढ़ी","कर प्रणाली सरल हुई","महंगाई बढ़ी","निर्यात कम हुआ"], answer:1 },
+
+{ question:"राजकोषीय नीति (Fiscal Policy) किससे संबंधित है?", options:["मौद्रिक नीति","सरकारी आय-व्यय","निर्यात नीति","कृषि नीति"], answer:1 },
+{ question:"मौद्रिक नीति कौन नियंत्रित करता है?", options:["वित्त मंत्रालय","RBI","SEBI","नीति आयोग"], answer:1 },
+{ question:"राजस्व घाटा क्या दर्शाता है?", options:["आय = व्यय","व्यय > आय","आय > व्यय","कोई नहीं"], answer:1 },
+{ question:"प्राथमिक घाटा (Primary Deficit) क्या होता है?", options:["कुल घाटा","ब्याज रहित घाटा","राजस्व घाटा","पूंजी घाटा"], answer:1 },
+{ question:"बजट में 'सब्सिडी' क्या होती है?", options:["कर","सरकारी सहायता","लोन","निवेश"], answer:1 },
+
+{ question:"भारत में सबसे अधिक GST दर कितनी है?", options:["12%","18%","28%","5%"], answer:2 },
+{ question:"GST के तहत सबसे कम स्लैब क्या है?", options:["0%","5%","12%","18%"], answer:0 },
+{ question:"इनकम टैक्स किस वर्ष से लागू है?", options:["1860","1947","1950","2000"], answer:0 },
+{ question:"भारत में टैक्स सिस्टम का मुख्य उद्देश्य क्या है?", options:["राजस्व जुटाना","महंगाई बढ़ाना","निर्यात रोकना","बेरोजगारी बढ़ाना"], answer:0 },
+{ question:"टैक्स फाइलिंग किसे कहते हैं?", options:["रिपोर्ट जमा करना","लोन लेना","बजट बनाना","खर्च करना"], answer:0 },
+
+{ question:"TDS काटने की जिम्मेदारी किसकी होती है?", options:["सरकार","नियोक्ता","RBI","SEBI"], answer:1 },
+{ question:"PAN कार्ड किसके लिए जरूरी है?", options:["टैक्स लेन-देन","पासपोर्ट","ड्राइविंग","मतदान"], answer:0 },
+{ question:"GST नंबर किसे दिया जाता है?", options:["कंपनी/व्यवसाय","छात्र","कर्मचारी","सरकार"], answer:0 },
+{ question:"भारत का वित्त आयोग कितने वर्षों में बनता है?", options:["3 साल","5 साल","10 साल","7 साल"], answer:1 },
+{ question:"राज्य सरकार की आय का मुख्य स्रोत क्या है?", options:["कर","दान","निर्यात","लोन"], answer:0 },
+
+{ question:"बजट में 'राजस्व प्राप्तियां' क्या होती हैं?", options:["लोन","कर और आय","खर्च","निवेश"], answer:1 },
+{ question:"बजट में 'राजस्व व्यय' क्या होता है?", options:["दैनिक खर्च","निवेश","लोन","कर"], answer:0 },
+{ question:"GST लागू होने से पहले कौन सा कर था?", options:["VAT","Income Tax","Custom Duty","Wealth Tax"], answer:0 },
+{ question:"VAT का पूरा नाम क्या है?", options:["Value Added Tax","Value Annual Tax","Variable Added Tax","Verified Asset Tax"], answer:0 },
+{ question:"भारत में सबसे बड़ा अप्रत्यक्ष कर सुधार क्या है?", options:["GST","Income Tax","Budget","Loan System"], answer:0 },
+
+{ question:"डायरेक्ट टैक्स का बोझ किस पर पड़ता है?", options:["खरीदार","सीधे करदाता","सरकार","कंपनी"], answer:1 },
+{ question:"इनडायरेक्ट टैक्स का बोझ किस पर पड़ता है?", options:["मध्यस्थ","उपभोक्ता","सरकार","RBI"], answer:1 },
+{ question:"सरकारी खर्च को क्या कहा जाता है?", options:["राजस्व","व्यय","कर","लाभ"], answer:1 },
+{ question:"बजट घाटा किससे पूरा किया जाता है?", options:["लोन","टैक्स","निर्यात","सब्सिडी"], answer:0 },
+{ question:"भारत में सबसे पहले बजट किसने पेश किया?", options:["लॉर्ड कैनिंग","आर.के. शनमुखम चेट्टी","नेहरू","गांधी"], answer:1 },
+
+{ question:"नया कर प्रणाली (New Tax Regime) कब आई?", options:["2020","2021","2022","2023"], answer:0 },
+{ question:"पुरानी कर प्रणाली में क्या होता है?", options:["छूट मिलती है","कोई टैक्स नहीं","GST नहीं","लोन"], answer:0 },
+{ question:"GST का मुख्य लाभ क्या है?", options:["सरल कर प्रणाली","जटिलता","महंगाई","निर्यात रोक"], answer:0 },
+{ question:"कर चोरी रोकने के लिए क्या उपयोग होता है?", options:["डिजिटल सिस्टम","लोन","सब्सिडी","निर्यात"], answer:0 },
+{ question:"डिजिटल टैक्स सिस्टम का उद्देश्य क्या है?", options:["पारदर्शिता","छिपाना","महंगाई","लोन"], answer:0 }
+];
+
+
+let index = 0;
+let score = 0;
+let timer;
+let timeLeft = 10;
+
+function startQuiz() {
+  document.getElementById("startScreen").classList.add("hide");
+  document.getElementById("quizScreen").classList.remove("hide");
+  loadQuestion();
+}
+
+function loadQuestion() {
+  resetTimer();
+  let q = quizData[index];
+  document.getElementById("question").innerText = q.question;
+  document.getElementById("qNo").innerText = index + 1;
+
+  let optionsHTML = "";
+  q.options.forEach((opt, i) => {
+    optionsHTML += `<div class="option" onclick="selectOption(${i})">${opt}</div>`;
+  });
+
+  document.getElementById("options").innerHTML = optionsHTML;
+}
+
+function selectOption(selected) {
+  let correct = quizData[index].answer;
+  let options = document.querySelectorAll(".option");
+
+  options.forEach((opt, i) => {
+    if (i === correct) opt.classList.add("correct");
+    else if (i === selected) opt.classList.add("wrong");
+
+    opt.style.pointerEvents = "none";
+  });
+
+  if (selected === correct) score++;
+}
+
+function nextQuestion() {
+  index++;
+  if (index < quizData.length) {
+    loadQuestion();
+  } else {
+    showResult();
+  }
+}
+
+  function showResult() {
+  document.getElementById("quizScreen").classList.add("hide");
+  document.getElementById("resultScreen").classList.remove("hide");
+  document.getElementById("score").innerText = score + " / " + quizData.length;
+}
+
+function resetTimer() {
+  clearInterval(timer);
+  timeLeft = 10;
+  document.getElementById("timer").innerText = timeLeft;
+
+  timer = setInterval(() => {
+    timeLeft--;
+    document.getElementById("timer").innerText = timeLeft;
+
+    if (timeLeft === 0) {
+      nextQuestion();
+    }
+  }, 1000);
+}
+
+</script>
+
+</body>
+</html>

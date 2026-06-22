@@ -1,0 +1,344 @@
+<!DOCTYPE html>
+<html>
+<head>
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-KN4DRRWZ17"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-KN4DRRWZ17');
+</script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sarvanaam Quiz </title>
+
+<style>
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: Arial;
+}
+
+body {
+  background: #f5f5f5;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+}
+
+/* Container */
+.app {
+  width: 95%;
+  max-width: 500px;
+  background: white;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+}
+
+/* Header */
+header {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 20px;
+}
+
+.timer {
+  background: #2196F3;
+  color: white;
+  padding: 5px 10px;
+  border-radius: 5px;
+}
+
+/* Question */
+.question {
+  font-size: 20px;
+  margin-bottom: 15px;
+}
+
+/* Options */
+.option {
+  background: #eee;
+  padding: 10px;
+  margin: 8px 0;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.option:hover {
+  background: #ddd;
+}
+
+.correct {
+  background: #4CAF50 !important;
+  color: white;
+}
+
+.wrong {
+  background: #f44336 !important;
+  color: white;
+}
+
+/* Button */
+button {
+  margin-top: 15px;
+  padding: 10px;
+  width: 100%;
+  border: none;
+ background:linear-gradient(135deg,#0a2dbcf3,#779af583);
+  color: white;
+  font-size: 16px;
+  cursor: pointer;
+  border-radius: 5px;
+}
+
+/* Hidden */
+.hide {
+  display: none;
+}
+
+/* Result */
+.result {
+  text-align: center;
+}
+
+/* Responsive */
+@media (max-width: 600px) {
+  .question {
+    font-size: 18px;
+  }
+}
+</style>
+
+</head>
+<body>
+
+<div class="app">
+
+  <!-- Start Screen -->
+  <div id="startScreen">
+    <h2>Quiz App</h2>
+    <button onclick="startQuiz()">Start Quiz</button>
+  </div>
+
+  <!-- Quiz Screen -->
+  <div id="quizScreen" class="hide">
+    <header>
+      <div>Question <span id="qNo">1</span>/95</div>
+      <div class="timer" id="timer">10</div>
+    </header>
+
+    <div class="question" id="question"></div>
+    <div id="options"></div>
+
+    <button onclick="nextQuestion()">Next</button>
+  </div>
+
+  <!-- Result Screen -->
+  <div id="resultScreen" class="hide result">
+    <h2>Your Score</h2>
+    <h1 id="score"></h1>
+    <button onclick="location.reload()">Play Again</button>
+  </div>
+
+</div>
+
+<script>
+const quizData = [
+
+
+{ question:"सर्वनाम किसे कहते हैं?", options:["संज्ञा के स्थान पर आने वाले शब्द","क्रिया के शब्द","विशेषण के शब्द","अव्यय के शब्द"], answer:0 },
+{ question:"'मैं' किस पुरुष का सर्वनाम है?", options:["उत्तम पुरुष","मध्यम पुरुष","अन्य पुरुष","निजवाचक"], answer:0 },
+{ question:"'तुम' किस प्रकार का सर्वनाम है?", options:["उत्तम पुरुष","मध्यम पुरुष","अन्य पुरुष","निश्चयवाचक"], answer:1 },
+{ question:"'वह' किस प्रकार का सर्वनाम है?", options:["उत्तम पुरुष","मध्यम पुरुष","अन्य पुरुष","प्रश्नवाचक"], answer:2 },
+{ question:"निजवाचक सर्वनाम का उदाहरण है:", options:["स्वयं","वह","तुम","मैं"], answer:0 },
+
+{ question:"'जो' किस प्रकार का सर्वनाम है?", options:["संबंधवाचक","प्रश्नवाचक","निश्चयवाचक","अनिश्चितवाचक"], answer:0 },
+{ question:"'क्या' किस प्रकार का सर्वनाम है?", options:["संबंधवाचक","प्रश्नवाचक","निश्चयवाचक","निजवाचक"], answer:1 },
+{ question:"'कोई' किस प्रकार का सर्वनाम है?", options:["अनिश्चितवाचक","निश्चयवाचक","संबंधवाचक","प्रश्नवाचक"], answer:0 },
+{ question:"'सब' किस प्रकार का सर्वनाम है?", options:["अनिश्चितवाचक","प्रश्नवाचक","निश्चयवाचक","निजवाचक"], answer:0 },
+{ question:"'यह' किस प्रकार का सर्वनाम है?", options:["निश्चयवाचक","प्रश्नवाचक","संबंधवाचक","निजवाचक"], answer:0 },
+
+{ question:"'कौन' किस प्रकार का सर्वनाम है?", options:["प्रश्नवाचक","संबंधवाचक","निश्चयवाचक","अनिश्चितवाचक"], answer:0 },
+{ question:"'जिसे' किस प्रकार का सर्वनाम है?", options:["संबंधवाचक","प्रश्नवाचक","निश्चयवाचक","निजवाचक"], answer:0 },
+{ question:"'अपना' किस प्रकार का सर्वनाम है?", options:["निजवाचक","प्रश्नवाचक","संबंधवाचक","अनिश्चितवाचक"], answer:0 },
+{ question:"'खुद' किस प्रकार का सर्वनाम है?", options:["निजवाचक","प्रश्नवाचक","निश्चयवाचक","अनिश्चितवाचक"], answer:0 },
+{ question:"'आप' (सम्मानसूचक) किस पुरुष का सर्वनाम है?", options:["मध्यम पुरुष","उत्तम पुरुष","अन्य पुरुष","निजवाचक"], answer:0 },
+
+{ question:"'मैंने किताब पढ़ी' में सर्वनाम कौन सा है?", options:["मैंने","किताब","पढ़ी","कोई नहीं"], answer:0 },
+{ question:"'तुम कहाँ जा रहे हो?' में सर्वनाम कौन सा है?", options:["तुम","कहाँ","जा","हो"], answer:0 },
+{ question:"'वह खेल रहा है' में सर्वनाम कौन सा है?", options:["वह","खेल","रहा","है"], answer:0 },
+{ question:"'वे लोग आए' में सर्वनाम कौन सा है?", options:["वे","लोग","आए","कोई नहीं"], answer:0 },
+{ question:"'यह मेरा घर है' में सर्वनाम कौन सा है?", options:["यह","मेरा","घर","है"], answer:0 },
+
+{ question:"'कौन आया?' में सर्वनाम कौन सा है?", options:["कौन","आया","है","था"], answer:0 },
+{ question:"'क्या तुम पढ़ते हो?' में सर्वनाम कौन सा है?", options:["क्या","तुम","पढ़ते","हो"], answer:1 },
+{ question:"'जो मेहनत करता है वह सफल होता है' में 'जो' क्या है?", options:["संबंधवाचक","प्रश्नवाचक","निश्चयवाचक","निजवाचक"], answer:0 },
+{ question:"'कोई भी आ सकता है' में सर्वनाम कौन सा है?", options:["कोई","भी","आ","सकता"], answer:0 },
+{ question:"'सब लोग तैयार हैं' में सर्वनाम कौन सा है?", options:["सब","लोग","तैयार","हैं"], answer:0 },
+
+{ question:"'मैं स्वयं यह करूँगा' में सर्वनाम कौन सा है?", options:["मैं","स्वयं","यह","करूँगा"], answer:1 },
+{ question:"'तुम्हारा नाम क्या है?' में सर्वनाम कौन सा है?", options:["तुम्हारा","नाम","क्या","है"], answer:0 },
+{ question:"'वह कौन सा शहर है?' में सर्वनाम कौन सा है?", options:["वह","कौन","सा","शहर"], answer:0 },
+{ question:"'यह किसकी किताब है?' में सर्वनाम कौन सा है?", options:["यह","किसकी","किताब","है"], answer:0 },
+{ question:"'मैंने तुम्हें देखा' में सर्वनाम कौन सा है?", options:["मैंने","तुम्हें","देखा","कोई नहीं"], answer:0 },
+
+{ question:"'वे कहाँ जा रहे हैं?' में सर्वनाम कौन सा है?", options:["वे","कहाँ","जा","रहे"], answer:0 },
+{ question:"'आप क्या कर रहे हैं?' में सर्वनाम कौन सा है?", options:["आप","क्या","कर","रहे"], answer:0 },
+{ question:"'कोई तो जवाब दो' में सर्वनाम कौन सा है?", options:["कोई","तो","जवाब","दो"], answer:0 },
+{ question:"'सब कुछ ठीक है' में सर्वनाम कौन सा है?", options:["सब","कुछ","ठीक","है"], answer:0 },
+{ question:"'जो भी आएगा स्वागत है' में 'जो भी' क्या है?", options:["संबंधवाचक","प्रश्नवाचक","निश्चयवाचक","निजवाचक"], answer:0 },
+
+{ question:"'कौन-कौन आया?' में सर्वनाम कौन सा है?", options:["कौन-कौन","आया","है","था"], answer:0 },
+{ question:"'मैं और तुम दोस्त हैं' में सर्वनाम कौन से हैं?", options:["मैं, तुम","वह, वे","यह, वह","कोई नहीं"], answer:0 },
+{ question:"'वह स्वयं आया' में सर्वनाम कौन सा है?", options:["वह","स्वयं","आया","दोनों"], answer:1 },
+{ question:"'यह वही लड़का है' में 'वही' क्या है?", options:["निश्चयवाचक","प्रश्नवाचक","संबंधवाचक","अनिश्चितवाचक"], answer:0 },
+{ question:"'किसने यह किया?' में सर्वनाम कौन सा है?", options:["किसने","यह","किया","कोई नहीं"], answer:0 },
+
+{ question:"'मैं अपना काम कर रहा हूँ' में सर्वनाम कौन सा है?", options:["मैं","अपना","काम","कर"], answer:1 },
+{ question:"'तुम लोग कहाँ हो?' में सर्वनाम कौन सा है?", options:["तुम","लोग","कहाँ","हो"], answer:0 },
+{ question:"'वे सब आ गए' में सर्वनाम कौन सा है?", options:["वे","सब","आ","गए"], answer:0 },
+{ question:"'यह वही जगह है' में सर्वनाम कौन सा है?", options:["यह","वही","जगह","है"], answer:0 },
+{ question:"'जो करेगा वही पाएगा' में 'वही' क्या है?", options:["निश्चयवाचक","संबंधवाचक","प्रश्नवाचक","निजवाचक"], answer:0 },
+
+{ question:"'आप लोग कहाँ रहते हैं?' में सर्वनाम कौन सा है?", options:["आप","लोग","कहाँ","रहते"], answer:0 },
+{ question:"'मैंने स्वयं देखा' में सर्वनाम कौन सा है?", options:["मैंने","स्वयं","देखा","दोनों"], answer:1 },
+{ question:"'कोई नहीं आया' में सर्वनाम कौन सा है?", options:["कोई","नहीं","आया","सब"], answer:0 },
+{ question:"'सबने कोशिश की' में सर्वनाम कौन सा है?", options:["सबने","कोशिश","की","है"], answer:0 },
+{ question:"'क्या यह सही है?' में सर्वनाम कौन सा है?", options:["क्या","यह","सही","है"], answer:0 },
+
+{ question:"'कौन सा रास्ता सही है?' में सर्वनाम कौन सा है?", options:["कौन","सा","रास्ता","है"], answer:0 },
+{ question:"'तुम्हें कौन बुला रहा है?' में सर्वनाम कौन सा है?", options:["तुम्हें","कौन","बुला","रहा"], answer:0 },
+{ question:"'वे कौन हैं?' में सर्वनाम कौन सा है?", options:["वे","कौन","हैं","दोनों"], answer:0 },
+{ question:"'जो भी चाहे आ सकता है' में 'जो भी' क्या है?", options:["संबंधवाचक","प्रश्नवाचक","निश्चयवाचक","निजवाचक"], answer:0 },
+{ question:"'यह कौन है?' में सर्वनाम कौन सा है?", options:["यह","कौन","है","दोनों"], answer:0 },
+
+{ question:"'जो भी सही है वही करो' में 'जो भी' क्या है?", options:["संबंधवाचक","प्रश्नवाचक","निश्चयवाचक","अनिश्चितवाचक"], answer:0 },
+{ question:"'कौन आया और कौन गया?' में 'कौन' क्या है?", options:["प्रश्नवाचक","संबंधवाचक","निश्चयवाचक","निजवाचक"], answer:0 },
+{ question:"'यह किताब किसकी है?' में सर्वनाम कौन सा है?", options:["यह","किसकी","किताब","है"], answer:1 },
+{ question:"'मैंने तुम्हें बुलाया' में सर्वनाम कौन सा है?", options:["मैंने","तुम्हें","बुलाया","दोनों"], answer:0 },
+{ question:"'वे सभी छात्र आ गए' में सर्वनाम कौन सा है?", options:["वे","सभी","छात्र","आ"], answer:0 },
+
+{ question:"'आप स्वयं निर्णय लें' में सर्वनाम कौन सा है?", options:["आप","स्वयं","निर्णय","लें"], answer:1 },
+{ question:"'कोई भी प्रश्न पूछ सकता है' में सर्वनाम कौन सा है?", options:["कोई","भी","प्रश्न","पूछ"], answer:0 },
+{ question:"'सब कुछ साफ है' में सर्वनाम कौन सा है?", options:["सब","कुछ","साफ","है"], answer:0 },
+{ question:"'वह जो आया था मेरा मित्र है' में 'जो' क्या है?", options:["संबंधवाचक","प्रश्नवाचक","निश्चयवाचक","निजवाचक"], answer:0 },
+{ question:"'कौन-कौन लोग आए?' में सर्वनाम कौन सा है?", options:["कौन-कौन","लोग","आए","हैं"], answer:0 },
+
+{ question:"'मैं और वह स्कूल गए' में सर्वनाम कौन से हैं?", options:["मैं, वह","तुम, वह","वे, यह","कोई नहीं"], answer:0 },
+{ question:"'तुम्हें यह काम करना है' में सर्वनाम कौन सा है?", options:["तुम्हें","यह","काम","करना"], answer:0 },
+{ question:"'वह अपना काम कर रहा है' में सर्वनाम कौन सा है?", options:["वह","अपना","काम","कर"], answer:1 },
+{ question:"'यह वही लड़का है जो पढ़ता है' में 'जो' क्या है?", options:["संबंधवाचक","प्रश्नवाचक","निश्चयवाचक","निजवाचक"], answer:0 },
+{ question:"'आप कहाँ जा रहे हैं?' में सर्वनाम कौन सा है?", options:["आप","कहाँ","जा","रहे"], answer:0 },
+
+{ question:"'मैंने यह काम स्वयं किया' में सर्वनाम कौन सा है?", options:["मैंने","यह","स्वयं","दोनों"], answer:2 },
+{ question:"'कोई तो आएगा' में सर्वनाम कौन सा है?", options:["कोई","तो","आएगा","सब"], answer:0 },
+{ question:"'सब लोग खुश हैं' में सर्वनाम कौन सा है?", options:["सब","लोग","खुश","हैं"], answer:0 },
+{ question:"'जो करेगा वही जीतेगा' में 'वही' क्या है?", options:["निश्चयवाचक","संबंधवाचक","प्रश्नवाचक","निजवाचक"], answer:0 },
+{ question:"'कौन सा खेल खेलते हो?' में सर्वनाम कौन सा है?", options:["कौन","सा","खेल","हो"], answer:0 },
+
+{ question:"'यह कौन सा देश है?' में सर्वनाम कौन सा है?", options:["यह","कौन","सा","देश"], answer:0 },
+{ question:"'वे लोग कहाँ हैं?' में सर्वनाम कौन सा है?", options:["वे","लोग","कहाँ","हैं"], answer:0 },
+{ question:"'मैं अपना काम करता हूँ' में सर्वनाम कौन सा है?", options:["मैं","अपना","काम","करता"], answer:1 },
+{ question:"'तुम क्या चाहते हो?' में सर्वनाम कौन सा है?", options:["तुम","क्या","चाहते","हो"], answer:0 },
+{ question:"'वह कौन है जो आया?' में 'जो' क्या है?", options:["संबंधवाचक","प्रश्नवाचक","निश्चयवाचक","निजवाचक"], answer:0 },
+
+{ question:"'कोई भी यहाँ आ सकता है' में सर्वनाम कौन सा है?", options:["कोई","भी","यहाँ","आ"], answer:0 },
+{ question:"'सब कुछ ठीक हो जाएगा' में सर्वनाम कौन सा है?", options:["सब","कुछ","ठीक","है"], answer:0 },
+{ question:"'आप लोग तैयार हो?' में सर्वनाम कौन सा है?", options:["आप","लोग","तैयार","हो"], answer:0 },
+{ question:"'मैंने स्वयं देखा था' में सर्वनाम कौन सा है?", options:["मैंने","स्वयं","देखा","था"], answer:1 },
+{ question:"'कौन-कौन पढ़ रहा है?' में सर्वनाम कौन सा है?", options:["कौन-कौन","पढ़","रहा","है"], answer:0 },
+
+{ question:"'यह मेरा मित्र है' में सर्वनाम कौन सा है?", options:["यह","मेरा","मित्र","है"], answer:0 },
+{ question:"'वह कौन है?' में सर्वनाम कौन सा है?", options:["वह","कौन","है","दोनों"], answer:0 },
+{ question:"'जो भी आए स्वागत है' में 'जो भी' क्या है?", options:["संबंधवाचक","प्रश्नवाचक","निश्चयवाचक","निजवाचक"], answer:0 },
+{ question:"'किसने यह किया?' में सर्वनाम कौन सा है?", options:["किसने","यह","किया","कोई नहीं"], answer:0 },
+{ question:"'मैं और तुम दोस्त हैं' में सर्वनाम कौन से हैं?", options:["मैं, तुम","वह, वे","कोई नहीं","यह, वह"], answer:0 },
+
+{ question:"'तुम्हारा क्या नाम है?' में सर्वनाम कौन सा है?", options:["तुम्हारा","क्या","नाम","है"], answer:0 },
+{ question:"'वह स्वयं आया था' में सर्वनाम कौन सा है?", options:["वह","स्वयं","आया","था"], answer:1 },
+{ question:"'यह वही घर है' में 'वही' क्या है?", options:["निश्चयवाचक","प्रश्नवाचक","संबंधवाचक","निजवाचक"], answer:0 },
+{ question:"'कोई नहीं जानता' में सर्वनाम कौन सा है?", options:["कोई","नहीं","जानता","सब"], answer:0 },
+{ question:"'सबने यह देखा' में सर्वनाम कौन सा है?", options:["सबने","यह","देखा","है"], answer:0 }
+
+];
+
+
+let index = 0;
+let score = 0;
+let timer;
+let timeLeft = 10;
+
+function startQuiz() {
+  document.getElementById("startScreen").classList.add("hide");
+  document.getElementById("quizScreen").classList.remove("hide");
+  loadQuestion();
+}
+
+function loadQuestion() {
+  resetTimer();
+  let q = quizData[index];
+  document.getElementById("question").innerText = q.question;
+  document.getElementById("qNo").innerText = index + 1;
+
+  let optionsHTML = "";
+  q.options.forEach((opt, i) => {
+    optionsHTML += `<div class="option" onclick="selectOption(${i})">${opt}</div>`;
+  });
+
+  document.getElementById("options").innerHTML = optionsHTML;
+}
+
+function selectOption(selected) {
+  let correct = quizData[index].answer;
+  let options = document.querySelectorAll(".option");
+
+  options.forEach((opt, i) => {
+    if (i === correct) opt.classList.add("correct");
+    else if (i === selected) opt.classList.add("wrong");
+
+    opt.style.pointerEvents = "none";
+  });
+
+  if (selected === correct) score++;
+}
+
+function nextQuestion() {
+  index++;
+  if (index < quizData.length) {
+    loadQuestion();
+  } else {
+    showResult();
+  }
+}
+
+  function showResult() {
+  document.getElementById("quizScreen").classList.add("hide");
+  document.getElementById("resultScreen").classList.remove("hide");
+  document.getElementById("score").innerText = score + " / " + quizData.length;
+}
+
+function resetTimer() {
+  clearInterval(timer);
+  timeLeft = 10;
+  document.getElementById("timer").innerText = timeLeft;
+
+  timer = setInterval(() => {
+    timeLeft--;
+    document.getElementById("timer").innerText = timeLeft;
+
+    if (timeLeft === 0) {
+      nextQuestion();
+    }
+  }, 1000);
+}
+
+</script>
+
+</body>
+</html>
